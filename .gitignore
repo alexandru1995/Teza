@@ -1,0 +1,10 @@
+
+MAuthen\.Client/ClientApp/node_modules/
+
+MAuthen\.Data/\.vs/
+
+**/bin/
+
+**/obj/
+
+MAuthen\.Client/ClientApp/package-lock\.json
