@@ -1,0 +1,13 @@
+.shadow{
+    box-shadow: 0 2px 3px ;
+}
+.black{
+    background-color: #222;
+}
+
+.fixedComponent {
+    position: sticky;
+    top: 0px;
+    z-index: 1;
+  }
+  
