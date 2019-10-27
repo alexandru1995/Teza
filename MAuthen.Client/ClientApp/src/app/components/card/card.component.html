@@ -1,16 +1,30 @@
-
-      <div class="card" style="min-width: 18rem; max-width: 28rem;">
-        <div class="p-2" style="text-align: center">
-          <img src="assets/img/cyber_security-512.png" style="height: 4rem; width: 4rem;"
+<div class="card" style="min-width: 18rem; max-width: 28rem;">
+    <div class="p-2" style="text-align: center">
+        <img src="assets/img/cyber_security-512.png" style="height: 4rem; width: 4rem;"
             class="card-img-top rounded-circle img-thumbnail">
+    </div>
+    <div class="card-body">
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                <span class="input-group-text" id="username"><i class="fas fa-user-tie"></i></span>
+            </div>
+            <input type="text" class="form-control" placeholder="Username" aria-label="Username"
+                aria-describedby="username">
         </div>
-        <div class="card-body">
-          <h5 class="card-title">Card title</h5>
-          <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's
-            content.</p>
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                <span class="input-group-text" id="username"><i class="fas fa-key"></i></span>
+            </div>
+            <input type="password" class="form-control" placeholder="Username" aria-label="Username"
+                aria-describedby="username">
         </div>
-        <div class="card-body">
-          <a href="#" class="card-link">Card link</a>
-          <a href="#" class="card-link">Another link</a>
+    </div>
+    <div class="card-body">
+        <div class="row justify-content-center">
+            <button class="btn gradient">Submit form</button>
         </div>
-      </div>
+        <div class="row justify-content-center">
+            <button class="btn btn-link" (click)="swichToTegistration()">Create Account</button>
+        </div>
+    </div>
+</div>

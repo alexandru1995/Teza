@@ -7,9 +7,17 @@ import { Component, OnInit } from '@angular/core';
 })
 export class HomeComponent implements OnInit {
 
+  showRegistration: boolean = false;
   constructor() { }
 
   ngOnInit() {
   }
 
+  changeToRedgistration($event) {
+    if (this.showRegistration) {
+      this.showRegistration = false;
+    } else {
+      this.showRegistration = true;
+    }
+  }
 }

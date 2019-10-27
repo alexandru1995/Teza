@@ -1,8 +1,9 @@
 <div class="container-fluid h-100">
-    <div class="row h-100">
-        <div class="col-sm-12 my-auto">
+    <div class="row gradient h-100">
+        <div class="col-12 my-auto">
             <div class="d-flex justify-content-center">
-                <card></card>
+                <card (switch)="changeToRedgistration($event)" *ngIf="!showRegistration"></card>
+                <registration-card (switch)="changeToRedgistration($event)" class="col col-sm-6 col-md-7 col-lg-7 col-xl-5 p-0" *ngIf="showRegistration"></registration-card>
             </div>
         </div>
     </div>

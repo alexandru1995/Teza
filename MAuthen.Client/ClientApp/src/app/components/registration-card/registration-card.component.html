@@ -1,0 +1,89 @@
+<div class="card" style="min-width: 18rem;">
+    <div class="p-2" style="text-align: center">
+        <img src="assets/img/new-user.jpg" style="height: 4rem; width: 4rem;"
+            class="card-img-top rounded-circle img-thumbnail">
+    </div>
+    <form class="mb-3" [formGroup]="registrationForm" (ngSubmit)="onSubmit()">
+        <div class="card-body">
+            <div class="row">
+                <div class="col">
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"><i class="fas fa-user-tie"></i></span>
+                        </div>
+                        <input formControlName="firstName" type="text" class="form-control" placeholder="First Name"
+                            [ngClass]="{ 'is-invalid': f.firstName.errors && registrationForm.controls['firstName'].touched}">
+                        <div *ngIf="f.firstName.errors" class="invalid-feedback ml-3">
+                            <div *ngIf="f.firstName.errors.required">First name is required</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"><i class="fas fa-user-tie"></i></span>
+                        </div>
+                        <input formControlName="lastName" type="text" class="form-control" placeholder="Last Name"
+                            [ngClass]="{ 'is-invalid': f.lastName.errors && registrationForm.controls['lastName'].touched}">
+                        <div *ngIf="f.lastName.errors" class="invalid-feedback ml-3">
+                            <div *ngIf="f.lastName.errors.required">Last name is required</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="username">
+                        <i class="fas fa-phone-alt"></i>
+                    </span>
+                </div>
+                <input formControlName="mobile" type="text" class="form-control" placeholder="Phone Number"
+                    [ngClass]="{ 'is-invalid': f.mobile.errors && registrationForm.controls['mobile'].touched}">
+                <div *ngIf="f.mobile.errors" class="invalid-feedback ml-3">
+                    <div *ngIf="f.mobile.errors.required">Phone number is required</div>
+                    <div *ngIf="f.mobile.errors.invalidNumber">Phone number is not valid</div>
+                </div>
+            </div>
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">@</span>
+                </div>
+                <input formControlName="email" type="text" class="form-control" placeholder="Email"
+                    [ngClass]="{ 'is-invalid': f.email.errors && registrationForm.controls['email'].touched}">
+                <div *ngIf="f.email.errors" class="invalid-feedback ml-3">
+                    <div *ngIf="f.email.errors.required">Email is required</div>
+                    <div *ngIf="f.email.errors.email">Email is not valid</div>
+                </div>
+            </div>
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text"><i class="fas fa-key"></i></span>
+                </div>
+                <input formControlName="password" type="password" class="form-control" placeholder="Password"
+                    [ngClass]="{ 'is-invalid': f.password.errors && registrationForm.controls['password'].touched}">
+                <div *ngIf="f.password.errors" class="invalid-feedback ml-3">
+                    <div *ngIf="f.password.errors.required">Last name is required</div>
+                </div>
+            </div>
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text"><i class="fas fa-key"></i></span>
+                </div>
+                <input formControlName="confirmPassword" type="password" class="form-control"
+                [ngClass]="{ 'is-invalid': f.confirmPassword.errors && registrationForm.controls['confirmPassword'].touched}">
+                <div *ngIf="f.confirmPassword.errors" class="invalid-feedback ml-3">
+                    <div *ngIf="f.confirmPassword.errors.required">Last name is required</div>
+                </div>
+            </div>
+        </div>
+        <div class="card-body p-0">
+            <div class="row justify-content-center">
+                <button class="btn gradient" type="submit">Submit form</button>
+            </div>
+            <div class="row justify-content-center">
+                <button class="btn btn-link" (click)="swichToAuth()">I have Account</button>
+            </div>
+        </div>
+    </form>
+
+</div>
