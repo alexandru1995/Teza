@@ -3,11 +3,11 @@ using MAuthen.Domain.Repositories.Interface;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
+using MAuthen.Api.Models;
 
 namespace MAuthen.Api.Controllers
 {
     [Route("[controller]")]
-    [ApiController]
     public class UserController : Controller
     {
         private readonly IUserRepository _user;
@@ -28,21 +28,32 @@ namespace MAuthen.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Add([FromBody]User model)
+        public async Task<IActionResult> Add([FromBody]UserModel model)
         {
             try
             {
-                await _user.Create(model);
+                await _user.Create(new User
+                {
+                    FirstName = model.FirstName,
+                    LastName = model.LastName,
+                    Blocked = false,
+                    Email = model.Email,
+                    PhoneNumber = model.PhoneNumber,
+                    Secret = new Secret{
+                        Password = model.Password
+                    }
+                    
+                });
             }
             catch(Exception err)
             {
                 switch (err.GetType().Name)
                 {
-                    case "DbUpdateException": return Json("Error This email alredy exist.");
+                    case "DbUpdateException": return StatusCode(409,"Error This email alredy exist.");
                 }
             }
             
-            return StatusCode(201, "Successful creation");
+            return Json(StatusCode(201, "Successful creation"));
         }
 
         [HttpPut]

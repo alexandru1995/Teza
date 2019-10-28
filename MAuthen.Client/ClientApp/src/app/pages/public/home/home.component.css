@@ -1,4 +1,5 @@
 .gradient {
+    height: 100%;
     background: #003973;
     /* fallback for old browsers */
     background: -webkit-linear-gradient(to bottom, #E5E5BE, #003973);

@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ToastService } from 'src/app/components/toast/toast.service';
 
 @Component({
   selector: 'app-home',
@@ -8,16 +9,21 @@ import { Component, OnInit } from '@angular/core';
 export class HomeComponent implements OnInit {
 
   showRegistration: boolean = false;
-  constructor() { }
+  constructor(public toastService: ToastService) { }
 
   ngOnInit() {
   }
 
+  registrationError(error){
+    this.toastService.show(error.message);
+  }
+
   changeToRedgistration($event) {
-    if (this.showRegistration) {
-      this.showRegistration = false;
-    } else {
-      this.showRegistration = true;
-    }
+    this.toastService.show("TEst test test", { classname: 'bg-success text-light', delay: 10000 });
+    // if (this.showRegistration) {
+    //   this.showRegistration = false;
+    // } else {
+    //   this.showRegistration = true;
+    // }
   }
 }

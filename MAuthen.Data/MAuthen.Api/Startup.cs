@@ -24,6 +24,7 @@ namespace MAuthen.Api
         {
             services.AddDbContextPool<MAuthenContext>(options =>
               options.UseSqlServer(@"Data Source=.\SQLEXPRESS;Initial Catalog=MAuthen;Integrated Security=True"));
+            services.AddCors();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IRoleRepository, RoleRepository>();
@@ -45,6 +46,11 @@ namespace MAuthen.Api
             }
 
             app.UseHttpsRedirection();
+            app.UseCors(options=> options.WithOrigins("http://localhost:4200")
+                .AllowAnyMethod()
+                .AllowAnyHeader()
+                .AllowAnyOrigin()
+            );
             app.UseMvc();
         }
     }
