@@ -4,7 +4,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace MAuthen.Data.Repositories.Implimentation
+namespace MAuthen.Data.Repositories.Implementation
 {
     public class RepositoryBase<TEntity> : IRepositoryBase<TEntity> where TEntity : class
     {

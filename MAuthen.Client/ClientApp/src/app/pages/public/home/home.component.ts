@@ -19,11 +19,10 @@ export class HomeComponent implements OnInit {
   }
 
   changeToRedgistration($event) {
-    this.toastService.show("TEst test test", { classname: 'bg-success text-light', delay: 10000 });
-    // if (this.showRegistration) {
-    //   this.showRegistration = false;
-    // } else {
-    //   this.showRegistration = true;
-    // }
+    if (this.showRegistration) {
+      this.showRegistration = false;
+    } else {
+      this.showRegistration = true;
+    }
   }
 }

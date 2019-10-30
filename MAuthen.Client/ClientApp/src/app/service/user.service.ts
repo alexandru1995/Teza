@@ -12,7 +12,7 @@ export class UserService {
     private http: HttpClient
   ) { }
 
-  signUp(user: User): Observable<User> {
+  add(user: User): Observable<User> {
     return this.http.post<User>("https://localhost:5001/user",user);
   }
 }

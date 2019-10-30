@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
 using MAuthen.Api.Models;
+using MAuthen.Api.Services.Interfaces;
 
 namespace MAuthen.Api.Controllers
 {
@@ -11,9 +12,11 @@ namespace MAuthen.Api.Controllers
     public class UserController : Controller
     {
         private readonly IUserRepository _user;
-        public UserController(IUserRepository user)
+        private readonly IPasswordProcessor _processor;
+        public UserController(IUserRepository user, IPasswordProcessor processor)
         {
             _user = user;
+            _processor = processor;
         }
         [HttpGet]
         public IActionResult Get()
@@ -40,7 +43,7 @@ namespace MAuthen.Api.Controllers
                     Email = model.Email,
                     PhoneNumber = model.PhoneNumber,
                     Secret = new Secret{
-                        Password = model.Password
+                        Password = _processor.Hash(model.Password)
                     }
                     
                 });
