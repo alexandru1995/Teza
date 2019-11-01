@@ -12,10 +12,12 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json;
 
 namespace MAuthen.Api
 {
@@ -74,8 +76,16 @@ namespace MAuthen.Api
                     };
                 });
 
-            services.AddCors();
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2).AddJsonOptions(options =>
+            {
+                options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+            });
+
+            // In production, the Angular files will be served from this directory
+            services.AddSpaStaticFiles(configuration =>
+            {
+                configuration.RootPath = "ClientApp/dist";
+            });
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IRoleRepository, RoleRepository>();
             services.AddScoped<ISecretRepository, SecretRepository>();
@@ -97,14 +107,30 @@ namespace MAuthen.Api
             }
 
             app.UseHttpsRedirection();
-            app.UseCors(options=> options.WithOrigins("http://localhost:4200")
-                .AllowAnyMethod()
-                .AllowAnyHeader()
-                .AllowAnyOrigin()
-            );
+            app.UseStaticFiles();
+            app.UseSpaStaticFiles();
+
             app.UseAuthentication();
             app.UseMiddleware<TokenManagerMiddleware>();
-            app.UseMvc();
+            app.UseMvc(routes =>
+            {
+                routes.MapRoute(
+                    name: "default",
+                    template: "{controller}/{action=Index}/{id?}");
+            });
+
+            app.UseSpa(spa =>
+            {
+                // To learn more about options for serving an Angular SPA from ASP.NET Core,
+                // see https://go.microsoft.com/fwlink/?linkid=864501
+
+                spa.Options.SourcePath = "ClientApp";
+
+                if (env.IsDevelopment())
+                {
+                    spa.UseAngularCliServer(npmScript: "start");
+                }
+            });
         }
     }
 }

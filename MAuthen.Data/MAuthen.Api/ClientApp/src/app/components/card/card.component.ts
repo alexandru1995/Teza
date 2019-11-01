@@ -1,16 +1,19 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, Output, EventEmitter } from '@angular/core';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { AuthorizationService } from 'src/app/service/authorization.service';
-import { CompileShallowModuleMetadata } from '@angular/compiler';
+import { fadeAnimation } from '../animation';
+import { DataService } from 'src/app/service/data.service';
+import { User } from 'src/app/models/user';
 
 @Component({
     selector: 'card',
     templateUrl: './card.component.html',
     styleUrls: ['./card.component.css'],
+    animations: [fadeAnimation]
 })
 export class CardComponent {
 
-    @Output() switch = new EventEmitter<boolean>()
+    @Output() switch = new EventEmitter<boolean>();
 
     loginForm: FormGroup;
     error: string;
@@ -18,7 +21,8 @@ export class CardComponent {
 
     constructor(
         private formBuilder: FormBuilder,
-        private authorization: AuthorizationService
+        private authorization: AuthorizationService,
+        private data: DataService
     ) {
         this.loginForm = this.formBuilder.group({
             email: ['', [Validators.required, Validators.email]],
@@ -26,27 +30,31 @@ export class CardComponent {
         });
     }
     get f() { return this.loginForm.controls; }
+
     onSubmit() {
         this.submitted = true;
         if (this.loginForm.invalid) {
             return;
         }
+        
         this.authorization.login(this.loginForm.value).subscribe(
             data => {
-                console.log(data)
+                this.data.changeMessage(data);
+                localStorage.setItem("user", JSON.stringify(data))
             },
             error => {
                 switch (error.status) {
                     case 401:
                         this.error = error.error;
-                        break;
-                    default:
+                        setTimeout(()=>this.hidenError(), 3000);
                         break;
                 }
-                console.log(error)
-                //this.error = error.error;
             }
         )
+    }
+
+    hidenError(){
+        this.error = null
     }
 
     swichToTegistration() {

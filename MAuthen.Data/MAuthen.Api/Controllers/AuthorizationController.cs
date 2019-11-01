@@ -5,6 +5,7 @@ using MAuthen.Domain.Repositories.Interface;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore.Internal;
 using Newtonsoft.Json;
 
 namespace MAuthen.Api.Controllers
@@ -34,7 +35,7 @@ namespace MAuthen.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> SignIn([FromBody] UserSimpleModel model)
+        public async Task<IActionResult> SignIn([FromBody]UserSimpleModel model)
         {
             if (!ModelState.IsValid)
             {
@@ -51,7 +52,7 @@ namespace MAuthen.Api.Controllers
                 return Unauthorized("Invalid user email or password");
             }
 
-            
+
             //TODO generate jwt
             return Json((UserModel)user);
         }

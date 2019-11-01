@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ToastService } from 'src/app/components/toast/toast.service';
+import { AuthorizationService } from 'src/app/service/authorization.service';
 
 @Component({
   selector: 'app-home',
@@ -9,13 +9,9 @@ import { ToastService } from 'src/app/components/toast/toast.service';
 export class HomeComponent implements OnInit {
 
   showRegistration: boolean = false;
-  constructor(public toastService: ToastService) { }
+  constructor() { }
 
   ngOnInit() {
-  }
-
-  registrationError(error){
-    this.toastService.show(error.message);
   }
 
   changeToRedgistration($event) {

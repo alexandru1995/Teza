@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule, ErrorHandler } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NavbarComponent } from './navbar/navbar.component';
 import { CardComponent } from './card/card.component';
@@ -6,8 +6,7 @@ import { RegistrationCardComponent } from './registration-card/registration-card
 import { ReactiveFormsModule } from '@angular/forms';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ToastComponent } from './toast/toast.component';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-
+import { RouterModule } from '@angular/router';
 
 @NgModule({
   declarations: [
@@ -24,6 +23,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
   ],
   imports: [
     ReactiveFormsModule,
+    RouterModule,
     NgbModule,
     CommonModule
   ]
