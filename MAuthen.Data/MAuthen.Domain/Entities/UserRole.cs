@@ -4,7 +4,6 @@ using System.Text;
 
 namespace MAuthen.Domain.Models
 {
-    
     public class UserRole
     {
         private DateTime _createdOn;

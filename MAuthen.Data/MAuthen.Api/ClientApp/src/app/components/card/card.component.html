@@ -5,7 +5,8 @@
     </div>
     <form class="mb-3" [formGroup]="loginForm">
         <div class="card-body">
-            <div class="row" @fadeAnimation class="text-danger p-2" *ngIf="error" ><i class="fas fa-exclamation-circle pr-1 text-danger"></i> {{error}}</div>
+            <div class="row" @fadeAnimation class="text-danger p-2" *ngIf="error"><i
+                    class="fas fa-exclamation-circle pr-1 text-danger"></i> {{error}}</div>
             <div class="input-group mb-3">
                 <div class="input-group-prepend">
                     <span class="input-group-text">@</span>
@@ -21,7 +22,8 @@
                 <div class="input-group-prepend">
                     <span class="input-group-text"><i class="fas fa-key"></i></span>
                 </div>
-                <input formControlName="password" type="password" autocomplete="password" class="form-control" placeholder="Password"
+                <input formControlName="password" type="password" autocomplete="password" class="form-control"
+                    placeholder="Password"
                     [ngClass]="{ 'is-invalid': f.password.errors && (loginForm.controls['password'].touched || submitted)}">
                 <div *ngIf="f.password.errors" class="invalid-feedback ml-3">
                     <div *ngIf="f.password.errors.required">Password is required</div>

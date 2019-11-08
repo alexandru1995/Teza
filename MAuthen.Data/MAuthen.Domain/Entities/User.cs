@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using MAuthen.Domain.Entities;
 
 namespace MAuthen.Domain.Models
 {
@@ -8,8 +9,10 @@ namespace MAuthen.Domain.Models
         public Guid Id { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
-        public string Email { get; set; }
-        public string PhoneNumber { get; set; }
+        public bool Gender { get; set; }
+        public DateTime Birthday { get; set; }
+        public ICollection<Contacts> Contacts { get; set; }
+        public string UserName { get; set; }
         public bool Blocked { get; set; }
         public DateTime BlockedTime { get; set; }
         public Secret Secret { get; set; }

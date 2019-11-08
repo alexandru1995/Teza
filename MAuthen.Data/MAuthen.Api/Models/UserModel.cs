@@ -1,8 +1,8 @@
-﻿using System;
+﻿using MAuthen.Api.Models.Contacts;
+using MAuthen.Domain.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
-using MAuthen.Domain.Models;
 
 namespace MAuthen.Api.Models
 {
@@ -10,8 +10,10 @@ namespace MAuthen.Api.Models
     {
         public string FirstName { get; set; }
         public string LastName { get; set; }
-        public string Email { get; set; }
-        public string PhoneNumber { get; set; }
+        public bool Gender { get; set; }
+        public string Birthday { get; set; }
+        public string UserName { get; set; }
+        public IList<ContactModel> Contacts { get; set; }
         public string Password { get; set; }
 
         public static implicit operator UserModel(User user)
@@ -20,8 +22,33 @@ namespace MAuthen.Api.Models
             {
                 FirstName = user.FirstName,
                 LastName = user.LastName,
-                Email = user.Email,
-                PhoneNumber = user.PhoneNumber
+                Contacts = user.Contacts.Select(u => new ContactModel
+                {
+                    Email = u.Email,
+                    Phone = u.Phone,
+                    Id = u.Id
+                }).ToList(),
+                UserName = user.UserName,
+                Birthday = user.Birthday.ToString("MM/dd/yyyy"),
+                Gender = user.Gender
+            };
+        }
+        public static implicit operator User(UserModel user)
+        {
+            return new User
+            {
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                Contacts = user.Contacts.Select(u => new Domain.Entities.Contacts
+                {
+                    Email = u.Email,
+                    Phone = u.Phone,
+                    Id =  u.Id
+                }).ToList(),
+                Secret = new Secret{Password = user.Password},
+                UserName = user.UserName,
+                Birthday = DateTime.Parse(user.Birthday),
+                Gender = user.Gender
             };
         }
     }

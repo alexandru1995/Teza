@@ -1,7 +1,11 @@
+import { Contact } from './contact.model';
+
 export class User{
+    Id: string;
     FirstName: string;
     LastName: string;
-    Email: string;
-    PhoneNumber: string;
+    UserName: string;
+    Contacts: Contact;
+    Birthday: string;
     Password: string;
 }

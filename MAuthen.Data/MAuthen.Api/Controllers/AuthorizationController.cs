@@ -41,15 +41,15 @@ namespace MAuthen.Api.Controllers
             {
                 return BadRequest("Invalid request");
             }
-            var user = await _userRepository.SignIn(model.Email, model.Password);
+            var user = await _userRepository.SignIn(model.Username, model.Password);
             if (user == null)
             {
-                return Unauthorized("Invalid user email or password");
+                return Unauthorized("Invalid username or password");
             }
             var passwordValidation = _processor.Check(user.Secret.Password, model.Password);
             if (!passwordValidation.Verified)
             {
-                return Unauthorized("Invalid user email or password");
+                return Unauthorized("Invalid username or password");
             }
 
 

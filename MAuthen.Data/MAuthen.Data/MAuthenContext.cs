@@ -1,4 +1,5 @@
-﻿using MAuthen.Domain.Models;
+﻿using MAuthen.Domain.Entities;
+using MAuthen.Domain.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace MAuthen.Data
@@ -12,6 +13,7 @@ namespace MAuthen.Data
         public DbSet<User> Users { get; set; }
         public DbSet<Role> Roles { get; set; }
         public DbSet<Secret> Secrets { get; set; }
+        public DbSet<Contacts> Contacts { get; set; }
         public DbSet<Service> Services { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -65,8 +67,15 @@ namespace MAuthen.Data
                 entity.HasOne(u => u.Secret)
                     .WithOne(s => s.User)
                     .HasForeignKey<Secret>(u => u.IdUser);
-                entity.HasIndex(u => u.Email).IsUnique();
-                entity.HasIndex(u => u.PhoneNumber).IsUnique();
+                entity.HasIndex(u => u.UserName).IsUnique();
+            });
+
+            modelBuilder.Entity<Contacts>(entity =>
+            {
+                entity.HasIndex(c => c.Email)
+                    .IsUnique();
+                entity.HasIndex(c => c.Phone)
+                    .IsUnique();
             });
 
             modelBuilder.Entity<Service>(entity =>

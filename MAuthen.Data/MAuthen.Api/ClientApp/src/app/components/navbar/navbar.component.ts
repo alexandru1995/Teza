@@ -13,14 +13,14 @@ export class NavbarComponent implements OnInit {
   user: User;
 
   constructor(
-    private data: DataService,
-    private readonly router: Router) { }
+    private data: DataService
+    ) { }
   
 
     menuItems = [
     { name: "Home", link: "/" },
     { name: "Services", link: "/" },
-    { name: "Account", link: "/" }
+    { name: "Account", link: "/account" }
   ];
 
   ngOnInit() {

@@ -1,0 +1,7 @@
+<div class="input-group">
+    <input class="form-control" placeholder="Birthdate" name="dp" [(ngModel)]="model" (click)="d.toggle()" 
+    ngbDatepicker #d="ngbDatepicker" (dateSelect)="onDateSelect($event)" autocomplete="off">
+    <div class="input-group-append">
+        <button #buttonEl class="btn btn-outline-secondary calendar" (click)="d.toggle()" type="button"></button>
+    </div>
+</div>

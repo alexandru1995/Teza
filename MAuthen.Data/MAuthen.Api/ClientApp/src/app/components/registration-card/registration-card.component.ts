@@ -2,6 +2,9 @@ import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
 import { phoneNumberValidator, passwordComplexity } from 'src/app/validators/phone-number';
 import { UserService } from 'src/app/service/user.service';
+import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
+import { User } from 'src/app/models/user';
+import { Contact } from 'src/app/models/contact.model';
 
 @Component({
     selector: 'registration-card',
@@ -15,6 +18,8 @@ export class RegistrationCardComponent {
 
     registrationForm: FormGroup;
     submitted = false;
+    
+  model: NgbDateStruct;
 
     constructor(
         private formBuilder: FormBuilder,
@@ -23,12 +28,15 @@ export class RegistrationCardComponent {
         this.registrationForm = this.formBuilder.group({
             firstName: ['', Validators.required],
             lastName: ['', Validators.required],
+            username: ['', Validators.required],
+            birthday: ['', Validators.required],
             email: ['', [Validators.required, Validators.email]],
             phoneNumber: ['', [Validators.required, phoneNumberValidator]],
             password: ['', [Validators.required, passwordComplexity]],
             confirmPassword: ['', Validators.required]
         }, { validator: this.checkPasswords });
     }
+
 
     get f() { return this.registrationForm.controls; }
 
@@ -45,11 +53,22 @@ export class RegistrationCardComponent {
         if (this.registrationForm.invalid) {
             return;
         }
-        this.user.add(this.registrationForm.value).subscribe(
+        var form = this.registrationForm.value;
+        var user = new User();
+        
+        user.FirstName = form.firstName;
+        user.LastName = form.lastName;
+        user.UserName = form.username;
+        //user.Contacts = {Email :form.email, Id: null, Phone: form.phoneNumber};
+        user.Birthday = form.birthday.month + "/" + form.birthday.day + "/" + form.birthday.year;
+        user.Password = form.password;
+        console.log(user)
+        this.user.add(user).subscribe(
         data => {
             console.log(data)
         },
         error => {
+            //TODO set error to username
             const email = this.registrationForm.controls['email']
             email.setErrors({
                 fildExist:

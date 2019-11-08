@@ -2,9 +2,11 @@
 using MAuthen.Domain.Repositories.Interface;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using MAuthen.Api.Models;
 using MAuthen.Api.Services.Interfaces;
+using MAuthen.Domain.Entities;
 
 namespace MAuthen.Api.Controllers
 {
@@ -33,26 +35,20 @@ namespace MAuthen.Api.Controllers
         [HttpPost]
         public async Task<IActionResult> Add([FromBody]UserModel model)
         {
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
             try
             {
-                await _user.Create(new User
-                {
-                    FirstName = model.FirstName,
-                    LastName = model.LastName,
-                    Blocked = false,
-                    Email = model.Email,
-                    PhoneNumber = model.PhoneNumber,
-                    Secret = new Secret{
-                        Password = _processor.Hash(model.Password)
-                    }
-                    
-                });
+                await _user.Create(model);
             }
             catch(Exception err)
             {
                 switch (err.GetType().Name)
                 {
-                    case "DbUpdateException": return StatusCode(409,"Error This email alredy exist.");
+                    case "DbUpdateException": return StatusCode(409,"Error This email already exist.");
                 }
             }
             

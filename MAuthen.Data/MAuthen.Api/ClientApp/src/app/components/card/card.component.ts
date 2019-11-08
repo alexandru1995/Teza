@@ -3,7 +3,7 @@ import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { AuthorizationService } from 'src/app/service/authorization.service';
 import { fadeAnimation } from '../animation';
 import { DataService } from 'src/app/service/data.service';
-import { User } from 'src/app/models/user';
+import { Router } from '@angular/router';
 
 @Component({
     selector: 'card',
@@ -22,7 +22,8 @@ export class CardComponent {
     constructor(
         private formBuilder: FormBuilder,
         private authorization: AuthorizationService,
-        private data: DataService
+        private data: DataService,
+        private readonly router: Router
     ) {
         this.loginForm = this.formBuilder.group({
             email: ['', [Validators.required, Validators.email]],
@@ -40,7 +41,9 @@ export class CardComponent {
         this.authorization.login(this.loginForm.value).subscribe(
             data => {
                 this.data.changeMessage(data);
-                localStorage.setItem("user", JSON.stringify(data))
+                localStorage.setItem("user", JSON.stringify(data));
+                this.router.navigateByUrl('/account');
+
             },
             error => {
                 switch (error.status) {

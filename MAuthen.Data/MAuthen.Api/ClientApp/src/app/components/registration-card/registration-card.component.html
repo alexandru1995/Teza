@@ -1,4 +1,4 @@
-<div class="card" style="min-width: 18rem;">
+<div class="card">
     <div class="p-2" style="text-align: center">
         <img src="assets/img/new-user.jpg" style="height: 4rem; width: 4rem;"
             class="card-img-top rounded-circle img-thumbnail">
@@ -6,7 +6,7 @@
     <form class="mb-3" [formGroup]="registrationForm" (ngSubmit)="onSubmit()">
         <div class="card-body">
             <div class="row">
-                <div class="col">
+                <div class="col-md-6">
                     <div class="input-group mb-3">
                         <div class="input-group-prepend">
                             <span class="input-group-text"><i class="fas fa-user-tie"></i></span>
@@ -18,7 +18,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col">
+                <div class="col-md-6 mb-3">
                     <div class="input-group mb-3">
                         <div class="input-group-prepend">
                             <span class="input-group-text"><i class="fas fa-user-tie"></i></span>
@@ -31,9 +31,41 @@
                     </div>
                 </div>
             </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">
+                                <i class="far fa-user-circle"></i>
+                            </span>
+                        </div>
+                        <input formControlName="username" type="text" class="form-control" placeholder="Nick Name"
+                            [ngClass]="{ 'is-invalid': f.username.errors && (registrationForm.controls['username'].touched || submitted)}">
+                        <div *ngIf="f.username.errors" class="invalid-feedback ml-3">
+                            <div *ngIf="f.username.errors.required">Nick Name is required</div>
+                            <div *ngIf="f.username.errors.fildExist">{{f.username.errors.fildExist.message}}</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <div class="input-group">
+                        <input formControlName="birthday" class="form-control" placeholder="Birthdate"
+                            (click)="d.toggle()" ngbDatepicker #d="ngbDatepicker" autocomplete="off"
+                            [ngClass]="{ 'is-invalid': f.birthday.errors && (registrationForm.controls['birthday'].touched || submitted)}">
+                        <div class="input-group-append">
+                            <button #buttonEl class="btn btn-outline-secondary calendar" (click)="d.toggle()"
+                                type="button"></button>
+                        </div>
+                        <div *ngIf="f.birthday.errors" class="invalid-feedback ml-3">
+                            <div *ngIf="f.birthday.errors.required">Birthday is required</div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
             <div class="input-group mb-3">
                 <div class="input-group-prepend">
-                    <span class="input-group-text" id="username">
+                    <span class="input-group-text">
                         <i class="fas fa-phone-alt"></i>
                     </span>
                 </div>
@@ -60,7 +92,8 @@
                 <div class="input-group-prepend">
                     <span class="input-group-text"><i class="fas fa-key"></i></span>
                 </div>
-                <input formControlName="password" autocomplete="password" type="password" class="form-control" placeholder="Password"
+                <input formControlName="password" autocomplete="password" type="password" class="form-control"
+                    placeholder="Password"
                     [ngClass]="{ 'is-invalid': f.password.errors && (registrationForm.controls['password'].touched || submitted)}">
                 <div *ngIf="f.password.errors" class="invalid-feedback ml-3">
                     <div *ngIf="f.password.errors.invalidPassword">{{f.password.errors.invalidPassword.message}} </div>
