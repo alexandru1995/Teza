@@ -18,7 +18,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-6 mb-3">
+                <div class="col-md-6">
                     <div class="input-group mb-3">
                         <div class="input-group-prepend">
                             <span class="input-group-text"><i class="fas fa-user-tie"></i></span>
@@ -60,9 +60,9 @@
                             <div *ngIf="f.birthday.errors.required">Birthday is required</div>
                         </div>
                     </div>
-
                 </div>
             </div>
+
             <div class="input-group mb-3">
                 <div class="input-group-prepend">
                     <span class="input-group-text">
@@ -76,6 +76,18 @@
                     <div *ngIf="f.phoneNumber.errors.invalidNumber">Phone number is not valid</div>
                 </div>
             </div>
+            <!-- ================ -->
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <label class="input-group-text"><i class="fas fa-venus-mars"></i></label>
+                </div>
+                <select class="custom-select">
+                    <option selected palc>Choose Gender</option>
+                    <option value="1">One</option>
+                    <option value="2">Two</option>
+                </select>
+            </div>
+            <!-- ================ -->
             <div class="input-group mb-3">
                 <div class="input-group-prepend">
                     <span class="input-group-text">@</span>

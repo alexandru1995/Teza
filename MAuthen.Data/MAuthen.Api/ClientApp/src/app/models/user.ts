@@ -5,7 +5,8 @@ export class User{
     FirstName: string;
     LastName: string;
     UserName: string;
-    Contacts: Contact;
+    Contacts: Contact[];
     Birthday: string;
     Password: string;
+    Gender: boolean = true;
 }

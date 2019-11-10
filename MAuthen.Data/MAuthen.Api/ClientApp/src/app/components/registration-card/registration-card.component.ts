@@ -59,9 +59,10 @@ export class RegistrationCardComponent {
         user.FirstName = form.firstName;
         user.LastName = form.lastName;
         user.UserName = form.username;
-        //user.Contacts = {Email :form.email, Id: null, Phone: form.phoneNumber};
+        user.Contacts = [{Email :form.email, Phone: form.phoneNumber}];
         user.Birthday = form.birthday.month + "/" + form.birthday.day + "/" + form.birthday.year;
         user.Password = form.password;
+        user.Gender = true;
         console.log(user)
         this.user.add(user).subscribe(
         data => {

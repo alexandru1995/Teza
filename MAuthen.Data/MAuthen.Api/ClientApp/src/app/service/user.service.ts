@@ -13,6 +13,7 @@ export class UserService {
   ) { }
 
   add(user: User): Observable<User> {
+    console.log(user)
     return this.http.post<User>("https://localhost:5001/user",user);
   }
 }
