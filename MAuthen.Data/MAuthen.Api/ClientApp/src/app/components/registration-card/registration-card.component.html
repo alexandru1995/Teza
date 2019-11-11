@@ -81,11 +81,17 @@
                 <div class="input-group-prepend">
                     <label class="input-group-text"><i class="fas fa-venus-mars"></i></label>
                 </div>
-                <select class="custom-select">
-                    <option selected palc>Choose Gender</option>
-                    <option value="1">One</option>
-                    <option value="2">Two</option>
+                <select class="custom-select" formControlName="gender"
+                [ngClass]="{ 'is-invalid': f.gender.errors && (registrationForm.controls['gender'].touched || submitted)}">
+                    <!-- <option selected>Choose Gender</option> -->
+                    <option value='' disabled>Choose Gender</option>
+                    <option value='true'>Male</option>
+                    <option value='false'>Female</option>
                 </select>
+                <div *ngIf="f.gender.errors" class="invalid-feedback ml-3">
+                    <div *ngIf="f.gender.errors.required">Gender is required</div>
+                </div>
+
             </div>
             <!-- ================ -->
             <div class="input-group mb-3">

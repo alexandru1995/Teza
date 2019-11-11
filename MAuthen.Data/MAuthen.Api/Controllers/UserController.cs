@@ -42,6 +42,8 @@ namespace MAuthen.Api.Controllers
             }
             try
             {
+
+                model.Password = _processor.Hash(model.Password);
                 await _user.Create(model);
             }
             catch(Exception err)

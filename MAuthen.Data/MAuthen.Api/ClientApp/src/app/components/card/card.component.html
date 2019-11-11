@@ -11,11 +11,10 @@
                 <div class="input-group-prepend">
                     <span class="input-group-text">@</span>
                 </div>
-                <input formControlName="email" type="text" class="form-control" placeholder="Email"
-                    [ngClass]="{ 'is-invalid': f.email.errors && (loginForm.controls['email'].touched || submitted)}">
-                <div *ngIf="f.email.errors" class="invalid-feedback ml-3">
-                    <div *ngIf="f.email.errors.required">Email is required</div>
-                    <div *ngIf="f.email.errors.email">Email is not valid</div>
+                <input formControlName="username" type="text" class="form-control" placeholder="User Name"
+                    [ngClass]="{ 'is-invalid': f.username.errors && (loginForm.controls['username'].touched || submitted)}">
+                <div *ngIf="f.username.errors" class="invalid-feedback ml-3">
+                    <div *ngIf="f.username.errors.required">User Name is required</div>
                 </div>
             </div>
             <div class="input-group mb-3">

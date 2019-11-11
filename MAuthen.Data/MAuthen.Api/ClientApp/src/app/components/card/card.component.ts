@@ -26,7 +26,7 @@ export class CardComponent {
         private readonly router: Router
     ) {
         this.loginForm = this.formBuilder.group({
-            email: ['', [Validators.required, Validators.email]],
+            username: ['', [Validators.required]],
             password: ['', [Validators.required]]
         });
     }

@@ -18,6 +18,7 @@ export class RegistrationCardComponent {
 
     registrationForm: FormGroup;
     submitted = false;
+    gender:boolean;
     
   model: NgbDateStruct;
 
@@ -33,7 +34,8 @@ export class RegistrationCardComponent {
             email: ['', [Validators.required, Validators.email]],
             phoneNumber: ['', [Validators.required, phoneNumberValidator]],
             password: ['', [Validators.required, passwordComplexity]],
-            confirmPassword: ['', Validators.required]
+            confirmPassword: ['', Validators.required],
+            gender:['', Validators.required]
         }, { validator: this.checkPasswords });
     }
 
@@ -62,7 +64,7 @@ export class RegistrationCardComponent {
         user.Contacts = [{Email :form.email, Phone: form.phoneNumber}];
         user.Birthday = form.birthday.month + "/" + form.birthday.day + "/" + form.birthday.year;
         user.Password = form.password;
-        user.Gender = true;
+        user.Gender = form.gender;
         console.log(user)
         this.user.add(user).subscribe(
         data => {
