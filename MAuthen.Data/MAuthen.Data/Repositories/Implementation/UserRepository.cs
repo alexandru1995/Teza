@@ -13,9 +13,21 @@ namespace MAuthen.Data.Repositories.Implementation
         {
             _dbContext = context;
         }
-        public async Task<User> SignIn(string username, string password)
+        public async Task<UserRole> SignIn(string username)
         {
-            return await _dbContext.Users.Include(u => u.Secret).Where(u => u.UserName == username).Include(c => c.Contacts).FirstOrDefaultAsync();
+            return _dbContext.UserRoles
+                .Include(u => u.User)
+                    .ThenInclude(c => c.Contacts)
+                    .Include(u => u.User.Secret)
+                .Include(r => r.Role)
+                .Where(u => u.User.UserName == username).FirstOrDefault();
         }
+
+        public async Task<User> Test(string username)
+        {
+
+            return null;
+        }
+
     }
 }

@@ -15,6 +15,9 @@ namespace MAuthen.Data
         public DbSet<Secret> Secrets { get; set; }
         public DbSet<Contacts> Contacts { get; set; }
         public DbSet<Service> Services { get; set; }
+        public DbSet<UserRole> UserRoles { get; set; }
+        public DbSet<UserService> UserServices { get; set; }
+        public DbSet<ServiceRole> ServiceRoles { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

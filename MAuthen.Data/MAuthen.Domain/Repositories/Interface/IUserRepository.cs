@@ -5,6 +5,6 @@ namespace MAuthen.Domain.Repositories.Interface
 {
     public interface IUserRepository : IRepositoryBase<User>
     {
-        Task<User> SignIn(string email, string password);
+        Task<UserRole> SignIn(string username);
     }
 }
