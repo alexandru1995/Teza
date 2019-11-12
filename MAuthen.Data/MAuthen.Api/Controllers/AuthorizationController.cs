@@ -7,6 +7,8 @@ using Microsoft.Extensions.Configuration;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore.Internal;
 using Newtonsoft.Json;
+using System.Collections.Generic;
+using System.Security.Claims;
 
 namespace MAuthen.Api.Controllers
 {
@@ -35,26 +37,45 @@ namespace MAuthen.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> SignIn([FromBody]UserSimpleModel model)
+        public async Task<IActionResult> SignIn([FromBody]UserSimpleModel model, [FromServices] IAccountService accountService)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest("Invalid request");
             }
-            var user = await _userRepository.SignIn(model.Username, model.Password);
-            if (user == null)
+            var query = await _userRepository.SignIn(model.Username);
+            var user = query.User;
+            if (query == null)
             {
                 return Unauthorized("Invalid username or password");
             }
-            var passwordValidation = _processor.Check(user.Secret.Password, model.Password);
+            var passwordValidation = _processor.Check(query.User.Secret.Password, model.Password);
             if (!passwordValidation.Verified)
             {
                 return Unauthorized("Invalid username or password");
             }
+            var clames = new List<Claim>();
+            clames.Add(new Claim("FirstName", user.FirstName));
+            clames.Add(new Claim("LasrName", user.LastName));
+            clames.Add(new Claim("UserName", user.UserName));
+            clames.Add(new Claim("Birthday", user.Birthday.ToString()));
+            foreach (var role in user.UserRoles)
+            {
+                var test = role.Role.Name;
+                clames.Add(new Claim(ClaimTypes.Role, role.Role.Name));
+            }
+            clames.Add(new Claim("Gender", user.Gender ? "Male" : "Female"));
+            foreach (var contact in user.Contacts)
+            {
+                clames.Add(new Claim("Email", contact.Email));
+                clames.Add(new Claim("PhoneNumber", contact.Phone));
+            }
 
+
+            return Json(accountService.SignIn(clames));
 
             //TODO generate jwt
-            return Json((UserModel)user);
+            //return Json((UserModel)user);
         }
     }
 }
