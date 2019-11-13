@@ -1,14 +1,11 @@
-﻿using System;
-using MAuthen.Api.Models;
+﻿using MAuthen.Api.Models;
 using MAuthen.Api.Services.Interfaces;
 using MAuthen.Domain.Repositories.Interface;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore.Internal;
-using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace MAuthen.Api.Controllers
 {
@@ -16,21 +13,16 @@ namespace MAuthen.Api.Controllers
     [ApiController]
     public class AuthorizationController : Controller
     {
-        private readonly IAccountService _accountService;
-        private readonly ITokenManager _tokenManager;
         private readonly IUserRepository _userRepository;
         private readonly IPasswordProcessor _processor;
 
         public IConfiguration _configuration { get; }
 
-        public AuthorizationController(IAccountService accountService,
-            ITokenManager tokenManager,
+        public AuthorizationController(
             IConfiguration configuration,
             IUserRepository user,
             IPasswordProcessor processor)
         {
-            _accountService = accountService;
-            _tokenManager = tokenManager;
             _configuration = configuration;
             _userRepository = user;
             _processor = processor;
@@ -45,7 +37,7 @@ namespace MAuthen.Api.Controllers
             }
             var query = await _userRepository.SignIn(model.Username);
             var user = query.User;
-            if (query == null)
+            if (user == null)
             {
                 return Unauthorized("Invalid username or password");
             }
@@ -54,11 +46,13 @@ namespace MAuthen.Api.Controllers
             {
                 return Unauthorized("Invalid username or password");
             }
-            var clames = new List<Claim>();
-            clames.Add(new Claim("FirstName", user.FirstName));
-            clames.Add(new Claim("LasrName", user.LastName));
-            clames.Add(new Claim("UserName", user.UserName));
-            clames.Add(new Claim("Birthday", user.Birthday.ToString()));
+            var clames = new List<Claim>
+            {
+                new Claim("FirstName", user.FirstName),
+                new Claim("LasrName", user.LastName),
+                new Claim("UserName", user.UserName),
+                new Claim("Birthday", user.Birthday.ToString())
+            };
             foreach (var role in user.UserRoles)
             {
                 var test = role.Role.Name;
@@ -70,12 +64,7 @@ namespace MAuthen.Api.Controllers
                 clames.Add(new Claim("Email", contact.Email));
                 clames.Add(new Claim("PhoneNumber", contact.Phone));
             }
-
-
             return Json(accountService.SignIn(clames));
-
-            //TODO generate jwt
-            //return Json((UserModel)user);
         }
     }
 }

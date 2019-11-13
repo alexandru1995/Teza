@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using MAuthen.Api.Models;
 using MAuthen.Api.Services.Interfaces;
 using MAuthen.Domain.Entities;
+using Microsoft.AspNetCore.Authorization;
 
 namespace MAuthen.Api.Controllers
 {
@@ -20,10 +21,18 @@ namespace MAuthen.Api.Controllers
             _user = user;
             _processor = processor;
         }
+        [HttpGet("users")]
+        public IActionResult GetAll()
+        {
+            return Json(_user.GetAll());
+        }
+
+        [Authorize]
         [HttpGet]
         public IActionResult Get()
         {
-            return Json(_user.GetAll());
+            var user = User.Claims;
+            return Json(User.Claims);
         }
 
         [HttpGet("{id}")]
