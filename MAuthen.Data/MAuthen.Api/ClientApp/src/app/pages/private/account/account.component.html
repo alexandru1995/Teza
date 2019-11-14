@@ -1,31 +1,43 @@
+<div class="container bg-light">
+    <div class="row ml-4 pt-4 mt-3">
+        <h2>Profile</h2>
+    </div>
     <div class="container bg-light">
-        <div class="row ml-4 pt-4 mt-3">
-            <h2>Profile</h2>
-        </div>
         <hr class="m-0">
-        <div class="row ml-4 pt-4">
-            <div class="col-sm-4" style="border-style: solid;border-color: red;">
-                <strong>Name</strong>
+        <div *ngIf="user">
+            <div class="row ml-4 pt-4">
+                <div class="col-sm-4">
+                    <strong>First Name</strong>
+                </div>
+                <div class="col-sm-3">
+                    {{ user.firstName }}
+                </div>
             </div>
-            <div class="col-sm-3" style="border-style: solid;border-color: blue;"></div>
-        </div>
-        <div class="row ml-4 pt-4">
-            <div class="col-sm-4" style="border-style: solid;border-color: red;">
-                <strong>Name</strong>
+            <div class="row ml-4 pt-2">
+                <div class="col-sm-4">
+                    <strong>Last Name</strong>
+                </div>
+                <div class="col-sm-3">
+                    {{ user.lastName }}
+                </div>
             </div>
-            <div class="col-sm-3" style="border-style: solid;border-color: rgb(51, 116, 57);"></div>
-        </div>
-        <div class="row ml-4 pt-4">
-            <div class="col-sm-4" style="border-style: solid;border-color: red;">
-                <strong>Name</strong>
+            <div class="row ml-4 pt-2">
+                <div class="col-sm-4">
+                    <strong>Gender</strong>
+                </div>
+                <div class="col-sm-3">
+                    <div *ngIf="user.gender">Male</div>
+                    <div *ngIf="!user.gender">Female</div>
+                </div>
             </div>
-            <div class="col-sm-3" style="border-style: solid;border-color: blue;"></div>
-        </div>
-        <div class="row ml-4 pt-4">
-            <div class="col-sm-4" style="border-style: solid;border-color: red;">
-                <strong>Name</strong>
+            <div class="row ml-4 pt-2">
+                <div class="col-sm-4">
+                    <strong>Birthday</strong>
+                </div>
+                <div class="col-sm-3">
+                    {{birthDay |  date:'mediumDate'}}
+                </div>
             </div>
-            <div class="col-sm-3" style="border-style: solid;border-color: blue;"></div>
         </div>
         <div class="row ml-4 pt-4 mt-3">
             <h2>Contact</h2>

@@ -15,18 +15,12 @@ namespace MAuthen.Data.Repositories.Implementation
         }
         public async Task<UserRole> SignIn(string username)
         {
-            return _dbContext.UserRoles
+            return await _dbContext.UserRoles
                 .Include(u => u.User)
                     .ThenInclude(c => c.Contacts)
                     .Include(u => u.User.Secret)
                 .Include(r => r.Role)
-                .Where(u => u.User.UserName == username).FirstOrDefault();
-        }
-
-        public async Task<User> Test(string username)
-        {
-
-            return null;
+                .Where(u => u.User.UserName == username).FirstOrDefaultAsync();
         }
 
     }
