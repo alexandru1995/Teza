@@ -9,5 +9,4 @@ export class User{
     Birthday: string;
     Password: string;
     Gender: boolean = true;
-    token?: string;
 }

@@ -10,40 +10,31 @@ import { map } from 'rxjs/operators';
 })
 export class AuthorizationService {
 
-    private currentUserSubject: BehaviorSubject<User>;
-    public currentUser: Observable<User>;
+    private token: BehaviorSubject<User>;
+    public currentToken: Observable<User>;
 
     constructor(private http: HttpClient) {
-        this.currentUserSubject = new BehaviorSubject<User>(JSON.parse(localStorage.getItem('currentUser')));
-        this.currentUser = this.currentUserSubject.asObservable();
+        this.token = new BehaviorSubject<User>(JSON.parse(localStorage.getItem('Token')));
+        this.currentToken = this.token.asObservable();
     }
 
     public get currentUserValue(): User {
-        return this.currentUserSubject.value;
+        return this.token.value;
     }
 
     login(user: Login) {
         return this.http.post<any>(`Authorization/`, user)
-            .pipe(map(user => {
+            .pipe(map(token => {
                 // store user details and jwt token in local storage to keep user logged in between page refreshes
-                localStorage.setItem('currentUser', JSON.stringify(user));
-                this.currentUserSubject.next(user);
+                localStorage.setItem('Token', JSON.stringify(token));
+                this.token.next(token);
                 return user;
             }));
     }
 
     logout() {
         // remove user from local storage to log user out
-        localStorage.removeItem('currentUser');
-        this.currentUserSubject.next(null);
+        localStorage.removeItem('User');
+        this.token.next(null);
     }
-
-
-    // constructor(
-    //     private http: HttpClient
-    // ) { }
-
-    // login(user: Login): Observable<User> {
-    //     return this.http.post<User>("Authorization/", user)
-    // }
 }
