@@ -6,8 +6,10 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Threading.Tasks;
 
 namespace MAuthen.Api.Controllers
@@ -72,13 +74,35 @@ namespace MAuthen.Api.Controllers
                 clames.Add(new Claim("Email", contact.Email));
                 clames.Add(new Claim("PhoneNumber", contact.Phone));
             }
+            var refrash = GenerateRefreshToken();
+            _userRepository.UpdateRefreshToken(user.UserName, refrash);
 
             return Json(new AuthenticatedUserModel
             {
                 FirstName = user.FirstName,
                 LastName = user.LastName,
-                Token = accountService.SignIn(clames).AccessToken
+                Token = accountService.SignIn(clames).AccessToken,
+                RefreshToken = refrash
             });
+        }
+
+        [HttpPost("refresh")]
+        public async Task<IActionResult> RefreshToken([FromBody]JsonWebToken model, [FromServices] IAccountService accountService)
+        {
+            var principal = accountService.GetPrincipalFromExpiredToken(model.AccessToken);
+            var username = principal.Identity.Name;
+            var refresh = await _userRepository.GetRefreshToken(username);
+            if (refresh != null && model.RefreshToken == refresh )
+            {
+                var newRefreshToken = GenerateRefreshToken();
+                _userRepository.UpdateRefreshToken(principal.Identity.Name, newRefreshToken);
+                return Json(new AuthenticatedUserModel
+                {
+                    Token = accountService.SignIn(principal.Claims).AccessToken,
+                    RefreshToken = newRefreshToken
+                });
+            }
+            return Unauthorized();
         }
 
         [Authorize]
@@ -86,6 +110,15 @@ namespace MAuthen.Api.Controllers
         public async Task SignOut( [FromServices] IAccountService accountService)
         {
             await accountService.SignOut();
+        }
+        private string GenerateRefreshToken()
+        {
+            var randomNumber = new byte[32];
+            using (var rng = RandomNumberGenerator.Create())
+            {
+                rng.GetBytes(randomNumber);
+                return Convert.ToBase64String(randomNumber);
+            }
         }
     }
 }

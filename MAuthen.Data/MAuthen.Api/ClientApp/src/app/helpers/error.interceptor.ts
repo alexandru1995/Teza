@@ -8,15 +8,20 @@ import { Router } from '@angular/router';
 
 @Injectable()
 export class ErrorInterceptor implements HttpInterceptor {
-    constructor(private authenticationService: AuthorizationService,
+    constructor(
+        private authenticationService: AuthorizationService,
         private readonly router: Router) { }
 
     intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
         
         return next.handle(request).pipe(catchError(err => {
-            if (err.status === 401) {
-                this.authenticationService.logout();
-                this.router.navigate(['/']);
+             if (err.status === 401) {
+                if(err.headers.has('Token-Expired')){
+                    this.authenticationService.refresh()
+                }else{
+                    this.authenticationService.logout();
+                    this.router.navigate(['/']);
+                }
             }
             const error = err.error || err.statusText;
             return throwError(error);

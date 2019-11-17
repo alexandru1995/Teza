@@ -4,14 +4,16 @@ using MAuthen.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace MAuthen.Data.Migrations
 {
     [DbContext(typeof(MAuthenContext))]
-    partial class MAuthenContextModelSnapshot : ModelSnapshot
+    [Migration("20191117162522_addRefreshToken")]
+    partial class addRefreshToken
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -66,7 +68,7 @@ namespace MAuthen.Data.Migrations
 
                     b.Property<string>("Password");
 
-                    b.Property<string>("RefreshToken");
+                    b.Property<Guid>("RefreshToken");
 
                     b.Property<string>("TotpSecret");
 

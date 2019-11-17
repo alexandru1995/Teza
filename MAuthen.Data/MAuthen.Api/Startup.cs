@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Text;
+using System.Threading.Tasks;
 using MAuthen.Api.Models.Authentication;
 using MAuthen.Api.Services;
 using MAuthen.Api.Services.Implimentation;
@@ -44,14 +45,19 @@ namespace MAuthen.Api
 
             var jwtSection = Configuration.GetSection("jwt");
             var jwtOptions = new JwtOptions();
-            jwtSection.Bind(jwtOptions);
+            jwtSection.Bind(jwtOptions);            
 
-            services.AddAuthentication(auth =>
-                {
-                    auth.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                    auth.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-                })
-                .AddJwtBearer(options =>
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2).AddJsonOptions(options =>
+            {
+                options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+            });
+
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = "bearer";
+                options.DefaultChallengeScheme = "bearer";
+            })
+                .AddJwtBearer("bearer", options =>
                 {
                     options.TokenValidationParameters = new TokenValidationParameters()
                     {
@@ -73,12 +79,18 @@ namespace MAuthen.Api
                         TokenDecryptionKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtOptions.SecretKey)),
 
                     };
+                    options.Events = new JwtBearerEvents
+                    {
+                        OnAuthenticationFailed = context =>
+                        {
+                            if (context.Exception.GetType() == typeof(SecurityTokenInvalidLifetimeException))
+                            {
+                                context.Response.Headers.Add("Token-Expired", "true");
+                            }
+                            return Task.CompletedTask;
+                        }
+                    };
                 });
-
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2).AddJsonOptions(options =>
-            {
-                options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
-            });
 
             // In production, the Angular files will be served from this directory
             services.AddSpaStaticFiles(configuration =>

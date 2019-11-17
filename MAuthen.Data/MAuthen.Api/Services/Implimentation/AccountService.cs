@@ -1,10 +1,8 @@
-﻿using System;
+﻿using MAuthen.Api.Models.Authentication;
+using MAuthen.Api.Services.Interfaces;
 using System.Collections.Generic;
-using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using MAuthen.Api.Models.Authentication;
-using MAuthen.Api.Services.Interfaces;
 
 namespace MAuthen.Api.Services.Implimentation
 {

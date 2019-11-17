@@ -50,9 +50,6 @@ namespace MAuthen.Api.Services.Implimentation
             return authorizationHeader == StringValues.Empty
                 ? string.Empty
                 : authorizationHeader.Single().Split(" ").Last();
-            //var token = _httpContextAccessor.HttpContext.Request.Cookies["Token"];
-            //return token == StringValues.Empty ?
-            //        string.Empty : token;
 
         }
         private static string GetKey(string token)

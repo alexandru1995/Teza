@@ -4,5 +4,6 @@ namespace MAuthen.Domain.Repositories.Interface
 {
     public interface ISecretRepository: IRepositoryBase<Secret>
     {
+
     }
 }
