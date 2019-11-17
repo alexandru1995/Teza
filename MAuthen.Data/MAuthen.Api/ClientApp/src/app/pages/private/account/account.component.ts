@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { UserService1 } from 'src/app/service/user1.service';
 import { User } from 'src/app/models/user';
+import { UserService } from 'src/app/service/user.service';
 
 @Component({
   selector: 'app-account',
@@ -10,16 +10,15 @@ import { User } from 'src/app/models/user';
 export class AccountComponent implements OnInit {
 
   user: User;
-  birthDay: Date;
+  birthday: Date;
   constructor(
-    private userService: UserService1
+    private userService: UserService
   ) { }
 
   ngOnInit() {
     this.userService.getUser().subscribe(user => { 
+      this.birthday = new Date(user.birthday)
       this.user = user;
-      this.birthDay = new Date(this.user.birthday)
-      console.log(this.birthDay);
     })
   }
 }

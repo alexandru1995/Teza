@@ -32,8 +32,7 @@ namespace MAuthen.Api.Services.Implimentation
         {
             var nowUtc = DateTime.UtcNow;
             var centuryBegin = new DateTime(1970, 1, 1).ToUniversalTime();
-            var expires = nowUtc.AddDays(_options.ExpiryMinutes);
-            var exp = (long)(new TimeSpan(expires.Ticks - centuryBegin.Ticks).TotalSeconds);
+            var expires = nowUtc.AddMinutes(_options.ExpiryMinutes);
 
             SecurityTokenDescriptor descriptor = new SecurityTokenDescriptor
             {

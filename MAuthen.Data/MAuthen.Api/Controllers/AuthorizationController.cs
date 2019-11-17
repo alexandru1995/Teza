@@ -1,8 +1,11 @@
 ﻿using MAuthen.Api.Models;
+using MAuthen.Api.Models.Authentication;
 using MAuthen.Api.Services.Interfaces;
 using MAuthen.Domain.Repositories.Interface;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -35,7 +38,12 @@ namespace MAuthen.Api.Controllers
             {
                 return BadRequest("Invalid request");
             }
+
             var query = await _userRepository.SignIn(model.Username);
+            if (query == null)
+            {
+                return Unauthorized("Invalid username or password");
+            }
             var user = query.User;
             if (user == null)
             {
@@ -64,7 +72,20 @@ namespace MAuthen.Api.Controllers
                 clames.Add(new Claim("Email", contact.Email));
                 clames.Add(new Claim("PhoneNumber", contact.Phone));
             }
-            return Json(accountService.SignIn(clames));
+
+            return Json(new AuthenticatedUserModel
+            {
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                Token = accountService.SignIn(clames).AccessToken
+            });
+        }
+
+        [Authorize]
+        [HttpGet("signout")]
+        public async Task SignOut( [FromServices] IAccountService accountService)
+        {
+            await accountService.SignOut();
         }
     }
 }

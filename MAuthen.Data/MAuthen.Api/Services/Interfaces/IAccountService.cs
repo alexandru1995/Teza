@@ -11,6 +11,7 @@ namespace MAuthen.Api.Services.Interfaces
     {
         JsonWebToken SignIn(IEnumerable<Claim> clames);
         ClaimsPrincipal GetPrincipalFromExpiredToken(string token);
+        Task SignOut();
         //void RevokeRefreshToken(string token);
     }
 }

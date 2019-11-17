@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { User } from 'src/app/models/user';
-import { DataService } from 'src/app/service/data.service';
+import { UserService } from 'src/app/service/user.service';
+import { AuthorizationService } from 'src/app/service/authorization.service';
 import { Router } from '@angular/router';
 
 @Component({
@@ -10,10 +11,11 @@ import { Router } from '@angular/router';
 })
 export class NavbarComponent implements OnInit {
 
-  user: User;
+  user;
 
   constructor(
-    private data: DataService
+    private authorizationService: AuthorizationService,
+    private router : Router
     ) { }
   
 
@@ -24,15 +26,15 @@ export class NavbarComponent implements OnInit {
   ];
 
   ngOnInit() {
-    this.data.currentMessage.subscribe(user => this.user = user);
+    this.authorizationService.currentUser.subscribe(user => this.user = user);
     if(this.user == null){
-      this.user = JSON.parse(localStorage.getItem("user"))
+      this.user = JSON.parse(localStorage.getItem("User"))
     }
   }
 
   signOut(){
-    localStorage.removeItem("user")
     this.user = null;
+    this.authorizationService.logout().subscribe();
+    this.router.navigate(['/'])
   }
-
 }

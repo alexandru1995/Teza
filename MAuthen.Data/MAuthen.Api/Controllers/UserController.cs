@@ -21,18 +21,20 @@ namespace MAuthen.Api.Controllers
             _user = user;
             _processor = processor;
         }
+        
+
+        [HttpGet]
+        [Authorize]
+        public async Task<JsonResult> Get()
+        {
+            var user = await _user.GetUserByUsername(User.Identity.Name);
+            return Json(user);
+        }
+
         [HttpGet("users")]
         public IActionResult GetAll()
         {
             return Json(_user.GetAll());
-        }
-
-        [Authorize]
-        [HttpGet]
-        public IActionResult Get()
-        {
-            var user = User.Claims;
-            return Json(User.Claims);
         }
 
         [HttpGet("{id}")]

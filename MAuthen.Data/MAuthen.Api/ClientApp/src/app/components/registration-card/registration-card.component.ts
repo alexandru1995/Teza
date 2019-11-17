@@ -58,13 +58,13 @@ export class RegistrationCardComponent {
         var form = this.registrationForm.value;
         var user = new User();
         
-        user.FirstName = form.firstName;
-        user.LastName = form.lastName;
-        user.UserName = form.username;
-        user.Contacts = [{Email :form.email, Phone: form.phoneNumber}];
-        user.Birthday = form.birthday.month + "/" + form.birthday.day + "/" + form.birthday.year;
-        user.Password = form.password;
-        user.Gender = form.gender;
+        user.firstName = form.firstName;
+        user.lastName = form.lastName;
+        user.userName = form.username;
+        user.contacts = [{email :form.email, phone: form.phoneNumber}];
+        user.birthday = form.birthday.month + "/" + form.birthday.day + "/" + form.birthday.year;
+        user.password = form.password;
+        user.gender = form.gender;
         console.log(user)
         this.user.add(user).subscribe(
         data => {

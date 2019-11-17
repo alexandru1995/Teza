@@ -2,7 +2,6 @@ import { Component, Output, EventEmitter, OnInit } from '@angular/core';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { AuthorizationService } from 'src/app/service/authorization.service';
 import { fadeAnimation } from '../animation';
-import { DataService } from 'src/app/service/data.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { first } from 'rxjs/operators';
 import { UserService } from 'src/app/service/user.service';
@@ -19,7 +18,7 @@ export class CardComponent implements OnInit {
     @Output() switch = new EventEmitter<boolean>();
 
     loginForm: FormGroup;
-    error : string;
+    error: string;
     submitted = false;
     loading = false;
     returnUrl: string;
@@ -28,7 +27,6 @@ export class CardComponent implements OnInit {
         private formBuilder: FormBuilder,
         private authorization: AuthorizationService,
         private route: ActivatedRoute,
-        private data: DataService,
         private userService: UserService,
         private readonly router: Router
     ) {
@@ -44,7 +42,7 @@ export class CardComponent implements OnInit {
     get f() { return this.loginForm.controls; }
 
     ngOnInit(): void {
-        this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
+        this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/account';
     }
 
     onSubmit() {
@@ -52,32 +50,17 @@ export class CardComponent implements OnInit {
         if (this.loginForm.invalid) {
             return;
         }
-
         this.authorization.login(this.loginForm.value)
             .pipe(first())
             .subscribe(
                 data => {
-                    this.getCurentUser();
-                    this.router.navigate([this.returnUrl]);
+                    this.router.navigate([this.returnUrl])
                 },
                 error => {
                     this.error = error;
                     this.loading = false;
                 }
             )
-    }
-
-    getCurentUser() {
-        this.userService.getUser().subscribe(
-            data => {
-                this.data.changeMessage(data);
-                localStorage.setItem("user", JSON.stringify(data));
-            },
-            error => {
-                this.error = error;
-                this.loading = false;
-            }
-        )
     }
 
     hidenError() {

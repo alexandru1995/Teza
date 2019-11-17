@@ -11,10 +11,12 @@ namespace MAuthen.Api.Services.Implimentation
     public class AccountService : IAccountService
     {
         private readonly IJwtHandler _jwtHandler;
+        private readonly ITokenManager _tokenManager;
 
-        public AccountService(IJwtHandler jwtHandler)
+        public AccountService(IJwtHandler jwtHandler, ITokenManager tokenManager)
         {
             _jwtHandler = jwtHandler;
+            _tokenManager = tokenManager;
         }
 
         public JsonWebToken SignIn(IEnumerable<Claim> clames)
@@ -26,6 +28,11 @@ namespace MAuthen.Api.Services.Implimentation
         public ClaimsPrincipal GetPrincipalFromExpiredToken(string token)
         {
             return _jwtHandler.GetPrincipalFromExpiredToken(token);
+        }
+
+        public async Task SignOut()
+        {
+           await _tokenManager.DeactivateCurrentAsync();
         }
     }
 }
