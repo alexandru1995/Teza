@@ -27,7 +27,6 @@ export class CardComponent implements OnInit {
         private formBuilder: FormBuilder,
         private authorization: AuthorizationService,
         private route: ActivatedRoute,
-        private userService: UserService,
         private readonly router: Router
     ) {
         if (this.authorization.currentUserValue) {
@@ -57,7 +56,7 @@ export class CardComponent implements OnInit {
                     this.router.navigate([this.returnUrl])
                 },
                 error => {
-                    this.error = error;
+                    this.error = error.error;
                     this.loading = false;
                 }
             )

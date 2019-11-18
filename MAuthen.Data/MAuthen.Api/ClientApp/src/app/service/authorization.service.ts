@@ -28,11 +28,7 @@ export class AuthorizationService {
         return this.http.post<SimpleUser>(`Authorization/`, data)
             .pipe(
                 tap((user: SimpleUser) => this.doLoginUser(user)),
-                mapTo(true),
-                catchError(error => {
-                    alert(error.error);
-                    return of(false);
-                })
+                mapTo(true)
             );
     }
 
@@ -64,6 +60,7 @@ export class AuthorizationService {
         this.storeTokens(user.tokens)
         user.tokens = null;
         localStorage.setItem("User", JSON.stringify(user));
+        this.currentUserSubject.next(user);
     }
 
     private storeTokens(tokens: Token) {

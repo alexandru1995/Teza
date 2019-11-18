@@ -27,7 +27,6 @@ namespace MAuthen.Api.Controllers
         [Authorize]
         public async Task<JsonResult> Get()
         {
-            var test = User.Identity.Name;
             var user = await _user.GetUserByUsername(User.Identity.Name);
             return Json(user);
         }

@@ -21,17 +21,23 @@ namespace MAuthen.Api.Controllers
     {
         private readonly IUserRepository _userRepository;
         private readonly IPasswordProcessor _processor;
+        private readonly ISecretRepository _secret;
+        private readonly IRoleRepository _role;
 
         public IConfiguration _configuration { get; }
 
         public AuthorizationController(
             IConfiguration configuration,
             IUserRepository user,
-            IPasswordProcessor processor)
+            IPasswordProcessor processor,
+            ISecretRepository secret,
+            IRoleRepository role)
         {
             _configuration = configuration;
             _userRepository = user;
             _processor = processor;
+            _secret = secret;
+            _role = role;
         }
 
         [HttpPost]
@@ -39,20 +45,17 @@ namespace MAuthen.Api.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest("Invalid request");
+                return BadRequest();
             }
 
-            //var query = await _userRepository.SignIn(model.Username);
-            //if (query == null)
-            //{
-            //    return Unauthorized("Invalid username or password");
-            //}
             var user = await _userRepository.GetUserByUsername(model.Username);
             if (user == null)
             {
                 return Unauthorized("Invalid username or password");
             }
-            var passwordValidation = _processor.Check(user.Secret.Password, model.Password);
+
+            var userPassword = await _secret.GetUserSecret(user.Id);
+            var passwordValidation = _processor.Check(userPassword.Password, model.Password);
             if (!passwordValidation.Verified)
             {
                 return Unauthorized("Invalid username or password");
@@ -64,18 +67,19 @@ namespace MAuthen.Api.Controllers
                 new Claim(ClaimsIdentity.DefaultNameClaimType, user.UserName),
                 new Claim("Birthday", user.Birthday.ToString(CultureInfo.InvariantCulture))
             };
-            if (user.UserRoles != null)
+            clams.Add(new Claim("Gender", user.Gender ? "Male" : "Female"));
+            if (user.Contacts != null)
             {
-                foreach (var role in user.UserRoles)
+                foreach (var contact in user.Contacts)
                 {
-                    clams.Add(new Claim(ClaimTypes.Role, role.Role.Name));
+                    clams.Add(new Claim("Email", contact.Email));
+                    clams.Add(new Claim("PhoneNumber", contact.Phone));
                 }
             }
-            clams.Add(new Claim("Gender", user.Gender ? "Male" : "Female"));
-            foreach (var contact in user.Contacts)
+            var userRole = await _role.GetUserRoles(user.Id);
+            foreach (var role in userRole)
             {
-                clams.Add(new Claim("Email", contact.Email));
-                clams.Add(new Claim("PhoneNumber", contact.Phone));
+                clams.Add(new Claim(ClaimTypes.Role, role.Name));
             }
             var refresh = GenerateRefreshToken();
             _userRepository.UpdateRefreshToken(user.UserName, refresh);
@@ -100,7 +104,7 @@ namespace MAuthen.Api.Controllers
             if (username == null)
                 return BadRequest();
             var refresh = await _userRepository.GetRefreshToken(username);
-            if (refresh != null && model.RefreshToken == refresh )
+            if (refresh != null && model.RefreshToken == refresh)
             {
                 var newRefreshToken = GenerateRefreshToken();
                 _userRepository.UpdateRefreshToken(principal.Identity.Name, newRefreshToken);

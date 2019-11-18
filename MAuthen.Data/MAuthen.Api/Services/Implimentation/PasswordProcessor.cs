@@ -38,8 +38,7 @@ namespace MAuthen.Api.Services.Implimentation
 
             if (parts.Length != 3)
             {
-                throw new FormatException("Unexpected hash format. " +
-                                          "Should be formatted as `{iterations}.{salt}.{hash}`");
+                return (false, false);
             }
 
             var iterations = Convert.ToInt32(parts[0]);

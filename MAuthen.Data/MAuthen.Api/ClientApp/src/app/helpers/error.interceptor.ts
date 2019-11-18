@@ -14,23 +14,24 @@ export class ErrorInterceptor implements HttpInterceptor {
     constructor(
         private authenticationService: AuthorizationService,
         private readonly router: Router
-        ) { }
+    ) { }
 
     intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-        
+
         return next.handle(request).pipe(
             catchError(err => {
-             if (err.status === 401) {
-                if(err.headers.has('Token-Expired')){
-                    return this.handle401Error(request, next);
-                }else{
-                    this.authenticationService.logout();
-                    this.router.navigate(['/']);
+                
+                if (err.status === 401) {
+                    if (err.headers.has('Token-Expired')) {
+                        return this.handle401Error(request, next);
+                    } else {
+                        localStorage.clear();
+                        return throwError(err);
+                    }
                 }
-            }
-            const error = err.error || err.statusText;
-            return throwError(error);
-        }))
+                const error = err.error || err.statusText;
+                return throwError(error);
+            }))
     }
     private handle401Error(request: HttpRequest<any>, next: HttpHandler) {
         if (!this.isRefreshing) {
@@ -52,7 +53,7 @@ export class ErrorInterceptor implements HttpInterceptor {
                 }));
         }
     }
-    
+
     private addToken(request: HttpRequest<any>, token: string) {
         return request.clone({
             setHeaders: {

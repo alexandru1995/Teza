@@ -11,7 +11,11 @@ namespace MAuthen.Data.Repositories.Implementation
     public class RoleRepository: RepositoryBase<Role>, IRoleRepository
     {
         private readonly MAuthenContext _context;
-        public RoleRepository(MAuthenContext context): base(context){}
+
+        public RoleRepository(MAuthenContext context) : base(context)
+        {
+            _context = context;
+        }
 
         public async Task<IList<Role>> GetUserRoles(Guid userId)
         {
