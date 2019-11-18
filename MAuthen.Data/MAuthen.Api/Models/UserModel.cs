@@ -1,5 +1,5 @@
 ﻿using MAuthen.Api.Models.Contacts;
-using MAuthen.Domain.Models;
+using MAuthen.Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;

@@ -1,5 +1,5 @@
 ﻿using MAuthen.Domain.Entities;
-using MAuthen.Domain.Models;
+using MAuthen.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace MAuthen.Data

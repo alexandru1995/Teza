@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using MAuthen.Domain.Entities;
 
-namespace MAuthen.Domain.Models
+namespace MAuthen.Domain.Entities
 {
     public class User
     {

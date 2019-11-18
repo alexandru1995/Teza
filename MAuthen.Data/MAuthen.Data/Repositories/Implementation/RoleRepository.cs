@@ -1,10 +1,10 @@
-﻿using System;
+﻿using MAuthen.Domain.Entities;
+using MAuthen.Domain.Repositories.Interface;
+using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using MAuthen.Domain.Models;
-using MAuthen.Domain.Repositories.Interface;
-using Microsoft.EntityFrameworkCore;
 
 namespace MAuthen.Data.Repositories.Implementation
 {

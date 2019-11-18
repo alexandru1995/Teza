@@ -1,4 +1,4 @@
-﻿using MAuthen.Domain.Models;
+﻿using MAuthen.Domain.Entities;
 
 namespace MAuthen.Domain.Repositories.Interface
 {

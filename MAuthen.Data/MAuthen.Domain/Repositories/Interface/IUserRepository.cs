@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
-using MAuthen.Domain.Models;
+using MAuthen.Domain.Entities;
 
 namespace MAuthen.Domain.Repositories.Interface
 {

@@ -1,4 +1,4 @@
-﻿using MAuthen.Domain.Models;
+﻿using MAuthen.Domain.Entities;
 using MAuthen.Domain.Repositories.Interface;
 using Microsoft.AspNetCore.Mvc;
 using System;

@@ -53,11 +53,13 @@ export class CardComponent implements OnInit {
             .pipe(first())
             .subscribe(
                 data => {
+                    this.loading = true;
                     this.router.navigate([this.returnUrl])
                 },
                 error => {
                     this.error = error.error;
                     this.loading = false;
+                    setTimeout(()=>this.hidenError(), 3000);
                 }
             )
     }

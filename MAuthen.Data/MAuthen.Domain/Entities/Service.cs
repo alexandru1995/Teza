@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace MAuthen.Domain.Models
+namespace MAuthen.Domain.Entities
 {
     public class Service
     {

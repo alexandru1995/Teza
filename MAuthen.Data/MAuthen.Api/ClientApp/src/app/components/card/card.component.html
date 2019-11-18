@@ -1,7 +1,11 @@
 <div class="card" style="min-width: 18rem;">
     <div class="p-2" style="text-align: center">
-        <img src="assets/img/cyber_security-512.png" style="height: 4rem; width: 4rem;"
+        <img *ngIf="!loading" src="assets/img/cyber_security-512.png" style="height: 4rem; width: 4rem;"
             class="card-img-top rounded-circle img-thumbnail">
+        <div *ngIf="loading" class="spinner-grow text-dark card-img-top" style="height: 4rem; width: 4rem;"
+            role="status">
+            <span class="sr-only">Loading...</span>
+        </div>
     </div>
     <form class="mb-3" [formGroup]="loginForm">
         <div class="card-body">
@@ -31,7 +35,8 @@
         </div>
         <div class="card-body p-0">
             <div class="row justify-content-center">
-                <button type="button" [disabled]="loading" class="btn gradient text-light" (click)="onSubmit()">Log In</button>
+                <button type="button" [disabled]="loading" class="btn gradient text-light" (click)="onSubmit()">Log
+                    In</button>
             </div>
             <div class="row justify-content-center">
                 <button class="btn btn-link" type="button" (click)="swichToTegistration()">Create Account</button>

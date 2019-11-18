@@ -48,8 +48,8 @@ export class ErrorInterceptor implements HttpInterceptor {
         } else {
             return this.refreshTokenSubject.pipe(
                 filter(token => token != null),
-                switchMap(jwt => {
-                    return next.handle(this.addToken(request, jwt));
+                switchMap(accessToken => {
+                    return next.handle(this.addToken(request, accessToken.toString()));
                 }));
         }
     }
