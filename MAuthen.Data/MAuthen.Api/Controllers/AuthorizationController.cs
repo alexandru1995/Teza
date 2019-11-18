@@ -8,6 +8,7 @@ using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
@@ -41,48 +42,53 @@ namespace MAuthen.Api.Controllers
                 return BadRequest("Invalid request");
             }
 
-            var query = await _userRepository.SignIn(model.Username);
-            if (query == null)
-            {
-                return Unauthorized("Invalid username or password");
-            }
-            var user = query.User;
+            //var query = await _userRepository.SignIn(model.Username);
+            //if (query == null)
+            //{
+            //    return Unauthorized("Invalid username or password");
+            //}
+            var user = await _userRepository.GetUserByUsername(model.Username);
             if (user == null)
             {
                 return Unauthorized("Invalid username or password");
             }
-            var passwordValidation = _processor.Check(query.User.Secret.Password, model.Password);
+            var passwordValidation = _processor.Check(user.Secret.Password, model.Password);
             if (!passwordValidation.Verified)
             {
                 return Unauthorized("Invalid username or password");
             }
-            var clames = new List<Claim>
+            var clams = new List<Claim>
             {
                 new Claim("FirstName", user.FirstName),
-                new Claim("LasrName", user.LastName),
-                new Claim("UserName", user.UserName),
-                new Claim("Birthday", user.Birthday.ToString())
+                new Claim("LastName", user.LastName),
+                new Claim(ClaimsIdentity.DefaultNameClaimType, user.UserName),
+                new Claim("Birthday", user.Birthday.ToString(CultureInfo.InvariantCulture))
             };
-            foreach (var role in user.UserRoles)
+            if (user.UserRoles != null)
             {
-                var test = role.Role.Name;
-                clames.Add(new Claim(ClaimTypes.Role, role.Role.Name));
+                foreach (var role in user.UserRoles)
+                {
+                    clams.Add(new Claim(ClaimTypes.Role, role.Role.Name));
+                }
             }
-            clames.Add(new Claim("Gender", user.Gender ? "Male" : "Female"));
+            clams.Add(new Claim("Gender", user.Gender ? "Male" : "Female"));
             foreach (var contact in user.Contacts)
             {
-                clames.Add(new Claim("Email", contact.Email));
-                clames.Add(new Claim("PhoneNumber", contact.Phone));
+                clams.Add(new Claim("Email", contact.Email));
+                clams.Add(new Claim("PhoneNumber", contact.Phone));
             }
-            var refrash = GenerateRefreshToken();
-            _userRepository.UpdateRefreshToken(user.UserName, refrash);
+            var refresh = GenerateRefreshToken();
+            _userRepository.UpdateRefreshToken(user.UserName, refresh);
 
             return Json(new AuthenticatedUserModel
             {
                 FirstName = user.FirstName,
                 LastName = user.LastName,
-                Token = accountService.SignIn(clames).AccessToken,
-                RefreshToken = refrash
+                Tokens = new JsonWebToken
+                {
+                    AccessToken = accountService.SignIn(clams).AccessToken,
+                    RefreshToken = refresh
+                }
             });
         }
 
@@ -91,14 +97,16 @@ namespace MAuthen.Api.Controllers
         {
             var principal = accountService.GetPrincipalFromExpiredToken(model.AccessToken);
             var username = principal.Identity.Name;
+            if (username == null)
+                return BadRequest();
             var refresh = await _userRepository.GetRefreshToken(username);
             if (refresh != null && model.RefreshToken == refresh )
             {
                 var newRefreshToken = GenerateRefreshToken();
                 _userRepository.UpdateRefreshToken(principal.Identity.Name, newRefreshToken);
-                return Json(new AuthenticatedUserModel
+                return Json(new JsonWebToken
                 {
-                    Token = accountService.SignIn(principal.Claims).AccessToken,
+                    AccessToken = accountService.SignIn(principal.Claims).AccessToken,
                     RefreshToken = newRefreshToken
                 });
             }

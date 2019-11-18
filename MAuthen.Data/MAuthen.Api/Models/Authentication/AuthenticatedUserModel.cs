@@ -6,7 +6,6 @@ namespace MAuthen.Api.Models.Authentication
     {
         public string FirstName { get; set; }
         public string LastName { get; set; }
-        public string Token { get; set; }
-        public string RefreshToken { get; set; }
+        public JsonWebToken Tokens { get; set; }
     }
 }

@@ -4,6 +4,7 @@ import { Login } from '../models/login.model';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Token } from '../models/token.medel';
+import { SimpleUser } from '../models/simpleUser.model';
 
 @Injectable({
     providedIn: 'root'
@@ -23,31 +24,29 @@ export class AuthorizationService {
     }
 
     login(user: Login) {
-        return this.http.post<any>(`Authorization/`, user)
+        return this.http.post<SimpleUser>(`Authorization/`, user)
             .pipe(map(user => {
-                console.log(user)
                 localStorage.setItem('User', JSON.stringify(user));
                 this.currentUserSubject.next(user);
                 return user;
             }));
     }
 
-    refresh(){
-        var tokens = JSON.parse(localStorage.getItem('User'));
-        var refresh =  {accessToken : tokens.token, refreshToken : tokens.refreshToken};
-        console.log(refresh);
-        return this.http.post<Token>(`Authorization/refresh`, refresh)
+    refresh() {
+        var user = JSON.parse(localStorage.getItem('User'));
+        return this.http.post<Token>(`Authorization/refresh`, user.tokens)
             .pipe(map(newTokens => {
-                localStorage.removeItem('User');
-                tokens.accessToken = newTokens.accessToken;
-                tokens.refreshToken = newTokens.refreshToken;
-                localStorage.setItem("User", JSON.stringify(tokens));
+                localStorage.removeItem('User')
+                user.tokens = newTokens;
+                localStorage.setItem("User", JSON.stringify(user));
             }));
     }
 
     logout() {
-        this.currentUserSubject.next(null);
-        localStorage.removeItem('User');
-        return this.http.get<any>(`Authorization/signout`);
+        return this.http.get<any>(`Authorization/signout`)
+            .pipe(map(removeUser => {
+                this.currentUserSubject.next(null);
+                localStorage.removeItem('User');
+            }));
     }
 }

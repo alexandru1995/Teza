@@ -1,4 +1,4 @@
 export class Token{
-    accessToken?: string;
+    accessToken: string;
     refreshToken: string;
 }

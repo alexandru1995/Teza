@@ -17,7 +17,10 @@ namespace MAuthen.Data.Repositories.Implementation
 
         public async Task<User> GetUserByUsername(string username)
         {
-            return await _context.Users.FirstOrDefaultAsync(u => u.UserName == username);
+            return await _context.Users
+                .Include(s => s.Secret)
+                .Include(c => c.Contacts)
+                .FirstOrDefaultAsync(u => u.UserName == username);
         }
 
         public async Task<string> GetRefreshToken(string username)
@@ -34,18 +37,17 @@ namespace MAuthen.Data.Repositories.Implementation
                     .ThenInclude(c => c.Contacts)
                     .Include(u => u.User.Secret)
                 .Include(r => r.Role)
-                .Where(u => u.User.UserName == username).FirstOrDefaultAsync();
-            
-            user.User.Secret.RefreshToken = new Guid().ToString();
-            await _context.SaveChangesAsync();
+                .FirstOrDefaultAsync(u => u.User.UserName == username);
             return user;
         }
 
         public async void UpdateRefreshToken(string username, string newRefreshToken)
         {
-            var userToken = await _context.Users.Where(u => u.UserName == username)
-                .Include(s => s.Secret).FirstOrDefaultAsync();
-            userToken.Secret.RefreshToken = newRefreshToken;
+            var userToken = _context.Users
+                .Include(s => s.Secret)
+                .FirstOrDefault(u => u.UserName == username);
+            if (userToken != null) 
+                userToken.Secret.RefreshToken = newRefreshToken;
             await _context.SaveChangesAsync();
         }
     }
