@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using MAuthen.Domain.Entities;
@@ -37,6 +38,15 @@ namespace MAuthen.Data.Repositories.Implementation
             if (userToken != null) 
                 userToken.Secret.RefreshToken = newRefreshToken;
             await _context.SaveChangesAsync();
+        }
+
+        public async Task<IList<Contacts>> AddContacts(string username, Contacts contacts)
+        {
+            var user = await _context.Users.Where(u => u.UserName == username)
+                .Include(c => c.Contacts).FirstOrDefaultAsync();
+            user.Contacts.Add(contacts);
+            await _context.SaveChangesAsync();
+            return user.Contacts.ToList();
         }
     }
 }

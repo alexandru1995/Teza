@@ -1,17 +1,17 @@
-﻿using MAuthen.Domain.Entities;
-using MAuthen.Domain.Repositories.Interface;
-using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using MAuthen.Api.Models;
+﻿using MAuthen.Api.Models;
+using MAuthen.Api.Models.Contacts;
 using MAuthen.Api.Services.Interfaces;
 using MAuthen.Domain.Entities;
+using MAuthen.Domain.Repositories.Interface;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Threading.Tasks;
 
 namespace MAuthen.Api.Controllers
 {
     [Route("[controller]")]
+    [Authorize]
     public class UserController : Controller
     {
         private readonly IUserRepository _user;
@@ -24,7 +24,7 @@ namespace MAuthen.Api.Controllers
         
 
         [HttpGet]
-        [Authorize]
+        
         public async Task<JsonResult> Get()
         {
             var user = await _user.GetUserByUsername(User.Identity.Name);
@@ -32,6 +32,7 @@ namespace MAuthen.Api.Controllers
         }
 
         [HttpGet("users")]
+        [Authorize(Roles = "UltraAdmin")]
         public IActionResult GetAll()
         {
             return Json(_user.GetAll());
@@ -46,14 +47,12 @@ namespace MAuthen.Api.Controllers
         [HttpPost]
         public async Task<IActionResult> Add([FromBody]UserModel model)
         {
-
             if (!ModelState.IsValid)
             {
                 return BadRequest();
             }
             try
             {
-
                 model.Password = _processor.Hash(model.Password);
                 await _user.Create(model);
             }
@@ -68,8 +67,13 @@ namespace MAuthen.Api.Controllers
             return Json(StatusCode(201, "Successful creation"));
         }
 
+        public async Task<IActionResult> AddContact([FromBody] ContactModel model)
+        {
+            return Json(await _user.AddContacts(User.Identity.Name, model));
+        }
+
         [HttpPut]
-        public async Task<IActionResult> Update(User model)
+        public async Task<JsonResult> Update(User model)
         {
             await _user.Update(model);
             return Json(model);

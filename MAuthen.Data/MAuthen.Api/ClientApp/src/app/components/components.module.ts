@@ -8,6 +8,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ToastComponent } from './toast/toast.component';
 import { RouterModule } from '@angular/router';
 import { DatepickerComponent } from './datepicker/datepicker.component';
+import { ContactEditModalComponent } from './contact-edit-modal/contact-edit-modal.component';
 
 @NgModule({
   declarations: [
@@ -15,14 +16,16 @@ import { DatepickerComponent } from './datepicker/datepicker.component';
     CardComponent,
     RegistrationCardComponent,
     ToastComponent,
-    DatepickerComponent
+    DatepickerComponent,
+    ContactEditModalComponent
   ],
   exports: [
     NavbarComponent,
     CardComponent,
     RegistrationCardComponent,
     ToastComponent,
-    DatepickerComponent
+    DatepickerComponent,
+    ContactEditModalComponent
   ],
   imports: [
     ReactiveFormsModule,
