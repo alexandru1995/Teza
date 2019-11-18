@@ -33,7 +33,8 @@ export class UserService {
     return this.http.get<User>("/user");
   }
 
-  addContact(contact: Contact): Observable<Contact> {
-    return this.http.post<Contact>("/user", contact);
+  addContact(contact: Contact): Observable<Contact[]> {
+    console.log(contact)
+    return this.http.post<Contact[]>("/user/AddContact", contact);
   }
 }

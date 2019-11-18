@@ -4,7 +4,6 @@ import { phoneNumberValidator, passwordComplexity } from 'src/app/validators/pho
 import { UserService } from 'src/app/service/user.service';
 import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
 import { User } from 'src/app/models/user';
-import { Contact } from 'src/app/models/contact.model';
 
 @Component({
     selector: 'registration-card',
@@ -18,9 +17,7 @@ export class RegistrationCardComponent {
 
     registrationForm: FormGroup;
     submitted = false;
-    gender:boolean;
-    
-  model: NgbDateStruct;
+    gender: boolean;
 
     constructor(
         private formBuilder: FormBuilder,
@@ -35,7 +32,7 @@ export class RegistrationCardComponent {
             phoneNumber: ['', [Validators.required, phoneNumberValidator]],
             password: ['', [Validators.required, passwordComplexity]],
             confirmPassword: ['', Validators.required],
-            gender:['', Validators.required]
+            gender: ['', Validators.required]
         }, { validator: this.checkPasswords });
     }
 
@@ -57,30 +54,30 @@ export class RegistrationCardComponent {
         }
         var form = this.registrationForm.value;
         var user = new User();
-        
+
         user.firstName = form.firstName;
         user.lastName = form.lastName;
         user.userName = form.username;
-        user.contacts = [{email :form.email, phone: form.phoneNumber}];
+        user.contacts = [{ id: null, email: form.email, phone: form.phoneNumber }];
         user.birthday = form.birthday.month + "/" + form.birthday.day + "/" + form.birthday.year;
         user.password = form.password;
         user.gender = form.gender;
         console.log(user)
         this.user.add(user).subscribe(
-        data => {
-            console.log(data)
-        },
-        error => {
-            //TODO set error to username
-            const email = this.registrationForm.controls['email']
-            email.setErrors({
-                fildExist:
-                {
-                    valid: false,
-                    message: error.error
-                }
+            data => {
+                console.log(data)
+            },
+            error => {
+                //TODO set error to username
+                const email = this.registrationForm.controls['email']
+                email.setErrors({
+                    fildExist:
+                    {
+                        valid: false,
+                        message: error.error
+                    }
+                })
             })
-        })
     }
 
     checkPasswords(group: FormGroup) {

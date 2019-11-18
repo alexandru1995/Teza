@@ -49,11 +49,11 @@ export class CardComponent implements OnInit {
         if (this.loginForm.invalid) {
             return;
         }
+        this.loading = true;
         this.authorization.login(this.loginForm.value)
             .pipe(first())
             .subscribe(
                 data => {
-                    this.loading = true;
                     this.router.navigate([this.returnUrl])
                 },
                 error => {

@@ -33,9 +33,15 @@ export class AccountComponent implements OnInit {
     var modalRef = this.modalService.open(ContactEditModalComponent);
     modalRef.componentInstance.label = "Email";
     modalRef.componentInstance.title = "Add Email";
+    modalRef.componentInstance.type = "email"
     modalRef.result
       .then((email) => {
-        console.log(email)
-      })
+        this.userService.addContact({ id: null, email: email, phone: null })
+          .subscribe(contacts => { console.log( contacts)})
+      }
+      )
+      .catch(err => { })
+
   }
 }
+

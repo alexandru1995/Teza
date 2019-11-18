@@ -73,14 +73,6 @@ namespace MAuthen.Data
                 entity.HasIndex(u => u.UserName).IsUnique();
             });
 
-            modelBuilder.Entity<Contacts>(entity =>
-            {
-                entity.HasIndex(c => c.Email)
-                    .IsUnique();
-                entity.HasIndex(c => c.Phone)
-                    .IsUnique();
-            });
-
             modelBuilder.Entity<Service>(entity =>
             {
                 entity.HasIndex(r => r.Name)

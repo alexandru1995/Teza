@@ -67,9 +67,11 @@ namespace MAuthen.Api.Controllers
             return Json(StatusCode(201, "Successful creation"));
         }
 
+        [HttpPost("AddContact")]
         public async Task<IActionResult> AddContact([FromBody] ContactModel model)
         {
-            return Json(await _user.AddContacts(User.Identity.Name, model));
+            var test = await _user.AddContacts(User.Identity.Name, model);
+            return Json("");
         }
 
         [HttpPut]

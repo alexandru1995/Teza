@@ -27,6 +27,9 @@ import { ContactEditModalComponent } from './contact-edit-modal/contact-edit-mod
     DatepickerComponent,
     ContactEditModalComponent
   ],
+  entryComponents:[
+    ContactEditModalComponent
+  ],
   imports: [
     ReactiveFormsModule,
     RouterModule,
