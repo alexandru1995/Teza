@@ -115,8 +115,9 @@ namespace MAuthen.Api.Controllers
 
         [Authorize]
         [HttpGet("signout")]
-        public async Task SignOut( [FromServices] IAccountService accountService)
+        public async Task SignOut([FromServices] IAccountService accountService)
         {
+            _userRepository.UpdateRefreshToken(User.Identity.Name, null);
             await accountService.SignOut();
         }
         private string GenerateRefreshToken()

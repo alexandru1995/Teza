@@ -6,7 +6,7 @@ import { AuthGuard } from './helpers/auth.guard';
 
 const routes: Routes = [
   { path: '', loadChildren: `./pages/public/home/home.module#HomeModule` },
-  { path: 'account', canActivate: [AuthGuard], loadChildren: 'src/app/pages/private/account/account.module#AccountModule'},
+  { path: 'account', canActivate: [AuthGuard], canLoad: [AuthGuard], loadChildren: 'src/app/pages/private/account/account.module#AccountModule'},
 
   { path: '**', redirectTo: '' }
 ];

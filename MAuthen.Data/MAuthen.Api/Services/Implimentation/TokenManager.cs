@@ -16,11 +16,11 @@ namespace MAuthen.Api.Services.Implimentation
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IOptions<JwtOptions> _jwtOptions;
 
-        public TokenManager(IDistributedCache cach,
+        public TokenManager(IDistributedCache cache,
             IHttpContextAccessor httpContextAccessor,
             IOptions<JwtOptions> jwtOptions)
         {
-            _cache = cach;
+            _cache = cache;
             _httpContextAccessor = httpContextAccessor;
             _jwtOptions = jwtOptions;
         }
