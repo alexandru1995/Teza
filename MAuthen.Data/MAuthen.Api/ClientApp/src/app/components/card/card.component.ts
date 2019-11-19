@@ -49,7 +49,6 @@ export class CardComponent implements OnInit {
             .pipe(first())
             .subscribe(
                 data => {
-                    console.log(this.returnUrl)
                     this.router.navigate([this.returnUrl])
                 },
                 error => {

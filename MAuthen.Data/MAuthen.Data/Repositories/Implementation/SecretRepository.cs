@@ -19,5 +19,22 @@ namespace MAuthen.Data.Repositories.Implementation
         {
             return await _context.Secrets.FirstOrDefaultAsync(s => s.IdUser == userId);
         }
+
+        public async Task<string> GetRefreshToken(string username)
+        {
+            return await _context.Users.Where(u => u.UserName == username)
+                .Include(s => s.Secret)
+                .Select(s => s.Secret.RefreshToken).FirstOrDefaultAsync();
+        }
+
+        public void UpdateRefreshToken(string username, string newRefreshToken)
+        {
+            var userToken = _context.Users
+                .Include(s => s.Secret)
+                .FirstOrDefault(u => u.UserName == username);
+            if (userToken != null)
+                userToken.Secret.RefreshToken = newRefreshToken;
+            _context.SaveChanges();
+        }
     }
 }

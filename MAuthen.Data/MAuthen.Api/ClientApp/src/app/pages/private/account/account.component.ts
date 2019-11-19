@@ -143,6 +143,7 @@ export class AccountComponent implements OnInit {
 
   private getUser() {
     this.userService.getUser().subscribe(user => {
+      console.log(user);
       this.contacts = user.contacts;
       this.user = user;
     })

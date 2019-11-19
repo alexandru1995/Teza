@@ -14,9 +14,9 @@ namespace MAuthen.Data
         public DbSet<Secret> Secrets { get; set; }
         public DbSet<Contacts> Contacts { get; set; }
         public DbSet<Service> Services { get; set; }
-        public DbSet<UserRole> UserRoles { get; set; }
-        public DbSet<UserService> UserServices { get; set; }
-        public DbSet<ServiceRole> ServiceRoles { get; set; }
+        public DbSet<UserServiceRoles> UserServiceRoles { get; set; }
+        //public DbSet<UserService> UserServices { get; set; }
+        //public DbSet<ServiceRole> ServiceRoles { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -24,44 +24,57 @@ namespace MAuthen.Data
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<UserRole>(entity =>
+            modelBuilder.Entity<UserServiceRoles>(entity =>
             {
-                entity.HasKey(ur => new { ur.IdRole, ur.IdUser });
-                entity.HasOne(ur => ur.User)
-                    .WithMany(u => u.UserRoles)
-                    .HasForeignKey(ur => ur.IdUser);
-                entity.HasOne(ur => ur.Role)
-                    .WithMany(r => r.UserRoles)
-                    .HasForeignKey(ur => ur.IdRole);
-
-            });                
-
-            modelBuilder.Entity<UserService>(entyty =>
-            {
-                entyty.HasKey(us => new { us.IdUser, us.IdService });
-                entyty.HasOne(us => us.User)
-                    .WithMany(u => u.UserServices)
-                    .HasForeignKey(ur => ur.IdUser);
-                entyty.HasOne(us => us.Service)
-                    .WithMany(s => s.UserServices)
-                    .HasForeignKey(us => us.IdService);
+                entity.HasKey(usr => new { usr.UserId, usr.RoleId, usr.ServiceId });
+                entity.HasOne(usr => usr.User)
+                    .WithMany(u => u.UserServiceRoles)
+                    .HasForeignKey(usr => usr.UserId);
+                entity.HasOne(usr => usr.Service)
+                    .WithMany(s => s.UserServicesRoles)
+                    .HasForeignKey(usr => usr.ServiceId);
+                entity.HasOne(usr => usr.Role)
+                    .WithMany(r => r.UserServiceRoles)
+                    .HasForeignKey(usr => usr.RoleId);
             });
 
-            modelBuilder.Entity<ServiceRole>(entity =>
-            {
-                entity.HasKey(sr => new
-                {
-                    sr.IdRole,
-                    sr.IdService
-                });
-                entity.HasOne(sr => sr.Role)
-                    .WithMany(u => u.ServiceRoles)
-                    .HasForeignKey(ur => ur.IdRole);
-                entity.HasOne(sr => sr.Service)
-                    .WithMany(s => s.ServiceRoles)
-                    .HasForeignKey(us => us.IdService);
-            });
+            //modelBuilder.Entity<UserRole>(entity =>
+            //{
+            //    entity.HasKey(ur => new { ur.IdRole, ur.IdUser });
+            //    entity.HasOne(ur => ur.User)
+            //        .WithMany(u => u.UserRoles)
+            //        .HasForeignKey(ur => ur.IdUser);
+            //    entity.HasOne(ur => ur.Role)
+            //        .WithMany(r => r.UserRoles)
+            //        .HasForeignKey(ur => ur.IdRole);
 
+            //});
+
+            //modelBuilder.Entity<UserService>(entyty =>
+            //{
+            //    entyty.HasKey(us => new { us.IdUser, us.IdService });
+            //    entyty.HasOne(us => us.User)
+            //        .WithMany(u => u.UserServices)
+            //        .HasForeignKey(ur => ur.IdUser);
+            //    entyty.HasOne(us => us.Service)
+            //        .WithMany(s => s.UserServices)
+            //        .HasForeignKey(us => us.IdService);
+            //});
+
+            //modelBuilder.Entity<ServiceRole>(entity =>
+            //{
+            //    entity.HasKey(sr => new
+            //    {
+            //        sr.IdRole,
+            //        sr.IdService
+            //    });
+            //    entity.HasOne(sr => sr.Role)
+            //        .WithMany(u => u.ServiceRoles)
+            //        .HasForeignKey(ur => ur.IdRole);
+            //    entity.HasOne(sr => sr.Service)
+            //        .WithMany(s => s.ServiceRoles)
+            //        .HasForeignKey(us => us.IdService);
+            //});
 
 
             modelBuilder.Entity<User>(entity =>
@@ -69,6 +82,10 @@ namespace MAuthen.Data
                 entity.HasOne(u => u.Secret)
                     .WithOne(s => s.User)
                     .HasForeignKey<Secret>(u => u.IdUser);
+                entity.HasMany(c => c.Contacts)
+                    .WithOne(u => u.User);
+                entity.HasOne(u => u.Secret)
+                    .WithOne(s => s.User);
                 entity.HasIndex(u => u.UserName).IsUnique();
             });
 

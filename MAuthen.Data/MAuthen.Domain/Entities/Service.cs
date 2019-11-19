@@ -11,7 +11,6 @@ namespace MAuthen.Domain.Entities
         public byte[] Certificate { get; set; }
         public bool HasTotp { get; set; }
         public DateTime CreatedOn { get; set; }
-        public ICollection<UserService> UserServices { get; set; }
-        public ICollection<ServiceRole> ServiceRoles { get; set; }
+        public ICollection<UserServiceRoles> UserServicesRoles { get; set; }
     }
 }

@@ -17,11 +17,11 @@ namespace MAuthen.Data.Repositories.Implementation
             _context = context;
         }
 
-        public async Task<IList<Role>> GetUserRoles(Guid userId)
+        public async Task<IList<Role>> GetUserServiceRoles(Guid userId, Guid ServiceId)
         {
-            return await _context.UserRoles.Include(d => d.Role)
-                .Where(r => r.IdUser == userId)
-                .Select(r => r.Role).ToListAsync();
+            return await _context.UserServiceRoles
+                .Where(usr => usr.UserId == userId && usr.ServiceId == ServiceId)
+                .Include(r => r.Role).Select(usr => usr.Role).ToListAsync();
         }
     }
 }

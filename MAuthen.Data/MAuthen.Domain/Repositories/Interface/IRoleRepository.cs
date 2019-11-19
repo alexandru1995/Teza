@@ -7,6 +7,6 @@ namespace MAuthen.Domain.Repositories.Interface
 {
     public interface IRoleRepository : IRepositoryBase<Role>
     {
-        Task<IList<Role>> GetUserRoles(Guid userId);
+        Task<IList<Role>> GetUserServiceRoles(Guid userId, Guid serviceId);
     }
 }

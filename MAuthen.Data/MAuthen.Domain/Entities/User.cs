@@ -15,7 +15,6 @@ namespace MAuthen.Domain.Entities
         public bool Blocked { get; set; }
         public DateTime BlockedTime { get; set; }
         public Secret Secret { get; set; }
-        public ICollection<UserRole> UserRoles { get; set; }
-        public ICollection<UserService> UserServices { get; set; }
+        public ICollection<UserServiceRoles> UserServiceRoles { get; set; }
     }
 }

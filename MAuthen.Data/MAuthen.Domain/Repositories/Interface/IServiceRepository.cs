@@ -10,7 +10,8 @@ namespace MAuthen.Domain.Repositories.Interface
     {
         Task<SimpleServiceModel> GetServiceById(Guid serviceId);
         Task<IList<User>> GetServiceUsers(Guid serviceId);
-        Task<IList<UserRole>> GetUserRoles(Guid userId, Guid serviceId);
+        //Task<IList<UserRole>> GetUserRoles(Guid userId, Guid serviceId);
+        Task<Guid> GetServiceIdByName(string name);
         
     }
 }

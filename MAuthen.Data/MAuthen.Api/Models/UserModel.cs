@@ -32,8 +32,8 @@ namespace MAuthen.Api.Models
                 LastName = user.LastName,
                 Contacts = user.Contacts.Select(u => new ContactModel
                 {
-                    Email = u.Email,
-                    Phone = u.Phone,
+                    //Email = u.Email,
+                    //Phone = u.Phone,
                     Id = u.Id
                 }).ToList(),
                 UserName = user.UserName,
@@ -49,8 +49,8 @@ namespace MAuthen.Api.Models
                 LastName = user.LastName,
                 Contacts = user.Contacts.Select(u => new Domain.Entities.Contacts
                 {
-                    Email = u.Email,
-                    Phone = u.Phone
+                    //Email = u.Email,
+                    //Phone = u.Phone
                 }).ToList(),
                 Secret = new Secret{Password = user.Password},
                 UserName = user.UserName,

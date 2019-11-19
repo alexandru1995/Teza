@@ -100,6 +100,7 @@ namespace MAuthen.Api
             services.AddScoped<IRoleRepository, RoleRepository>();
             services.AddScoped<ISecretRepository, SecretRepository>();
             services.AddScoped<IServiceRepository, ServiceRepository>();
+            services.AddScoped<IContactRepository, ContactRepository>();
             services.Configure<JwtOptions>(jwtSection);
         }
 

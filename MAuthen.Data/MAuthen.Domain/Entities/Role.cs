@@ -7,7 +7,6 @@ namespace MAuthen.Domain.Entities
     {
         public Guid Id { get; set; }
         public string Name { get; set; }
-        public ICollection<UserRole> UserRoles { get; set; }
-        public ICollection<ServiceRole> ServiceRoles { get; set; }
+        public ICollection<UserServiceRoles> UserServiceRoles { get; set; }
     }
 }

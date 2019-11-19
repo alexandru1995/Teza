@@ -28,18 +28,25 @@ namespace MAuthen.Data.Repositories.Implementation
                 }).FirstOrDefaultAsync();
         }
 
-        public async Task<IList<User>> GetServiceUsers(Guid serviceId)
+        public async Task<Guid> GetServiceIdByName(string name)
         {
-            return await _context.UserServices
-                .Include(s => s.Service)
-                .Include(u => u.User)
-                .Where(us => us.IdService == serviceId).Select(s => s.User)
-                .ToListAsync();
+            return await _context.Services.Where(s => s.Name == name).Select(s => s.Id).FirstOrDefaultAsync();
         }
 
-        public Task<IList<UserRole>> GetUserRoles(Guid userId, Guid serviceId)
+        public async Task<IList<User>> GetServiceUsers(Guid serviceId)
         {
-            throw new NotImplementedException();
+            return await _context.UserServiceRoles.Where(usr => usr.ServiceId == serviceId)
+                .Include(u => u.User).Select(usr => usr.User).ToListAsync();
         }
+
+        //public async Task<IList<UserRole>> GetUserRoles(Guid userId, Guid serviceId)
+        //{
+        //    //var userRole = await _context.Roles
+        //    //    .Include(s => s.ServiceRoles.Where(sr => sr.IdService == serviceId))
+        //    //    .Include(u => u.UserRoles.Where(ur => ur.IdUser == userId)).ToListAsync();
+        //    //var userRoles =  _context.Roles.
+                                    
+        //    throw new NotImplementedException();
+        //}
     }
 }

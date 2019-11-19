@@ -18,6 +18,7 @@ namespace MAuthen.Api.Controllers
     {
         private readonly IUserRepository _user;
         private readonly IPasswordProcessor _processor;
+        private readonly IContactRepository _contact;
         public UserController(IUserRepository user, IPasswordProcessor processor)
         {
             _user = user;
@@ -37,7 +38,8 @@ namespace MAuthen.Api.Controllers
             return Json(user, new JsonSerializerSettings
             {
                 NullValueHandling = NullValueHandling.Ignore,
-                ContractResolver = contractResolver
+                ContractResolver = contractResolver,
+                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
             });
         }
 
@@ -80,13 +82,15 @@ namespace MAuthen.Api.Controllers
         [HttpPost("AddContact")]
         public async Task<IActionResult> AddContact([FromBody] ContactModel model)
         {
-            return Json(await _user.AddContacts(User.Identity.Name, model));
+            //await _user.AddContacts(User.Identity.Name, model)
+            return Json("");
         }
 
         [HttpPost("UpdateContact")]
         public async Task<IActionResult> UpdateContact([FromBody] ContactModel model)
         {
-            return Json(await _user.UpdateContacts( model));
+            //return Json(await _user.UpdateContacts( model));
+            return Ok("");
         }
 
 
@@ -95,7 +99,7 @@ namespace MAuthen.Api.Controllers
         {
             try
             {
-                await _user.deleteContacts(id);
+                await _contact.Delete(id);
                 return StatusCode(204);
             }
             catch(Exception err)

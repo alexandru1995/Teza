@@ -24,8 +24,13 @@ export class AuthorizationService {
         return this.currentUserSubject.value;
     }
 
-    login(data: Login): Observable<boolean> {
-        return this.http.post<SimpleUser>(`Authorization/`, data)
+    login(data: any): Observable<boolean> {
+        let user: Login = {
+            Password : data.password,
+            ServiceName  : "MAuthen",
+            Username : data.username
+        };
+        return this.http.post<SimpleUser>(`Authorization/`, user)
             .pipe(
                 tap((user: SimpleUser) => this.doLoginUser(user)),
                 mapTo(true)

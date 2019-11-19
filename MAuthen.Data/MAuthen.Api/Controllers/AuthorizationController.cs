@@ -1,11 +1,9 @@
-﻿using MAuthen.Api.Models;
-using MAuthen.Api.Models.Authentication;
+﻿using MAuthen.Api.Models.Authentication;
 using MAuthen.Api.Services.Interfaces;
 using MAuthen.Domain.Repositories.Interface;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
-using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -24,6 +22,8 @@ namespace MAuthen.Api.Controllers
         private readonly IPasswordProcessor _processor;
         private readonly ISecretRepository _secret;
         private readonly IRoleRepository _role;
+        private readonly IServiceRepository _service;
+        private readonly IContactRepository _contact;
 
         public IConfiguration _configuration { get; }
 
@@ -31,18 +31,22 @@ namespace MAuthen.Api.Controllers
             IConfiguration configuration,
             IUserRepository user,
             IPasswordProcessor processor,
+            IContactRepository contact,
+            IServiceRepository service,
             ISecretRepository secret,
             IRoleRepository role)
         {
             _configuration = configuration;
             _userRepository = user;
             _processor = processor;
+            _contact = contact;
+            _service = service;
             _secret = secret;
             _role = role;
         }
 
         [HttpPost]
-        public async Task<IActionResult> SignIn([FromBody]UserSimpleModel model, [FromServices] IAccountService accountService)
+        public async Task<IActionResult> SignIn([FromBody]SignInModel model, [FromServices] IAccountService accountService)
         {
             if (!ModelState.IsValid)
             {
@@ -69,20 +73,21 @@ namespace MAuthen.Api.Controllers
                 new Claim("Birthday", user.Birthday.ToString(CultureInfo.InvariantCulture))
             };
             clams.Add(new Claim("Gender", user.Gender ? "Male" : "Female"));
+            var userContact = await _contact.GetContactByUserId(user.Id);
             if (user.Contacts != null)
             {
-                var contact = user.Contacts.FirstOrDefault();
-                clams.Add(new Claim("Email", contact?.Email??""));
-                clams.Add(new Claim("PhoneNumber", contact?.Phone??""));
+                clams.Add(new Claim("Email", userContact.Email.Select(e => e.Email).FirstOrDefault() ?? ""));
+                clams.Add(new Claim("PhoneNumber", userContact.Phone.Select(p => p.Phone).FirstOrDefault() ?? ""));
 
             }
-            var userRole = await _role.GetUserRoles(user.Id);
+            var serviceId = await _service.GetServiceIdByName(model.ServiceName);
+            var userRole = await _role.GetUserServiceRoles(user.Id, serviceId);
             foreach (var role in userRole)
             {
                 clams.Add(new Claim(ClaimTypes.Role, role.Name));
             }
             var refresh = GenerateRefreshToken();
-            _userRepository.UpdateRefreshToken(user.UserName, refresh);
+            _secret.UpdateRefreshToken(user.UserName, refresh);
 
             return Json(new AuthenticatedUserModel
             {
@@ -103,11 +108,11 @@ namespace MAuthen.Api.Controllers
             var username = principal.Identity.Name;
             if (username == null)
                 return BadRequest();
-            var refresh = await _userRepository.GetRefreshToken(username);
+            var refresh = await _secret.GetRefreshToken(username);
             if (refresh != null && model.RefreshToken == refresh)
             {
                 var newRefreshToken = GenerateRefreshToken();
-                _userRepository.UpdateRefreshToken(principal.Identity.Name, newRefreshToken);
+                _secret.UpdateRefreshToken(principal.Identity.Name, newRefreshToken);
                 return Json(new JsonWebToken
                 {
                     AccessToken = accountService.SignIn(principal.Claims).AccessToken,
@@ -121,7 +126,7 @@ namespace MAuthen.Api.Controllers
         [HttpGet("signout")]
         public async Task SignOut([FromServices] IAccountService accountService)
         {
-            _userRepository.UpdateRefreshToken(User.Identity.Name, null);
+            _secret.UpdateRefreshToken(User.Identity.Name, null);
             await accountService.SignOut();
         }
         private string GenerateRefreshToken()
