@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { User } from '../models/user';
 import { Observable, BehaviorSubject } from 'rxjs';
-import { map } from 'rxjs/operators';
 import { Contact } from '../models/contact.model';
 
 @Injectable({
@@ -33,8 +32,15 @@ export class UserService {
     return this.http.get<User>("/user");
   }
 
-  addContact(contact: Contact): Observable<Contact[]> {
-    console.log(contact)
-    return this.http.post<Contact[]>("/user/AddContact", contact);
+  addContact(contact: any): Observable<any> {
+    return this.http.post<any>("/user/AddContact", contact);
+  }
+
+  updateContact(contact: Contact): Observable<Contact>{
+    return this.http.post<Contact>("/user/UpdateContact", contact);
+  }
+
+  deleteContact(contactId: string): Observable<{}>{
+    return this.http.delete("/user/DeleteContact"+"/"+contactId);
   }
 }

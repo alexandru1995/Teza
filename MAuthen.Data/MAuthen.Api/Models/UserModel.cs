@@ -50,8 +50,7 @@ namespace MAuthen.Api.Models
                 Contacts = user.Contacts.Select(u => new Domain.Entities.Contacts
                 {
                     Email = u.Email,
-                    Phone = u.Phone,
-                    Id =  u.Id
+                    Phone = u.Phone
                 }).ToList(),
                 Secret = new Secret{Password = user.Password},
                 UserName = user.UserName,

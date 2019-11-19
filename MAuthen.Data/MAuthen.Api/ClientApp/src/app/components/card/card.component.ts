@@ -4,7 +4,6 @@ import { AuthorizationService } from 'src/app/service/authorization.service';
 import { fadeAnimation } from '../animation';
 import { Router, ActivatedRoute } from '@angular/router';
 import { first } from 'rxjs/operators';
-import { UserService } from 'src/app/service/user.service';
 
 @Component({
     selector: 'card',
@@ -29,10 +28,6 @@ export class CardComponent implements OnInit {
         private route: ActivatedRoute,
         private readonly router: Router
     ) {
-        if (this.authorization.currentUserValue) {
-            this.router.navigate(['/service']);
-        }
-
         this.loginForm = this.formBuilder.group({
             username: ['', [Validators.required]],
             password: ['', [Validators.required]]
@@ -54,6 +49,7 @@ export class CardComponent implements OnInit {
             .pipe(first())
             .subscribe(
                 data => {
+                    console.log(this.returnUrl)
                     this.router.navigate([this.returnUrl])
                 },
                 error => {

@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 
 namespace MAuthen.Api.Controllers
 {
@@ -28,7 +30,15 @@ namespace MAuthen.Api.Controllers
         public async Task<JsonResult> Get()
         {
             var user = await _user.GetUserByUsername(User.Identity.Name);
-            return Json(user);
+            DefaultContractResolver contractResolver = new DefaultContractResolver
+            {
+                NamingStrategy = new CamelCaseNamingStrategy()
+            };
+            return Json(user, new JsonSerializerSettings
+            {
+                NullValueHandling = NullValueHandling.Ignore,
+                ContractResolver = contractResolver
+            });
         }
 
         [HttpGet("users")]
@@ -70,10 +80,30 @@ namespace MAuthen.Api.Controllers
         [HttpPost("AddContact")]
         public async Task<IActionResult> AddContact([FromBody] ContactModel model)
         {
-            var test = await _user.AddContacts(User.Identity.Name, model);
-            return Json("");
+            return Json(await _user.AddContacts(User.Identity.Name, model));
         }
 
+        [HttpPost("UpdateContact")]
+        public async Task<IActionResult> UpdateContact([FromBody] ContactModel model)
+        {
+            return Json(await _user.UpdateContacts( model));
+        }
+
+
+        [HttpDelete("DeleteContact/{id}")]
+        public async Task<IActionResult> DeleteContact(Guid id)
+        {
+            try
+            {
+                await _user.deleteContacts(id);
+                return StatusCode(204);
+            }
+            catch(Exception err)
+            {
+                return StatusCode(500);
+            }
+            
+        }
         [HttpPut]
         public async Task<JsonResult> Update(User model)
         {

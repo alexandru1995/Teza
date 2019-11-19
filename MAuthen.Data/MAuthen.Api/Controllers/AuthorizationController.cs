@@ -9,6 +9,7 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
@@ -70,11 +71,10 @@ namespace MAuthen.Api.Controllers
             clams.Add(new Claim("Gender", user.Gender ? "Male" : "Female"));
             if (user.Contacts != null)
             {
-                foreach (var contact in user.Contacts)
-                {
-                    clams.Add(new Claim("Email", contact.Email));
-                    clams.Add(new Claim("PhoneNumber", contact.Phone));
-                }
+                var contact = user.Contacts.FirstOrDefault();
+                clams.Add(new Claim("Email", contact?.Email??""));
+                clams.Add(new Claim("PhoneNumber", contact?.Phone??""));
+
             }
             var userRole = await _role.GetUserRoles(user.Id);
             foreach (var role in userRole)

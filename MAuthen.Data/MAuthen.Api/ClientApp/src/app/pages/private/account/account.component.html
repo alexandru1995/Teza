@@ -1,81 +1,108 @@
-<div class="container bg-light" *ngIf="user">
+<div class="container bg-light mt-4 pb-3 mb-3" style="min-height: 89vh;" *ngIf="user">
     <div class="row ml-4 pt-4 mt-3">
         <h2>Profile</h2>
     </div>
-    <div class="container bg-light pb-3">
-        <hr class="m-0">
-        <div *ngIf="user">
-            <div class="row ml-4 pt-4">
-                <div class="col-sm-4">
-                    <strong>First Name</strong>
-                </div>
-                <div class="col-sm-3">
-                    {{ user.firstName }}
-                </div>
+    <hr class="m-0">
+    <div *ngIf="user">
+        <div class="row ml-4 pt-4">
+            <div class="col-sm-4">
+                <strong>First Name</strong>
             </div>
-            <div class="row ml-4 pt-2">
-                <div class="col-sm-4">
-                    <strong>Last Name</strong>
-                </div>
-                <div class="col-sm-3">
-                    {{ user.lastName }}
-                </div>
-            </div>
-            <div class="row ml-4 pt-2">
-                <div class="col-sm-4">
-                    <strong>Gender</strong>
-                </div>
-                <div class="col-sm-3">
-                    <div *ngIf="user.gender">Male</div>
-                    <div *ngIf="!user.gender">Female</div>
-                </div>
-            </div>
-            <div class="row ml-4 pt-2">
-                <div class="col-sm-4">
-                    <strong>Birthday</strong>
-                </div>
-                <div class="col-sm-3">
-                    {{ birthday |  date:'mediumDate'}}
-                </div>
+            <div class="col-sm-3">
+                {{ user.firstName }}
             </div>
         </div>
-        <div *ngIf="user.contacts">
-            <div class="row ml-4 pt-4 mt-3">
-                <h2>Contacts</h2>
+        <div class="row ml-4 pt-2">
+            <div class="col-sm-4">
+                <strong>Last Name</strong>
             </div>
-            <hr class="m-0">
-            <div class="row ml-4 pt-4">
-                <div class="col-sm-6">
-                    <ul class="list-group">
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                            <strong>Email addresses</strong>
-                            <button class="btn btn-linck" (click)="addEmail()">
-                                <span style="color: Dodgerblue;">
-                                    <i class="fas fa-plus-circle fa-lg"></i>
-                                </span>
-                            </button>
-                        </li>
+            <div class="col-sm-3">
+                {{ user.lastName }}
+            </div>
+        </div>
+        <div class="row ml-4 pt-2">
+            <div class="col-sm-4">
+                <strong>Gender</strong>
+            </div>
+            <div class="col-sm-3">
+                <div *ngIf="user.gender">Male</div>
+                <div *ngIf="!user.gender">Female</div>
+            </div>
+        </div>
+        <div class="row ml-4 pt-2">
+            <div class="col-sm-4">
+                <strong>Birthday</strong>
+            </div>
+            <div class="col-sm-3">
+                {{ birthday |  date:'mediumDate'}}
+            </div>
+        </div>
+    </div>
+    <div *ngIf="user.contacts">
+        <div class="row ml-4 pt-4 mt-3">
+            <h2>Contacts</h2>
+        </div>
+        <hr class="m-0">
+        <div class="row ml-4 pt-4">
+            <div class="col-sm-6">
+                <ul class="list-group">
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <strong>Email addresses</strong>
+                        <button class="btn btn-linck" (click)="addEmail()">
+                            <span style="color: Dodgerblue;">
+                                <i class="fas fa-plus-circle fa-lg"></i>
+                            </span>
+                        </button>
+                    </li>
+                    <div *ngFor="let contact of contacts">
                         <li class="list-group-item d-flex justify-content-between align-items-center"
-                        *ngFor="let contact of contacts">
-                           {{contact.email}}
+                            *ngIf="contact.email">
+                            {{contact.email}}
+                            <div>
+                                <button class="btn btn-linck" (click)="updateContact(contact,'email')">
+                                    <span style="color: Dodgerblue;">
+                                        <i class="fas fa-pencil-alt"></i>
+                                    </span>
+                                </button>
+                                <button class="btn btn-linck" (click)="DeleteContact(contact,'email')">
+                                    <span class="text-danger">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </span>
+                                </button>
+                            </div>
                         </li>
-                    </ul>
-                </div>
-                <div class="col-sm-6">
-                    <ul class="list-group">
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                            <strong>Phone numbers</strong>
-                            <button class="btn btn-linck">
-                                <span style="color: Dodgerblue;">
-                                    <i class="fas fa-plus-circle fa-lg"></i>
-                                </span>
-                            </button>
-                        </li>
-                        <li class="list-group-item d-flex justify-content-between align-items-center" *ngFor="let contact of contacts">
+                    </div>
+                </ul>
+            </div>
+            <div class="col-sm-6">
+                <ul class="list-group">
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <strong>Phone numbers</strong>
+                        <button class="btn btn-linck" (click)="addPhone()">
+                            <span style="color: Dodgerblue;">
+                                <i class="fas fa-plus-circle fa-lg"></i>
+                            </span>
+                        </button>
+                    </li>
+                    <div *ngFor="let contact of contacts">
+                        <li class="list-group-item d-flex justify-content-between align-items-center"
+                            *ngIf="contact.phone">
                             {{contact.phone}}
+                            <div>
+                                <button class="btn btn-linck" (click)="updateContact(contact,'phone')">
+                                    <span style="color: Dodgerblue;">
+                                        <i class="fas fa-pencil-alt"></i>
+                                    </span>
+                                </button>
+                                <button class="btn btn-linck" (click)="DeleteContact(contact,'phone')">
+                                    <span class="text-danger">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </span>
+                                </button>
+                            </div>
                         </li>
-                    </ul>
-                </div>
+                    </div>
+                </ul>
             </div>
         </div>
     </div>

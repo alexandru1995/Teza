@@ -14,9 +14,12 @@ export class ContactEditModalComponent implements OnInit {
   @Input() title;
   @Input() label;
   @Input() type;
+  @Input() value;
+  @Input() message;
+  @Input() isConfirmation: boolean = false;
 
   contactForm: FormGroup;
-  name: string = '';
+  name: string ;
   submitted: boolean=false;
   isEmail: boolean = false;
   constructor(
@@ -26,11 +29,11 @@ export class ContactEditModalComponent implements OnInit {
     if (this.type === "email") {
       this.isEmail = true;
       this.contactForm = this.formBuilder.group({
-        name: ['', [Validators.required, Validators.email]]
+        name: [this.value, [Validators.required, Validators.email]]
       })
     } else {
       this.contactForm = this.formBuilder.group({
-        name: ['', [Validators.required, phoneNumberValidator]]
+        name: [this.value, [Validators.required, phoneNumberValidator]]
       })
     }
   }
@@ -38,6 +41,9 @@ export class ContactEditModalComponent implements OnInit {
 
   save(){
     this.submitted = true;
+    if(this.contactForm.invalid){
+      return;
+    }
     this.modal.close(this.contactForm.value['name'])
   }
 }

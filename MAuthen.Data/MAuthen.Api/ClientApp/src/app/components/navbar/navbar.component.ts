@@ -20,8 +20,8 @@ export class NavbarComponent implements OnInit {
   
 
     menuItems = [
-    { name: "Home", link: "/" },
-    { name: "Services", link: "/" },
+    { name: "Home", link: '' },
+    { name: "Services", link: "/services" },
     { name: "Account", link: "/account" }
   ];
 
@@ -34,7 +34,8 @@ export class NavbarComponent implements OnInit {
 
   signOut(){
     this.user = null;
+    this.router.navigateByUrl("/");
     this.authorizationService.logout().subscribe();
-    this.router.navigate(['/'])
+    
   }
 }

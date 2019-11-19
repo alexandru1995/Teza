@@ -13,13 +13,13 @@ export class AuthGuard implements CanActivate, CanLoad {
 
     canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
         if (!this.authenticationService.isLoggedIn()) {
-            this.router.navigate(['/'], { queryParams: { returnUrl: state.url } });
+            this.router.navigate([''], { queryParams: { returnUrl: state.url } });
         }
         return this.authenticationService.isLoggedIn();
     }
     canLoad() {
         if (!this.authenticationService.isLoggedIn()) {
-            this.router.navigate(['/']);
+            this.router.navigate(['']);
         }
         return this.authenticationService.isLoggedIn();
     }

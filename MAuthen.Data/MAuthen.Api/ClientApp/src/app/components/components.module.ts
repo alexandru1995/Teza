@@ -9,6 +9,7 @@ import { ToastComponent } from './toast/toast.component';
 import { RouterModule } from '@angular/router';
 import { DatepickerComponent } from './datepicker/datepicker.component';
 import { ContactEditModalComponent } from './contact-edit-modal/contact-edit-modal.component';
+import { AddServiceModalComponent } from './add-service-modal/add-service-modal.component';
 
 @NgModule({
   declarations: [
@@ -17,7 +18,8 @@ import { ContactEditModalComponent } from './contact-edit-modal/contact-edit-mod
     RegistrationCardComponent,
     ToastComponent,
     DatepickerComponent,
-    ContactEditModalComponent
+    ContactEditModalComponent,
+    AddServiceModalComponent
   ],
   exports: [
     NavbarComponent,
@@ -25,10 +27,12 @@ import { ContactEditModalComponent } from './contact-edit-modal/contact-edit-mod
     RegistrationCardComponent,
     ToastComponent,
     DatepickerComponent,
-    ContactEditModalComponent
+    ContactEditModalComponent,
+    AddServiceModalComponent
   ],
   entryComponents:[
-    ContactEditModalComponent
+    ContactEditModalComponent,
+    AddServiceModalComponent
   ],
   imports: [
     ReactiveFormsModule,

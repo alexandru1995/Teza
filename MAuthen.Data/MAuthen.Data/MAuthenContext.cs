@@ -1,5 +1,4 @@
 ﻿using MAuthen.Domain.Entities;
-using MAuthen.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace MAuthen.Data
@@ -77,6 +76,8 @@ namespace MAuthen.Data
             {
                 entity.HasIndex(r => r.Name)
                 .IsUnique();
+                entity.HasIndex(r => r.Domain)
+                    .IsUnique();
             });
         }
     }

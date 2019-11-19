@@ -1,10 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using MAuthen.Domain.Entities;
 using MAuthen.Domain.Repositories.Interface;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace MAuthen.Data.Repositories.Implementation
 {
@@ -30,14 +30,14 @@ namespace MAuthen.Data.Repositories.Implementation
                 .Select(s => s.Secret.RefreshToken).FirstOrDefaultAsync();
         }
 
-        public async void UpdateRefreshToken(string username, string newRefreshToken)
+        public void UpdateRefreshToken(string username, string newRefreshToken)
         {
             var userToken = _context.Users
                 .Include(s => s.Secret)
                 .FirstOrDefault(u => u.UserName == username);
             if (userToken != null) 
                 userToken.Secret.RefreshToken = newRefreshToken;
-            await _context.SaveChangesAsync();
+            _context.SaveChanges();
         }
 
         public async Task<IList<Contacts>> AddContacts(string username, Contacts contacts)
@@ -47,6 +47,38 @@ namespace MAuthen.Data.Repositories.Implementation
             user.Contacts.Add(contacts);
             await _context.SaveChangesAsync();
             return user.Contacts.ToList();
+        }
+
+        public async Task<Contacts> UpdateContacts(Contacts contact)
+        {
+            var currentContact = await _context.Contacts.AsNoTracking().Where(c => c.Id == contact.Id).FirstOrDefaultAsync();
+            if (currentContact == null)
+            {
+                throw new ApplicationException("Contact not exist");
+            }
+            try
+            {
+                _context.Contacts.Update(contact);
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception e)
+            {
+                throw new ApplicationException("Error on insert contact");
+            }
+
+            return contact;
+        }
+
+        public async Task deleteContacts(Guid id)
+        {
+            var contact = await _context.Contacts.AsNoTracking().FirstOrDefaultAsync(c => c.Id == id);
+            if (contact == null)
+            {
+                throw new ApplicationException("Contact not exist");
+            }
+
+            _context.Contacts.Remove(contact);
+            await _context.SaveChangesAsync();
         }
     }
 }

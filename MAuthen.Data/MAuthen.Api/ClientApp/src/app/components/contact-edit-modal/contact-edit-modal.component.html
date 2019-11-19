@@ -5,7 +5,7 @@
     </button>
 </div>
 <div class="modal-body">
-    <form [formGroup]="contactForm">
+    <form [formGroup]="contactForm" *ngIf="!isConfirmation">
         <div class="form-group">
             <label for="name">{{label}}</label>
             <div class="input-group" *ngIf="isEmail">
@@ -26,8 +26,10 @@
             </div>
         </div>
     </form>
+    <p *ngIf="isConfirmation"><strong>{{message}}</strong></p>
 </div>
 <div class="modal-footer">
     <button type="button" class="btn btn-outline-secondary" (click)="modal.dismiss()">Cancel</button>
-    <button type="button" class="btn btn-primary" (click)="save()">Save</button>
+    <button *ngIf="!isConfirmation" type="button" class="btn btn-primary" (click)="save()">Save</button>
+    <button *ngIf="isConfirmation" type="button" class="btn btn-danger" (click)="save()">Ok</button>
 </div>

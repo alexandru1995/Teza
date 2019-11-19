@@ -11,5 +11,7 @@ namespace MAuthen.Domain.Repositories.Interface
         Task<string> GetRefreshToken(string username);
         void UpdateRefreshToken(string username, string newRefreshToken);
         Task<IList<Contacts>> AddContacts(string username, Contacts contacts);
+        Task<Contacts> UpdateContacts(Contacts contacts);
+        Task deleteContacts(Guid id);
     }
 }
