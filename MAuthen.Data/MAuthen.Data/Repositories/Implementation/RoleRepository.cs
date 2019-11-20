@@ -20,7 +20,7 @@ namespace MAuthen.Data.Repositories.Implementation
         public async Task<IList<Role>> GetUserServiceRoles(Guid userId, Guid ServiceId)
         {
             return await _context.UserServiceRoles
-                .Where(usr => usr.UserId == userId && usr.ServiceId == ServiceId && !usr.Role.Options.HasFlag(RoleFlags.None))
+                .Where(usr => usr.UserId == userId && usr.ServiceId == ServiceId)
                 .Include(r => r.Role).Select(usr => usr.Role).ToListAsync();
         }
     }

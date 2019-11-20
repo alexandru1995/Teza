@@ -55,5 +55,19 @@ namespace MAuthen.Api.Controllers
             await _service.RemoveService(id);
             return Ok();
         }
+
+        [HttpGet("BlockUser/{serviceId}/{userId}")]
+        [Authorize(Roles = "UltraAdmin")]
+        public async Task<IActionResult> BlockUser(Guid serviceId,Guid userId, [FromServices]IUserRepository userRepository)
+        {
+            try
+            {
+                await userRepository.Block(userId, serviceId);
+                return Ok();
+            }catch(Exception err)
+            {
+                return StatusCode(401,err.Message);
+            }
+        }
     }
 }

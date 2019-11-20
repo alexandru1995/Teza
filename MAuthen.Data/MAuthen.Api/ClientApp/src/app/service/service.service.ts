@@ -26,4 +26,7 @@ export class ServiceService {
     getUsers(id:string):Observable<UserServiceModel[]>{
         return this.http.get<UserServiceModel[]>("/service/"+id);
     }
+    blockUser(userId:string,serviceId:string): Observable<any>{
+        return this.http.get<any>("/service/BlockUser/"+serviceId+"/"+userId);
+    }
 }

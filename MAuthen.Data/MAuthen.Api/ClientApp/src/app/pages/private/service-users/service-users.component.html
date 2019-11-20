@@ -26,9 +26,9 @@
                         </td>
                         <td>{{user.role}}</td>
                         <td class="text-right">
-                            <button class="btn btn-linck" (click)="updateService(service)">
-                                <span style="color: Dodgerblue;">
-                                    <i class="fas fa-pencil-alt"></i>
+                            <button class="btn btn-linck" (click)="blockUser(user.id)">
+                                <span class="text-danger">
+                                    <i class="fas fa-ban"></i>
                                 </span>
                             </button>
                             <button class="btn btn-linck" (click)="deleteService(service.id)">

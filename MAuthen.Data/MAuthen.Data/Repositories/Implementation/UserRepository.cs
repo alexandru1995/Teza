@@ -1,11 +1,13 @@
 ﻿using MAuthen.Domain.Entities;
 using MAuthen.Domain.Repositories.Interface;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace MAuthen.Data.Repositories.Implementation
 {
-    public class UserRepository: RepositoryBase<User>,IUserRepository
+    public class UserRepository : RepositoryBase<User>, IUserRepository
     {
         private readonly MAuthenContext _context;
         public UserRepository(MAuthenContext context) : base(context)
@@ -17,6 +19,30 @@ namespace MAuthen.Data.Repositories.Implementation
         {
             return await _context.Users
                 .FirstOrDefaultAsync(u => u.UserName == username);
+        }
+
+        public async Task Block(Guid id, Guid serviceId)
+        {
+            var user = await _context.UserServiceRoles.Where(
+                u => u.UserId == id && 
+                u.ServiceId == serviceId && 
+                (!u.Role.Options.HasFlag(RoleFlags.None) ||
+                !u.Role.Options.HasFlag(RoleFlags.Default) && u.Role.Name != "Admin"))
+                .FirstOrDefaultAsync();
+            if (user == null)
+            {
+                throw new Exception("You dont hav permision to block this user;");
+            }
+            user.Bloked = true;
+            _context.UserServiceRoles.Update(user);
+            await _context.SaveChangesAsync();
+        }
+
+        public async  Task<bool> IsBlocked(Guid userId, Guid serviceId)
+        {
+            return await _context.UserServiceRoles
+                .Where(u => u.UserId == userId && u.ServiceId == serviceId)
+                .Select(s => s.Bloked).FirstOrDefaultAsync();
         }
     }
 }

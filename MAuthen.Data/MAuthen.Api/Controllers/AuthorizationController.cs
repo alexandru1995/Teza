@@ -74,19 +74,24 @@ namespace MAuthen.Api.Controllers
                 new Claim("Birthday", user.Birthday.ToString(CultureInfo.InvariantCulture)),
                 new Claim("Gender", user.Gender ? "Male" : "Female")
             };
+
+            var serviceId = await _service.GetServiceIdByName(model.ServiceName);
+            if(await _userRepository.IsBlocked(user.Id, serviceId))
+            {
+                return StatusCode(401, "You are bloked on this service");
+            }
+            await _service.AddUserToService(serviceId, user.Id);
+            var userRole = await _role.GetUserServiceRoles(user.Id, serviceId);
+            foreach (var role in userRole)
+            {
+                clams.Add(new Claim(ClaimTypes.Role, role.Name));
+            }
             var userContact = await _contact.GetContactByUserId(user.Id);
             if (user.Contacts != null)
             {
                 clams.Add(new Claim("Email", userContact.Where(e => e.Email !=null).Select(c => c.Email).FirstOrDefault() ?? ""));
                 clams.Add(new Claim("PhoneNumber", userContact.Where(p => p.Phone!=null).Select(p => p.Phone).FirstOrDefault() ?? ""));
 
-            }
-            var serviceId = await _service.GetServiceIdByName(model.ServiceName);
-            await _service.AddUserToService(serviceId, user.Id);
-            var userRole = await _role.GetUserServiceRoles(user.Id, serviceId);
-            foreach (var role in userRole)
-            {
-                clams.Add(new Claim(ClaimTypes.Role, role.Name));
             }
             var refresh = GenerateRefreshToken();
             _secret.UpdateRefreshToken(user.UserName, refresh);
