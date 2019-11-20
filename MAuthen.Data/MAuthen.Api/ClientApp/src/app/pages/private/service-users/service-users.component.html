@@ -1,47 +1,31 @@
 <div class="container bg-light mt-4 pb-3 mb-3" style="min-height: 89vh;">
     <div class="row ml-4 pt-4 mt-3">
         <div class="col-6 col-sm-6 pl-0 pt-1">
-            <h2>Services</h2>
-        </div>
-        <div class="col-6 col-sm-6">
-            <div class="float-right pr-3">
-                <button class="btn btn-link mt-2" (click)="addService()">
-                    <h5><i class="fas fa-plus"></i> Add Service</h5>
-                </button>
-            </div>
+            <h2>Services Users</h2>
         </div>
     </div>
-    <!-- <hr class="m-0 "> -->
-
-    <div class="row p-3" *ngIf="!services">
-        <div class="col-12 text-center" *ngIf="loading">
+    <div class="col-12 text-center" *ngIf="!users && loading">
             <div class="spinner-border" role="status">
                 <span class="sr-only">Loading...</span>
             </div>
         </div>
-        <div class="col-12 alert alert-info" *ngIf="!loading" role="alert">
-            You d'ont hawe any service.
-        </div>
-    </div>
-    <div class="row pl-3 pt-0 pr-3 pb-0" *ngIf="services">
+    <div class="row pl-3 pt-0 pr-3 pb-0" *ngIf="users">
         <div class="table-responsive">
             <table class="table table-hover">
                 <thead>
                     <tr>
                         <th scope="col">Name</th>
-                        <th scope="col">Domain</th>
-                        <th scope="col">Modified</th>
+                        <th scope="col">Role</th>
                         <th scope="col"></th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr *ngFor="let service of servicesTable">
-                        <td class="clickable" [routerLink]='["/services/"+ service.id]'>
-                            {{ service.name }}
+                    <tr *ngFor="let user of userTable">
+                        <td class="clickable">
+                            {{user.firstName}} {{user.lastName}}
                         </td>
-                        <td>{{ service.domain}}</td>
-                        <td>{{ service.createdOn |  date:'mediumDate' }}</td>
-                        <td class="text-center">
+                        <td>{{user.role}}</td>
+                        <td class="text-right">
                             <button class="btn btn-linck" (click)="updateService(service)">
                                 <span style="color: Dodgerblue;">
                                     <i class="fas fa-pencil-alt"></i>

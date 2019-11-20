@@ -15,12 +15,9 @@ namespace MAuthen.Data
         public DbSet<Contacts> Contacts { get; set; }
         public DbSet<Service> Services { get; set; }
         public DbSet<UserServiceRoles> UserServiceRoles { get; set; }
-        //public DbSet<UserService> UserServices { get; set; }
-        //public DbSet<ServiceRole> ServiceRoles { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            //optionsBuilder.UseSqlServer(@"Data Source=.\SQLEXPRESS;Initial Catalog=MAuthen;Integrated Security=True");
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -37,52 +34,6 @@ namespace MAuthen.Data
                     .WithMany(r => r.UserServiceRoles)
                     .HasForeignKey(usr => usr.RoleId);
             });
-
-            //modelBuilder.Entity<UserRole>(entity =>
-            //{
-            //    entity.HasKey(ur => new { ur.IdRole, ur.IdUser });
-            //    entity.HasOne(ur => ur.User)
-            //        .WithMany(u => u.UserRoles)
-            //        .HasForeignKey(ur => ur.IdUser);
-            //    entity.HasOne(ur => ur.Role)
-            //        .WithMany(r => r.UserRoles)
-            //        .HasForeignKey(ur => ur.IdRole);
-
-            //});
-
-            //modelBuilder.Entity<UserService>(entyty =>
-            //{
-            //    entyty.HasKey(us => new { us.IdUser, us.IdService });
-            //    entyty.HasOne(us => us.User)
-            //        .WithMany(u => u.UserServices)
-            //        .HasForeignKey(ur => ur.IdUser);
-            //    entyty.HasOne(us => us.Service)
-            //        .WithMany(s => s.UserServices)
-            //        .HasForeignKey(us => us.IdService);
-            //});
-
-            //modelBuilder.Entity<ServiceRole>(entity =>
-            //{
-            //    entity.HasKey(sr => new
-            //    {
-            //        sr.IdRole,
-            //        sr.IdService
-            //    });
-            //    entity.HasOne(sr => sr.Role)
-            //        .WithMany(u => u.ServiceRoles)
-            //        .HasForeignKey(ur => ur.IdRole);
-            //    entity.HasOne(sr => sr.Service)
-            //        .WithMany(s => s.ServiceRoles)
-            //        .HasForeignKey(us => us.IdService);
-            //});
-
-            //modelBuilder.Entity<Contacts>(entity =>
-            //{
-            //    entity.HasMany(e => e.Email)
-            //        .WithOne(e => e.Contact);
-            //    entity.HasMany(e => e.Phone)
-            //        .WithOne(e => e.Contact);
-            //});
 
             modelBuilder.Entity<User>(entity =>
             {

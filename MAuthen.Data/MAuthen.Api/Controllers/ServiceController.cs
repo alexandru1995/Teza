@@ -22,13 +22,20 @@ namespace MAuthen.Api.Controllers
         [HttpGet("GetServices")]
         public async Task<IActionResult> GetUserServices()
         {
-            return Json(await _service.GetUserServices(User.Identity.Name));
+            var services = await _service.GetUserServices(User.Identity.Name);
+            if (services.Count > 0)
+            {
+                return Json(services);
+            }
+            return StatusCode(204);
         }
 
-        //public async Task<IActionResult> GetServiceUsers(Guid serviceId)
-        //{
-        //    return null;
-        //}
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetServiceUsers(Guid id)
+        {
+            return Json(await _service.GetServiceUsers(id));
+        }
+
         [HttpPost]
         public async Task<IActionResult> AddService(SimpleServiceModel service)
         {

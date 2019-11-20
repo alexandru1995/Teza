@@ -11,7 +11,7 @@ namespace MAuthen.Data.Repositories.Implementation
 {
     public class ServiceRepository : RepositoryBase<Service>, IServiceRepository
     {
-        private MAuthenContext _context;
+        private readonly MAuthenContext _context;
         public ServiceRepository(MAuthenContext context) : base(context)
         {
             _context = context;
@@ -20,7 +20,9 @@ namespace MAuthen.Data.Repositories.Implementation
         public async Task<SimpleServiceModel> AddService(string userName, Service service)
         {
             var newService = _context.Services.Add(service);
-            var role = _context.Add(new Role {Name = "SuperAdmin"});
+
+            var role = _context.Roles.Add(new Role {Name = "SuperAdmin"});
+            _context.Roles.Add(new Role {Name = "user"});
             var userId = _context.Users.Where(u => u.UserName == userName).Select(s => s.Id).FirstOrDefault();
             _context.UserServiceRoles.Add(
                 new UserServiceRoles
@@ -40,26 +42,23 @@ namespace MAuthen.Data.Repositories.Implementation
             };
         }
 
-        public async Task<SimpleServiceModel> GetServiceById(Guid serviceId)
-        {
-            return await _context.Services.Where(s => s.Id == serviceId)
-                .Select(ns => new SimpleServiceModel {
-                    Id = ns.Id,
-                    Name = ns.Name,
-                    Domain = ns.Domain,
-                    CreatedOn = ns.CreatedOn
-                }).FirstOrDefaultAsync();
-        }
-
         public async Task<Guid> GetServiceIdByName(string name)
         {
             return await _context.Services.Where(s => s.Name == name).Select(s => s.Id).FirstOrDefaultAsync();
         }
         //TODO Get full user with role
-        public async Task<IList<User>> GetServiceUsers(Guid serviceId)
+        public async Task<IList<ServiceUserModel>> GetServiceUsers(Guid serviceId)
         {
             return await _context.UserServiceRoles.Where(usr => usr.ServiceId == serviceId)
-                .Include(u => u.User).Select(usr => usr.User).ToListAsync();
+                .Include(r => r.Role)
+                .Include(u => u.User)
+                .Select(usr => new ServiceUserModel
+                {
+                    Id = usr.UserId,
+                    Role = usr.Role.Name,
+                    FirstName = usr.User.FirstName,
+                    LastName = usr.User.LastName
+                }).ToListAsync();
         }
 
         public async Task<IList<SimpleServiceModel>> GetUserServices(string username)
@@ -94,15 +93,20 @@ namespace MAuthen.Data.Repositories.Implementation
             await _context.SaveChangesAsync();
 
         }
-
-        //public async Task<IList<UserRole>> GetUserRoles(Guid userId, Guid serviceId)
-        //{
-        //    //var userRole = await _context.Roles
-        //    //    .Include(s => s.ServiceRoles.Where(sr => sr.IdService == serviceId))
-        //    //    .Include(u => u.UserRoles.Where(ur => ur.IdUser == userId)).ToListAsync();
-        //    //var userRoles =  _context.Roles.
-                                    
-        //    throw new NotImplementedException();
-        //}
+        //TODO Insert User to client service
+        public async Task AddUserToService(Guid serviceId, Guid userId)
+        {
+            var userIsAssigned =
+                _context.UserServiceRoles.FirstOrDefault(s => s.ServiceId == serviceId && s.UserId == userId);
+            if (userIsAssigned == null)
+            {
+                _context.UserServiceRoles.Add(new UserServiceRoles
+                {
+                    UserId = userId,
+                    ServiceId = serviceId
+                });
+                await _context.SaveChangesAsync();
+            }
+        }
     }
 }

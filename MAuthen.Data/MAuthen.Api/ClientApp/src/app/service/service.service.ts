@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Service } from '../models/service-models/service.model';
+import { UserServiceModel } from '../models/service-models/user-service.model';
 
 @Injectable({
     providedIn: 'root'
@@ -21,5 +22,8 @@ export class ServiceService {
     }
     delete(id: string): Observable<any>{
         return this.http.delete("/service/"+id)
+    }
+    getUsers(id:string):Observable<UserServiceModel[]>{
+        return this.http.get<UserServiceModel[]>("/service/"+id);
     }
 }

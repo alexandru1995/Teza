@@ -17,7 +17,7 @@ export class ServiceComponent implements OnInit {
   loading: boolean = false;
 
   page = 1;
-  pageSize = 8;
+  pageSize = 9;
   collectionSize;
 
   constructor(
@@ -45,7 +45,6 @@ export class ServiceComponent implements OnInit {
     modalRef.componentInstance.domain = service.domain;
     modalRef.result
       .then((rez) => {
-        console.log(rez)
         service.name = rez.name;
         service.domain = rez.domain;
         this.service.update(service).subscribe(service => {
@@ -92,7 +91,7 @@ export class ServiceComponent implements OnInit {
   private getService() {
     this.loading = true;
     this.service.get().subscribe(service => {
-      console.log(service);
+      console.log("service",this.service)
       this.services = service;
       this.loading = false;
       this.collectionSize = this.services.length;

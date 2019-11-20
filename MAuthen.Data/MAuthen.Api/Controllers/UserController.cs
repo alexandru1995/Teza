@@ -58,6 +58,7 @@ namespace MAuthen.Api.Controllers
         }
 
         [HttpPost]
+        [AllowAnonymous]
         public async Task<IActionResult> Add([FromBody]UserModel model)
         {
             if (!ModelState.IsValid)
@@ -77,7 +78,7 @@ namespace MAuthen.Api.Controllers
                 }
             }
             
-            return Json(StatusCode(201, "Successful creation"));
+            return StatusCode(201, "Successful creation");
         }
 
         [HttpPost("AddContact")]
@@ -102,7 +103,7 @@ namespace MAuthen.Api.Controllers
                 await _contact.Delete(id);
                 return StatusCode(204);
             }
-            catch(Exception err)
+            catch
             {
                 return StatusCode(500);
             }

@@ -65,14 +65,15 @@ namespace MAuthen.Api.Controllers
             {
                 return Unauthorized("Invalid username or password");
             }
+            
             var clams = new List<Claim>
             {
                 new Claim("FirstName", user.FirstName),
                 new Claim("LastName", user.LastName),
                 new Claim(ClaimsIdentity.DefaultNameClaimType, user.UserName),
-                new Claim("Birthday", user.Birthday.ToString(CultureInfo.InvariantCulture))
+                new Claim("Birthday", user.Birthday.ToString(CultureInfo.InvariantCulture)),
+                new Claim("Gender", user.Gender ? "Male" : "Female")
             };
-            clams.Add(new Claim("Gender", user.Gender ? "Male" : "Female"));
             var userContact = await _contact.GetContactByUserId(user.Id);
             if (user.Contacts != null)
             {
@@ -81,6 +82,7 @@ namespace MAuthen.Api.Controllers
 
             }
             var serviceId = await _service.GetServiceIdByName(model.ServiceName);
+            await _service.AddUserToService(serviceId, user.Id);
             var userRole = await _role.GetUserServiceRoles(user.Id, serviceId);
             foreach (var role in userRole)
             {

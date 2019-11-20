@@ -5,7 +5,7 @@ namespace MAuthen.Api.Models.Contacts
 {
     public class ContactModel
     {
-        public Guid Id { get; set; }
+        public Guid? Id { get; set; }
         public string Email { get; set; }
         public string Phone { get; set; }
 
@@ -22,7 +22,6 @@ namespace MAuthen.Api.Models.Contacts
         {
             return new Domain.Entities.Contacts
             {
-                Id = model.Id,
                 Email = model.Email,
                 Phone = model.Phone
             };
