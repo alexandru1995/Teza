@@ -41,6 +41,6 @@ export class UserService {
   }
 
   deleteContact(contactId: string): Observable<{}>{
-    return this.http.delete("/user/DeleteContact"+"/"+contactId);
+    return this.http.delete("/user/DeleteContact/"+contactId);
   }
 }

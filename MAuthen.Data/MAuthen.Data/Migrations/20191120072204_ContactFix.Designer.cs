@@ -4,14 +4,16 @@ using MAuthen.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace MAuthen.Data.Migrations
 {
     [DbContext(typeof(MAuthenContext))]
-    partial class MAuthenContextModelSnapshot : ModelSnapshot
+    [Migration("20191120072204_ContactFix")]
+    partial class ContactFix
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -19,14 +21,42 @@ namespace MAuthen.Data.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("MAuthen.Domain.Entities.Contacts", b =>
+            modelBuilder.Entity("MAuthen.Domain.Entities.ContactEmail", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<Guid?>("ContactId");
+
                     b.Property<string>("Email");
 
+                    b.HasKey("Id");
+
+                    b.HasIndex("ContactId");
+
+                    b.ToTable("ContactEmail");
+                });
+
+            modelBuilder.Entity("MAuthen.Domain.Entities.ContactPhone", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<Guid?>("ContactId");
+
                     b.Property<string>("Phone");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ContactId");
+
+                    b.ToTable("ContactPhone");
+                });
+
+            modelBuilder.Entity("MAuthen.Domain.Entities.Contacts", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd();
 
                     b.Property<Guid?>("UserId");
 
@@ -143,6 +173,20 @@ namespace MAuthen.Data.Migrations
                     b.HasIndex("ServiceId");
 
                     b.ToTable("UserServiceRoles");
+                });
+
+            modelBuilder.Entity("MAuthen.Domain.Entities.ContactEmail", b =>
+                {
+                    b.HasOne("MAuthen.Domain.Entities.Contacts", "Contact")
+                        .WithMany("Email")
+                        .HasForeignKey("ContactId");
+                });
+
+            modelBuilder.Entity("MAuthen.Domain.Entities.ContactPhone", b =>
+                {
+                    b.HasOne("MAuthen.Domain.Entities.Contacts", "Contact")
+                        .WithMany("Phone")
+                        .HasForeignKey("ContactId");
                 });
 
             modelBuilder.Entity("MAuthen.Domain.Entities.Contacts", b =>

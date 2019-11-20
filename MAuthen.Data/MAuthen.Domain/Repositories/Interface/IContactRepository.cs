@@ -8,6 +8,6 @@ namespace MAuthen.Domain.Repositories.Interface
     public interface IContactRepository : IRepositoryBase<Contacts>
     {
         Task<IList<Contacts>> AddContacts(string username, Contacts contacts);
-        Task<Contacts> GetContactByUserId(Guid userId);
+        Task<IList<Contacts>> GetContactByUserId(Guid userId);
     }
 }

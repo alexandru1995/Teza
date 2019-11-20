@@ -46,5 +46,8 @@ export class ContactEditModalComponent implements OnInit {
     }
     this.modal.close(this.contactForm.value['name'])
   }
+  confirm(){
+    this.modal.close(this.contactForm.value['name'])
+  }
 }
 

@@ -25,12 +25,10 @@ namespace MAuthen.Data.Repositories.Implementation
             return user.Contacts.ToList();
         }
 
-        public async Task<Contacts> GetContactByUserId(Guid userId)
+        public async Task<IList<Contacts>> GetContactByUserId(Guid userId)
         {
             return await _context.Contacts
-                .Include(c => c.Email)
-                .Include(p => p.Phone)
-                .Where(c => c.User.Id == userId).FirstOrDefaultAsync();
-        }
+                .Include(u => u.User)
+                .Where(c => c.User.Id == userId).ToListAsync();        }
     }
 }

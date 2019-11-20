@@ -5,10 +5,10 @@ using MAuthen.Domain.Entities;
 using MAuthen.Domain.Repositories.Interface;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
+using System;
+using System.Threading.Tasks;
 
 namespace MAuthen.Api.Controllers
 {
@@ -19,18 +19,19 @@ namespace MAuthen.Api.Controllers
         private readonly IUserRepository _user;
         private readonly IPasswordProcessor _processor;
         private readonly IContactRepository _contact;
-        public UserController(IUserRepository user, IPasswordProcessor processor)
+        public UserController(IUserRepository user, IPasswordProcessor processor, IContactRepository contact)
         {
             _user = user;
+            _contact = contact;
             _processor = processor;
         }
         
 
         [HttpGet]
-        
         public async Task<JsonResult> Get()
         {
             var user = await _user.GetUserByUsername(User.Identity.Name);
+            user.Contacts= await _contact.GetContactByUserId(user.Id);
             DefaultContractResolver contractResolver = new DefaultContractResolver
             {
                 NamingStrategy = new CamelCaseNamingStrategy()
@@ -82,15 +83,14 @@ namespace MAuthen.Api.Controllers
         [HttpPost("AddContact")]
         public async Task<IActionResult> AddContact([FromBody] ContactModel model)
         {
-            //await _user.AddContacts(User.Identity.Name, model)
-            return Json("");
+            return Json(await _contact.AddContacts(User.Identity.Name, model));
         }
 
         [HttpPost("UpdateContact")]
         public async Task<IActionResult> UpdateContact([FromBody] ContactModel model)
         {
-            //return Json(await _user.UpdateContacts( model));
-            return Ok("");
+            await _contact.Update(model);
+            return StatusCode(200);
         }
 
 

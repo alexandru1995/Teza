@@ -76,6 +76,13 @@ namespace MAuthen.Data
             //        .HasForeignKey(us => us.IdService);
             //});
 
+            //modelBuilder.Entity<Contacts>(entity =>
+            //{
+            //    entity.HasMany(e => e.Email)
+            //        .WithOne(e => e.Contact);
+            //    entity.HasMany(e => e.Phone)
+            //        .WithOne(e => e.Contact);
+            //});
 
             modelBuilder.Entity<User>(entity =>
             {

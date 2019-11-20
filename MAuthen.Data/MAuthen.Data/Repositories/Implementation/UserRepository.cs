@@ -1,9 +1,6 @@
-﻿using System;
-using MAuthen.Domain.Entities;
+﻿using MAuthen.Domain.Entities;
 using MAuthen.Domain.Repositories.Interface;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace MAuthen.Data.Repositories.Implementation
@@ -19,7 +16,6 @@ namespace MAuthen.Data.Repositories.Implementation
         public async Task<User> GetUserByUsername(string username)
         {
             return await _context.Users
-                .Include(c => c.Contacts)
                 .FirstOrDefaultAsync(u => u.UserName == username);
         }
 

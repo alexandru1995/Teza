@@ -92,7 +92,6 @@ export class AccountComponent implements OnInit {
       modalRef.componentInstance.title = "Delete Phone Number";
       modalRef.componentInstance.message = "Are you sure you want to delete this Phone Number ?";
       modalRef.componentInstance.isConfirmation = true;
-      modalRef.componentInstance.value = contact.phone;
       modalRef.result
         .then(() => {
           if (contact.email != null) {
@@ -120,6 +119,8 @@ export class AccountComponent implements OnInit {
       modalRef.componentInstance.isConfirmation = true;
       modalRef.result
         .then(() => {
+          
+          console.log("-----")
           if (contact.phone != null) {
             contact.email = null;
             this.userService.updateContact(contact)
@@ -137,7 +138,9 @@ export class AccountComponent implements OnInit {
               )
           }
         })
-        .catch(err => { })
+        .catch(err => { 
+          console.log(err)
+        })
     }
   }
 

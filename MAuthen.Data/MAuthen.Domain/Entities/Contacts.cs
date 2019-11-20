@@ -7,7 +7,7 @@ namespace MAuthen.Domain.Entities
     {
         public Guid Id { get; set; }
         public User User { get; set; }
-        public ICollection<ContactEmail> Email { get; set; }
-        public ICollection<ContactPhone> Phone { get; set; }
+        public string Email { get; set; }
+        public string Phone { get; set; }
     }
 }

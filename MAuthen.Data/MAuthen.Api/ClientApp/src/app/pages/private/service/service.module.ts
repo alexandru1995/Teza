@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 
 import { ServiceRoutingModule } from './service-routing.module';
 import { ServiceComponent } from './service.component';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 
 @NgModule({
@@ -11,7 +12,8 @@ import { ServiceComponent } from './service.component';
   ],
   imports: [
     CommonModule,
-    ServiceRoutingModule
+    ServiceRoutingModule,
+    NgbModule
   ]
 })
 export class ServiceModule { }

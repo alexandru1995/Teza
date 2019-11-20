@@ -11,8 +11,8 @@ namespace MAuthen.Domain.Entities
         public Service Service { get; set; }
         public bool Consent { get; set; }
         public DateTime CreatedOn {
-            get { return _createdOn; }
-            set { _createdOn = DateTime.UtcNow; }
+            get => _createdOn;
+            set => _createdOn = DateTime.UtcNow;
         }
     }
 }

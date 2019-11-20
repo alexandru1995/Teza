@@ -31,5 +31,5 @@
 <div class="modal-footer">
     <button type="button" class="btn btn-outline-secondary" (click)="modal.dismiss()">Cancel</button>
     <button *ngIf="!isConfirmation" type="button" class="btn btn-primary" (click)="save()">Save</button>
-    <button *ngIf="isConfirmation" type="button" class="btn btn-danger" (click)="save()">Ok</button>
+    <button *ngIf="isConfirmation" type="button" class="btn btn-danger" (click)="confirm()">Ok</button>
 </div>

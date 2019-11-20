@@ -1,6 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
+using MAuthen.Domain.Entities;
 
 namespace MAuthen.Domain.Models
 {
@@ -9,6 +8,18 @@ namespace MAuthen.Domain.Models
         public Guid Id { get; set; }
         public string Name { get; set; }
         public string Domain { get; set; }
-        public DateTime CreatedOn { get; set; }
+        public DateTime? CreatedOn { get; set; }
+
+        public static implicit operator Service(SimpleServiceModel model)
+        {
+            return  new Service
+            {
+                Id = model.Id,
+                Name = model.Name,
+                Domain = model.Domain,
+                CreatedOn = DateTime.Now
+                
+            };
+        }
     }
 }

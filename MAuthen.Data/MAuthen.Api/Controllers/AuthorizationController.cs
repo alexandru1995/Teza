@@ -76,8 +76,8 @@ namespace MAuthen.Api.Controllers
             var userContact = await _contact.GetContactByUserId(user.Id);
             if (user.Contacts != null)
             {
-                clams.Add(new Claim("Email", userContact.Email.Select(e => e.Email).FirstOrDefault() ?? ""));
-                clams.Add(new Claim("PhoneNumber", userContact.Phone.Select(p => p.Phone).FirstOrDefault() ?? ""));
+                clams.Add(new Claim("Email", userContact.Where(e => e.Email !=null).Select(c => c.Email).FirstOrDefault() ?? ""));
+                clams.Add(new Claim("PhoneNumber", userContact.Where(p => p.Phone!=null).Select(p => p.Phone).FirstOrDefault() ?? ""));
 
             }
             var serviceId = await _service.GetServiceIdByName(model.ServiceName);
