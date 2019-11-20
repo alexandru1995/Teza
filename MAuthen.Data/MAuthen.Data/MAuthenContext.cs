@@ -1,5 +1,6 @@
 ﻿using MAuthen.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace MAuthen.Data
 {
@@ -21,6 +22,11 @@ namespace MAuthen.Data
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+
+            EnumToNumberConverter<RoleFlags, int>
+                converter = new EnumToNumberConverter<RoleFlags, int>();
+
+
             modelBuilder.Entity<UserServiceRoles>(entity =>
             {
                 entity.HasKey(usr => new { usr.UserId, usr.RoleId, usr.ServiceId });
@@ -53,6 +59,12 @@ namespace MAuthen.Data
                 .IsUnique();
                 entity.HasIndex(r => r.Domain)
                     .IsUnique();
+            });
+
+            modelBuilder.Entity<Role>(entyty =>
+            {
+                entyty.Property(r => r.Options)
+                .HasConversion(converter);
             });
         }
     }

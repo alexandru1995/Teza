@@ -21,15 +21,13 @@ namespace MAuthen.Data.Repositories.Implementation
         {
             var newService = _context.Services.Add(service);
 
-            var role = _context.Roles.Add(new Role {Name = "SuperAdmin"});
-            _context.Roles.Add(new Role {Name = "user"});
             var userId = _context.Users.Where(u => u.UserName == userName).Select(s => s.Id).FirstOrDefault();
             _context.UserServiceRoles.Add(
                 new UserServiceRoles
                 {
                     UserId = userId,
                     ServiceId = newService.Entity.Id,
-                    RoleId = role.Entity.Id,
+                    RoleId = Guid.Parse("BD1FF3D5-6BE5-4660-B1BE-77284DD8B669"),
                     CreatedOn = DateTime.Now
                 });
             await _context.SaveChangesAsync();
@@ -65,7 +63,9 @@ namespace MAuthen.Data.Repositories.Implementation
         {
             return await _context.UserServiceRoles
                 .Include(s => s.Service)
-                .Where(u => u.User.UserName == username)
+                .Where(u => u.User.UserName == username 
+                && (u.Role.Options.HasFlag(RoleFlags.Default) 
+                && u.Role.Name == "Aministrator")|| u.Role.Options.HasFlag(RoleFlags.None))
                 .Select(s => new SimpleServiceModel
                 {
                     Id = s.ServiceId,
@@ -88,8 +88,9 @@ namespace MAuthen.Data.Repositories.Implementation
                     s.Service
                 }).ToListAsync();
 
-            _context.Roles.RemoveRange(serviceRole.Select(s=>s.Role));
-            _context.Services.Remove(serviceRole.Select(s=>s.Service).First());
+            _context.Roles.RemoveRange(
+                serviceRole.Select(s => s.Role).Where(r => r.Options.HasFlag(RoleFlags.Service)));
+            _context.Services.Remove(serviceRole.Select(s => s.Service).First());
             await _context.SaveChangesAsync();
 
         }
@@ -103,7 +104,8 @@ namespace MAuthen.Data.Repositories.Implementation
                 _context.UserServiceRoles.Add(new UserServiceRoles
                 {
                     UserId = userId,
-                    ServiceId = serviceId
+                    ServiceId = serviceId,
+                    RoleId = Guid.Parse("B942F50F-1A0D-4A7A-9010-844F95D0F7C9")
                 });
                 await _context.SaveChangesAsync();
             }

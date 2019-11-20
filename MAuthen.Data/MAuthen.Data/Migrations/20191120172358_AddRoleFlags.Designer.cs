@@ -4,14 +4,16 @@ using MAuthen.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace MAuthen.Data.Migrations
 {
     [DbContext(typeof(MAuthenContext))]
-    partial class MAuthenContextModelSnapshot : ModelSnapshot
+    [Migration("20191120172358_AddRoleFlags")]
+    partial class AddRoleFlags
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -135,8 +137,6 @@ namespace MAuthen.Data.Migrations
                     b.Property<Guid>("RoleId");
 
                     b.Property<Guid>("ServiceId");
-
-                    b.Property<bool>("Bloked");
 
                     b.Property<DateTime>("CreatedOn");
 

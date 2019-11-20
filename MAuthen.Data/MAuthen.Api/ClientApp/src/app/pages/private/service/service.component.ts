@@ -60,13 +60,15 @@ export class ServiceComponent implements OnInit {
     modalRef.componentInstance.title = "Add Service";
     modalRef.result
       .then((rez) => {
-        console.log(rez)
         this.service.add(rez).subscribe(service => {
-          this.services.push(service);
+          if (this.services == null) {
+            this.getService()
+          } else {
+            this.services.push(service);
+          }
           this.collectionSize++;
         })
-      }
-      )
+      })
       .catch(err => { })
   }
 
@@ -91,10 +93,9 @@ export class ServiceComponent implements OnInit {
   private getService() {
     this.loading = true;
     this.service.get().subscribe(service => {
-      console.log("service",this.service)
       this.services = service;
       this.loading = false;
-      this.collectionSize = this.services.length;
+      this.collectionSize = this.services ? this.services.length : 0;
     })
   }
 }
