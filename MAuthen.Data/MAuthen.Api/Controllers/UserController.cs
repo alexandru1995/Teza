@@ -56,7 +56,6 @@ namespace MAuthen.Api.Controllers
         {
             return Json(await _user.GetById(id));
         }
-
         [HttpPost]
         [AllowAnonymous]
         public async Task<IActionResult> Add([FromBody]UserModel model)
@@ -80,21 +79,17 @@ namespace MAuthen.Api.Controllers
             
             return StatusCode(201, "Successful creation");
         }
-
         [HttpPost("AddContact")]
         public async Task<IActionResult> AddContact([FromBody] ContactModel model)
         {
             return Json(await _contact.AddContacts(User.Identity.Name, model));
         }
-
         [HttpPost("UpdateContact")]
         public async Task<IActionResult> UpdateContact([FromBody] ContactModel model)
         {
             await _contact.Update(model);
             return StatusCode(200);
         }
-
-
         [HttpDelete("DeleteContact/{id}")]
         public async Task<IActionResult> DeleteContact(Guid id)
         {

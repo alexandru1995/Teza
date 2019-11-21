@@ -78,7 +78,7 @@ namespace MAuthen.Api.Controllers
             var serviceId = await _service.GetServiceIdByName(model.ServiceName);
             if(await _userRepository.IsBlocked(user.Id, serviceId))
             {
-                return StatusCode(401, "You are bloked on this service");
+                return StatusCode(403, "You are bloked on this service");
             }
             await _service.AddUserToService(serviceId, user.Id);
             var userRole = await _role.GetUserServiceRoles(user.Id, serviceId);

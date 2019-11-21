@@ -57,7 +57,7 @@ namespace MAuthen.Api.Controllers
         }
 
         [HttpGet("BlockUser/{serviceId}/{userId}")]
-        [Authorize(Roles = "UltraAdmin")]
+        [Authorize(Roles = "UltraAdmin, Administrator")]
         public async Task<IActionResult> BlockUser(Guid serviceId,Guid userId, [FromServices]IUserRepository userRepository)
         {
             try
@@ -66,7 +66,22 @@ namespace MAuthen.Api.Controllers
                 return Ok();
             }catch(Exception err)
             {
-                return StatusCode(401,err.Message);
+                return StatusCode(403,err.Message);
+            }
+        }
+
+        [HttpGet("UnBlockUser/{serviceId}/{userId}")]
+        [Authorize(Roles = "UltraAdmin")]
+        public async Task<IActionResult> UnBlockUser(Guid serviceId, Guid userId, [FromServices]IUserRepository userRepository)
+        {
+            try
+            {
+                await userRepository.UnBlock(userId, serviceId);
+                return Ok();
+            }
+            catch (Exception err)
+            {
+                return StatusCode(403, err.Message);
             }
         }
     }

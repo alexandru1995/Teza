@@ -4,19 +4,22 @@ import { ServiceService } from 'src/app/service/service.service';
 import { ActivatedRoute } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ContactEditModalComponent } from 'src/app/components/contact-edit-modal/contact-edit-modal.component';
+import { fadeAnimation } from 'src/app/components/animation';
 
 @Component({
   selector: 'app-service-users',
   templateUrl: './service-users.component.html',
-  styleUrls: ['./service-users.component.css']
+  styleUrls: ['./service-users.component.css'],
+  animations: [fadeAnimation]
 })
 export class ServiceUsersComponent implements OnInit {
 
   page = 1;
   pageSize = 9;
   collectionSize;
-  loading : boolean = false;
+  loading: boolean = false;
   serviceId: string;
+  error: string;
 
   users: UserServiceModel[];
 
@@ -37,30 +40,43 @@ export class ServiceUsersComponent implements OnInit {
     this.getUser()
   }
 
-  blockUser(userId){
+  blockUser(user) {
     var modalRef = this.modalService.open(ContactEditModalComponent);
     modalRef.componentInstance.title = "Block User";
     modalRef.componentInstance.message = "Are you sure you want to block this User ?";
     modalRef.componentInstance.isConfirmation = true;
     modalRef.result
       .then(() => {
-        this.service.blockUser(userId,this.serviceId).subscribe(
+        this.service.blockUser(user.id, this.serviceId).subscribe(
           data => {
-            console.log("success")
+            this.getUser()
           },
-          err => { 
-            console.log(err)
+          err => {
+            this.error = err;
+            setTimeout(() => this.hidenError(), 3000);
           }
         )
       })
       .catch(err => { })
   }
 
-  private getUser(){
+  unBlockUser(user) {
+    this.service.unBlockUser(user.id, this.serviceId).subscribe(
+      data => {
+        this.getUser()
+      },
+      err => {
+      })
+  }
+
+  private getUser() {
     this.loading = true;
     this.service.getUsers(this.serviceId).subscribe(users => {
       this.users = users
       this.loading = false;
     })
+  }
+  private hidenError() {
+    this.error = null
   }
 }

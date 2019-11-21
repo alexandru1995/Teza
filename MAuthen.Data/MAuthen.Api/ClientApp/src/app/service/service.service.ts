@@ -29,4 +29,7 @@ export class ServiceService {
     blockUser(userId:string,serviceId:string): Observable<any>{
         return this.http.get<any>("/service/BlockUser/"+serviceId+"/"+userId);
     }
+    unBlockUser(userId:string,serviceId:string): Observable<any>{
+        return this.http.get<any>("/service/UnBlockUser/"+serviceId+"/"+userId);
+    }
 }

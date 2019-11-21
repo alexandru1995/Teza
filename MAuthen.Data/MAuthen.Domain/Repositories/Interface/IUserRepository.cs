@@ -9,5 +9,6 @@ namespace MAuthen.Domain.Repositories.Interface
         Task<User> GetUserByUsername(string username);
         Task Block(Guid userId, Guid serviceId);
         Task<Boolean> IsBlocked(Guid userId, Guid serviceId);
+        Task UnBlock(Guid id, Guid serviceId);
     }
 }

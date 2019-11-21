@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace MAuthen.Domain.Models
 {
@@ -10,5 +8,6 @@ namespace MAuthen.Domain.Models
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Role { get; set; }
+        public Boolean IsBlocked { get; set; }
     }
 }

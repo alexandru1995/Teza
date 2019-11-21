@@ -55,7 +55,8 @@ namespace MAuthen.Data.Repositories.Implementation
                     Id = usr.UserId,
                     Role = usr.Role.Name,
                     FirstName = usr.User.FirstName,
-                    LastName = usr.User.LastName
+                    LastName = usr.User.LastName,
+                    IsBlocked = usr.Bloked
                 }).ToListAsync();
         }
 
