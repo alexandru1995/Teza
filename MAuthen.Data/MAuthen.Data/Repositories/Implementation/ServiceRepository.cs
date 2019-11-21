@@ -65,7 +65,7 @@ namespace MAuthen.Data.Repositories.Implementation
                 .Include(s => s.Service)
                 .Where(u => u.User.UserName == username 
                 && (u.Role.Options.HasFlag(RoleFlags.Default) 
-                && u.Role.Name == "Aministrator")|| u.Role.Options.HasFlag(RoleFlags.None))
+                && u.Role.Name == "Aministrator"|| u.Role.Options.HasFlag(RoleFlags.None)))
                 .Select(s => new SimpleServiceModel
                 {
                     Id = s.ServiceId,
