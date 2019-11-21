@@ -126,6 +126,9 @@ namespace MAuthen.Api.Controllers
                     RefreshToken = newRefreshToken
                 });
             }
+
+            Response.Headers.Remove("Token-Expired");
+            Response.Headers.Add("Invalid-refresh", "true");
             return Unauthorized();
         }
 

@@ -24,7 +24,12 @@ export class ErrorInterceptor implements HttpInterceptor {
                 if (err.status === 401) {
                     if (err.headers.has('Token-Expired')) {
                         return this.handle401Error(request, next);
-                    } else {
+                    }if(err.headers.has('Invalid-refresh')) {
+                        localStorage.clear();
+                        this.authenticationService.currentUserSubject.next(null);
+                        this.router.navigate([''])
+                    }
+                    else {
                         localStorage.clear();
                         return throwError(err);
                     }
@@ -43,7 +48,7 @@ export class ErrorInterceptor implements HttpInterceptor {
                     this.isRefreshing = false;
                     this.refreshTokenSubject.next(token.accessToken);
                     return next.handle(this.addToken(request, token.accessToken));
-                }));
+                },));
 
         } else {
             return this.refreshTokenSubject.pipe(

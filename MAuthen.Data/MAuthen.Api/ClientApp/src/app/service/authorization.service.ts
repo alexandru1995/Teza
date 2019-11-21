@@ -11,7 +11,7 @@ import { SimpleUser } from '../models/simpleUser.model';
 })
 export class AuthorizationService {
 
-    private currentUserSubject: BehaviorSubject<any>;
+    public currentUserSubject: BehaviorSubject<any>;
     public currentUser: Observable<any>;
 
 
