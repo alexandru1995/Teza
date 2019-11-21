@@ -34,8 +34,8 @@ export class ErrorInterceptor implements HttpInterceptor {
                         return throwError(err);
                     }
                 }
-                const error = err.error || err.statusText;
-                return throwError(error);
+                //const error = err.error || err.statusText;
+                return throwError(err);
             }))
     }
     private handle401Error(request: HttpRequest<any>, next: HttpHandler) {

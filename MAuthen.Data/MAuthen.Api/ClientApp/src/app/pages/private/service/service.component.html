@@ -36,7 +36,7 @@
                 </thead>
                 <tbody>
                     <tr *ngFor="let service of servicesTable">
-                        <td class="clickable" [routerLink]='["/services/"+ service.id]'>
+                        <td class="clickable text-primary" [routerLink]='["/services/"+ service.id]'>
                             {{ service.name }}
                         </td>
                         <td>{{ service.domain}}</td>

@@ -10,6 +10,8 @@ import { RouterModule } from '@angular/router';
 import { DatepickerComponent } from './datepicker/datepicker.component';
 import { ContactEditModalComponent } from './contact-edit-modal/contact-edit-modal.component';
 import { AddServiceModalComponent } from './add-service-modal/add-service-modal.component';
+import { AddRoleModalComponent } from './add-role-modal/add-role-modal.component';
+import { ChangeRoleModalComponent } from './change-role-modal/change-role-modal.component';
 
 @NgModule({
   declarations: [
@@ -19,7 +21,9 @@ import { AddServiceModalComponent } from './add-service-modal/add-service-modal.
     ToastComponent,
     DatepickerComponent,
     ContactEditModalComponent,
-    AddServiceModalComponent
+    AddServiceModalComponent,
+    AddRoleModalComponent,
+    ChangeRoleModalComponent
   ],
   exports: [
     NavbarComponent,
@@ -28,11 +32,15 @@ import { AddServiceModalComponent } from './add-service-modal/add-service-modal.
     ToastComponent,
     DatepickerComponent,
     ContactEditModalComponent,
-    AddServiceModalComponent
+    AddServiceModalComponent,
+    AddRoleModalComponent,
+    ChangeRoleModalComponent
   ],
   entryComponents:[
     ContactEditModalComponent,
-    AddServiceModalComponent
+    AddServiceModalComponent,
+    AddRoleModalComponent,
+    ChangeRoleModalComponent
   ],
   imports: [
     ReactiveFormsModule,

@@ -9,6 +9,6 @@ namespace MAuthen.Domain.Entities
         public string Name { get; set; }
         public Guid? ServiceId { get; set; }
         public ICollection<UserServiceRoles> UserServiceRoles { get; set; }
-        public RoleFlags Options { get; set; } = RoleFlags.Default;
+        public RoleFlags Options { get; set; } = RoleFlags.Service;
     }
 }

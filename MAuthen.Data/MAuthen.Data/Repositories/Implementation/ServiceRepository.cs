@@ -64,10 +64,12 @@ namespace MAuthen.Data.Repositories.Implementation
         {
             return await _context.UserServiceRoles
                 .Include(s => s.Service)
-                .Where(u => u.User.UserName == username 
-                && (u.Role.Options.HasFlag(RoleFlags.Default) 
-                && u.Role.Name == "Aministrator"|| u.Role.Options.HasFlag(RoleFlags.None)))
+                .Where(u => 
+                    u.User.UserName == username && u.Role.Options.HasFlag(RoleFlags.Default) && u.Role.Name == "Administrator" 
+                || 
+                u.User.UserName == username && u.Role.Options.HasFlag(RoleFlags.None))
                 .Select(s => new SimpleServiceModel
+
                 {
                     Id = s.ServiceId,
                     Name = s.Service.Name,

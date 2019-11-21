@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Threading.Tasks;
-using MAuthen.Domain.Entities;
 using MAuthen.Domain.Models;
 using MAuthen.Domain.Repositories.Interface;
 using Microsoft.AspNetCore.Authorization;
@@ -57,7 +56,6 @@ namespace MAuthen.Api.Controllers
         }
 
         [HttpGet("BlockUser/{serviceId}/{userId}")]
-        [Authorize(Roles = "UltraAdmin, Administrator")]
         public async Task<IActionResult> BlockUser(Guid serviceId,Guid userId, [FromServices]IUserRepository userRepository)
         {
             try
@@ -71,7 +69,6 @@ namespace MAuthen.Api.Controllers
         }
 
         [HttpGet("UnBlockUser/{serviceId}/{userId}")]
-        [Authorize(Roles = "UltraAdmin")]
         public async Task<IActionResult> UnBlockUser(Guid serviceId, Guid userId, [FromServices]IUserRepository userRepository)
         {
             try
