@@ -28,15 +28,17 @@ namespace MAuthen.Data.Repositories.Implementation
                     UserId = userId,
                     ServiceId = newService.Entity.Id,
                     RoleId = Guid.Parse("BD1FF3D5-6BE5-4660-B1BE-77284DD8B669"),
-                    CreatedOn = DateTime.Now
+                    CreatedOn = DateTime.Now,
+                    
                 });
             await _context.SaveChangesAsync();
             return new SimpleServiceModel
             {
                 Id = newService.Entity.Id,
-                Name = newService.Entity.Name,
-                Domain = newService.Entity.Domain,
-                CreatedOn = newService.Entity.CreatedOn
+                Name = newService.Entity.Name, 
+                Issuer= newService.Entity.Issuer,
+                CreatedOn = newService.Entity.CreatedOn,
+                LogoutUrl = newService.Entity.LogoutUrl
             };
         }
 
@@ -73,7 +75,7 @@ namespace MAuthen.Data.Repositories.Implementation
                 {
                     Id = s.ServiceId,
                     Name = s.Service.Name,
-                    Domain = s.Service.Domain,
+                    Issuer = s.Service.Issuer,
                     CreatedOn = s.Service.CreatedOn
                 }).ToListAsync();
         }

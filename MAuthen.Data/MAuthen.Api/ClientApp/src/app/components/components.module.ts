@@ -4,7 +4,7 @@ import { NavbarComponent } from './navbar/navbar.component';
 import { CardComponent } from './card/card.component';
 import { RegistrationCardComponent } from './registration-card/registration-card.component';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModule, NgbTimeAdapter } from '@ng-bootstrap/ng-bootstrap';
 import { ToastComponent } from './toast/toast.component';
 import { RouterModule } from '@angular/router';
 import { DatepickerComponent } from './datepicker/datepicker.component';
@@ -12,6 +12,7 @@ import { ContactEditModalComponent } from './contact-edit-modal/contact-edit-mod
 import { AddServiceModalComponent } from './add-service-modal/add-service-modal.component';
 import { AddRoleModalComponent } from './add-role-modal/add-role-modal.component';
 import { ChangeRoleModalComponent } from './change-role-modal/change-role-modal.component';
+import { TimePikerModalComponent } from './time-piker-modal/time-piker-modal.component';
 
 @NgModule({
   declarations: [
@@ -23,7 +24,8 @@ import { ChangeRoleModalComponent } from './change-role-modal/change-role-modal.
     ContactEditModalComponent,
     AddServiceModalComponent,
     AddRoleModalComponent,
-    ChangeRoleModalComponent
+    ChangeRoleModalComponent,
+    TimePikerModalComponent
   ],
   exports: [
     NavbarComponent,
@@ -34,13 +36,15 @@ import { ChangeRoleModalComponent } from './change-role-modal/change-role-modal.
     ContactEditModalComponent,
     AddServiceModalComponent,
     AddRoleModalComponent,
-    ChangeRoleModalComponent
+    ChangeRoleModalComponent,
+    TimePikerModalComponent
   ],
   entryComponents:[
     ContactEditModalComponent,
     AddServiceModalComponent,
     AddRoleModalComponent,
-    ChangeRoleModalComponent
+    ChangeRoleModalComponent,
+    TimePikerModalComponent
   ],
   imports: [
     ReactiveFormsModule,

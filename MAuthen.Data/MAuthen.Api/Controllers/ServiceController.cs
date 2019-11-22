@@ -28,7 +28,7 @@ namespace MAuthen.Api.Controllers
             }
             return StatusCode(204);
         }
-
+        //TODO Get service details
         [HttpGet("{id}")]
         public async Task<IActionResult> GetServiceUsers(Guid id)
         {
@@ -36,13 +36,13 @@ namespace MAuthen.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddService(SimpleServiceModel service)
+        public async Task<IActionResult> AddService(FullServiceModel service)
         {
             return Json(await _service.AddService(User.Identity.Name, service));
         }
 
         [HttpPut]
-        public async Task<IActionResult> UpdateService(SimpleServiceModel service)
+        public async Task<IActionResult> UpdateService(FullServiceModel service)
         {
             await _service.Update(service);
             return StatusCode(200);

@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Service } from '../models/service-models/service.model';
 import { UserServiceModel } from '../models/service-models/user-service.model';
+import { FullService } from '../models/service-models/full-service.model';
 
 @Injectable({
     providedIn: 'root'
@@ -14,10 +15,10 @@ export class ServiceService {
     get() : Observable<Service[]>{
         return this.http.get<Service[]>("/service/GetServices");
     }
-    add(service: Service) : Observable<Service>{
+    add(service: FullService) : Observable<Service>{
         return this.http.post<any>("/service", service);
     }
-    update(service: Service):Observable<any>{
+    update(service: FullService):Observable<any>{
         return this.http.put<any>("/service", service);
     }
     delete(id: string): Observable<any>{

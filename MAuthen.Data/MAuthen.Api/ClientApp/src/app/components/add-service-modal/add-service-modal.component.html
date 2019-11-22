@@ -8,15 +8,32 @@
     <div class="modal-body">
         <form [formGroup]="addServiceForm">
             <input formControlName="name" type="text" class="form-control " placeholder="Service Name" ngbAutofocus
-                [ngClass]="{ 'is-invalid': f.name.errors && (addServiceForm.controls['name'].touched || submitted)}">
+                [ngClass]="{ 'is-invalid': f.name.errors && submitted}">
             <div *ngIf="f.name.errors" class="invalid-feedback ml-3">
                 <div *ngIf="f.name.errors.required">Name is required</div>
             </div>
 
-            <input formControlName="domain" type="text" class="form-control mt-3" placeholder="Service Domain"
-                [ngClass]="{ 'is-invalid': f.domain.errors && (addServiceForm.controls['domain'].touched || submitted)}">
-            <div *ngIf="f.domain.errors" class="invalid-feedback ml-3">
-                <div *ngIf="f.domain.errors.required">Domain is required</div>
+            <input formControlName="isshuer" type="text" class="form-control mt-3" placeholder="Service Isshuer"
+                [ngClass]="{ 'is-invalid': f.isshuer.errors &&  submitted}">
+            <div *ngIf="f.isshuer.errors" class="invalid-feedback ml-3">
+                <div *ngIf="f.isshuer.errors.required">Service Isshuer is required</div>
+            </div>
+
+            <input formControlName="logOutUrl" type="text" class="form-control mt-3" placeholder="Service Log Out URL"
+                [ngClass]="{ 'is-invalid': f.logOutUrl.errors && submitted}">
+            <div *ngIf="f.logOutUrl.errors" class="invalid-feedback ml-3">
+                <div *ngIf="f.logOutUrl.errors.required">Service Log Out URL is required</div>
+            </div>
+
+            <input name="time" type="text" value="{{time}}" class="form-control mt-3" placeholder="Token Expiration Time"  (click)="openTimePiker()">
+            <div *ngIf="f.tokenExpirationTime.errors" class="invalid-feedback ml-3">
+                <div *ngIf="f.tokenExpirationTime.errors.required">Token Expiration Time is required</div>
+            </div>
+
+            <input formControlName="password" type="password" class="form-control mt-3" placeholder="Service Password"
+                [ngClass]="{ 'is-invalid': f.password.errors && submitted}">
+            <div *ngIf="f.password.errors" class="invalid-feedback ml-3">
+                <div *ngIf="f.password.errors.required">Service Password is required</div>
             </div>
         </form>
     </div>
@@ -25,3 +42,5 @@
         <button type="button" class="btn btn-primary" (click)="save()">Save</button>
     </div>
 </div>
+
+

@@ -35,14 +35,30 @@ export class ServiceComponent implements OnInit {
       .slice((this.page - 1) * this.pageSize, (this.page - 1) * this.pageSize + this.pageSize);
   }
 
-
+  addService() {
+    var modalRef = this.modalService.open(AddServiceModalComponent, { centered: true });
+    modalRef.componentInstance.title = "Add Service";
+    modalRef.result
+      .then((rez) => {
+        console.log(rez);
+        // this.service.add(rez).subscribe(service => {
+        //   if (this.services == null) {
+        //     this.getService()
+        //   } else {
+        //     this.services.push(service);
+        //   }
+        //   this.collectionSize++;
+        // })
+      })
+      .catch(err => { })
+  }
 
   updateService(service) {
     console.log(service)
     var modalRef = this.modalService.open(AddServiceModalComponent, { centered: true });
     modalRef.componentInstance.title = "Edit Service";
     modalRef.componentInstance.name = service.name;
-    modalRef.componentInstance.domain = service.domain;
+    modalRef.componentInstance.isshuer = service.isshuer;
     modalRef.result
       .then((rez) => {
         service.name = rez.name;
@@ -52,23 +68,6 @@ export class ServiceComponent implements OnInit {
         })
       }
       )
-      .catch(err => { })
-  }
-
-  addService() {
-    var modalRef = this.modalService.open(AddServiceModalComponent, { centered: true });
-    modalRef.componentInstance.title = "Add Service";
-    modalRef.result
-      .then((rez) => {
-        this.service.add(rez).subscribe(service => {
-          if (this.services == null) {
-            this.getService()
-          } else {
-            this.services.push(service);
-          }
-          this.collectionSize++;
-        })
-      })
       .catch(err => { })
   }
 
@@ -98,4 +97,5 @@ export class ServiceComponent implements OnInit {
       this.collectionSize = this.services ? this.services.length : 0;
     })
   }
+
 }

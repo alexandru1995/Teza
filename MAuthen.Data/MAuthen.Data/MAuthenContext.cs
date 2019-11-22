@@ -57,7 +57,7 @@ namespace MAuthen.Data
             {
                 entity.HasIndex(r => r.Name)
                 .IsUnique();
-                entity.HasIndex(r => r.Domain)
+                entity.HasIndex(r => r.Issuer)
                     .IsUnique();
             });
 
