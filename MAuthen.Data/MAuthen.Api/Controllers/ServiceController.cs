@@ -32,7 +32,6 @@ namespace MAuthen.Api.Controllers
         {
             StringValues token;
             HttpContext.Request.Form.TryGetValue("clientID", out token);
-            ;
             var payload = JWT.Payload(token);
             var serviceData = JObject.Parse(payload);
             var value = serviceData.GetValue("client_id");
@@ -42,7 +41,7 @@ namespace MAuthen.Api.Controllers
                 var key = Encoding.ASCII.GetBytes(service.ServicePassword);
                 JWT.Decode(token, key);
             }
-            catch (Exception e)
+            catch
             {
                 return StatusCode(401);
             }

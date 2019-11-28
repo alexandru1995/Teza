@@ -6,5 +6,6 @@ namespace TestIntegrationApplication.Helpers
     public interface IJwtToken
     {
         string Create(string returnUrl);
+        string GetAuthorizationCode(string Token);
     }
 }

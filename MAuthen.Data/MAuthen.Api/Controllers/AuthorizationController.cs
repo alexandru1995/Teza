@@ -1,16 +1,21 @@
-﻿using MAuthen.Api.Helpers;
+﻿using Jose;
+using MAuthen.Api.Helpers;
 using MAuthen.Api.Models.Authentication;
 using MAuthen.Api.Services.Interfaces;
+using MAuthen.Domain.Entities;
 using MAuthen.Domain.Repositories.Interface;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Security.Claims;
 using System.Security.Cryptography;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace MAuthen.Api.Controllers
@@ -25,6 +30,7 @@ namespace MAuthen.Api.Controllers
         private readonly IRoleRepository _role;
         private readonly IServiceRepository _service;
         private readonly IContactRepository _contact;
+        private readonly Models.Authentication.JwtOptions _options;
 
         public IConfiguration _configuration { get; }
 
@@ -35,6 +41,7 @@ namespace MAuthen.Api.Controllers
             IContactRepository contact,
             IServiceRepository service,
             ISecretRepository secret,
+            IOptions<Models.Authentication.JwtOptions> options,
             IRoleRepository role)
         {
             _configuration = configuration;
@@ -44,9 +51,10 @@ namespace MAuthen.Api.Controllers
             _service = service;
             _secret = secret;
             _role = role;
+            _options = options.Value;
         }
 
-        
+
 
         [HttpPost]
         public async Task<IActionResult> SignIn([FromBody]SignInModel model, [FromServices] IAccountService accountService)
@@ -68,6 +76,20 @@ namespace MAuthen.Api.Controllers
             {
                 return Unauthorized("Invalid username or password");
             }
+            var serviceId = await _service.GetServiceIdByName(model.ServiceName);
+            if (await _userRepository.IsBlocked(user.Id, serviceId))
+            {
+                return StatusCode(403, "You are bloked on this service");
+            }
+
+            if (model.ServiceName != "MAuthen")
+            {
+                var service = await _service.GetById(serviceId);
+                SendLoginResponse(user.Id, service.Issuer);
+
+                return RedirectPermanent("SendLoginResponse");
+            }
+
 
             var clams = new List<Claim>
             {
@@ -78,14 +100,7 @@ namespace MAuthen.Api.Controllers
                 new Claim("Gender", user.Gender ? "Male" : "Female")
             };
 
-            var serviceId = await _service.GetServiceIdByName(model.ServiceName);
 
-
-
-            if (await _userRepository.IsBlocked(user.Id, serviceId))
-            {
-                return StatusCode(403, "You are bloked on this service");
-            }
             await _service.AddUserToService(serviceId, user.Id);
             var userRole = await _role.GetUserServiceRoles(user.Id, serviceId);
             foreach (var role in userRole)
@@ -155,6 +170,30 @@ namespace MAuthen.Api.Controllers
             }
         }
 
+        [HttpGet("SendLoginResponse")]
+        public IActionResult SendLoginResponse()
+        {
+            return View();
+        }
+
+        private void SendLoginResponse(Guid userId, string issuer)
+        {
+
+
+
+            @ViewData["ReturnUrl"] = issuer + "OnLogin";
+            var authorizationCode = "_" + Guid.NewGuid();
+            HttpContext.Session.Set(authorizationCode, Encoding.UTF8.GetBytes(userId.ToString()));
+            var test = HttpContext.Session.GetString(authorizationCode);
+            //_session.SetString(authorizationCode, userId.ToString());
+            //var test = _session.GetString(authorizationCode);
+            var payload = new Dictionary<string, object>()
+            {
+                {"AuthorizationCode", authorizationCode}
+            };
+            var key = Encoding.ASCII.GetBytes(_options.SecretKey);
+            @ViewData["Token"] = JWT.Encode(payload, key, JwsAlgorithm.HS256);
+        }
 
     }
 }

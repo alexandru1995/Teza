@@ -11,5 +11,6 @@ namespace TestIntegrationApplication.Models
         public string Issuer { set; get; }
         public string Audience { set; get; }
         public string Secret { set; get; }
+        public string ServerSecret { get; set; }
     }
 }

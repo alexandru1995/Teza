@@ -58,10 +58,12 @@ namespace MAuthen.Api
                 options.Cookie.IsEssential = true;
             });
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2).AddJsonOptions(options =>
-            {
-                options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
-            });
+            services.AddMvc()
+                .SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
+                .AddJsonOptions(options =>
+                {
+                    options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+                });
 
             services.AddAuthentication(options =>
             {
@@ -132,18 +134,17 @@ namespace MAuthen.Api
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
 
-            
-            app.UseSession();
             app.UseAuthentication();
             app.UseMiddleware<TokenManagerMiddleware>();
-            
+
+            app.UseSession();
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
                     name: "default",
                     template: "{controller}/{action=Index}/{id?}");
             });
-            
+
             app.UseSpa(spa =>
             {
                 // To learn more about options for serving an Angular SPA from ASP.NET Core,

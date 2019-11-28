@@ -1,11 +1,9 @@
-﻿using Microsoft.IdentityModel.Tokens;
+﻿using Jose;
+using Microsoft.Extensions.Options;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
 using System.Text;
-using Jose;
-using Microsoft.Extensions.Options;
 using TestIntegrationApplication.Models;
 
 namespace TestIntegrationApplication.Helpers
@@ -29,6 +27,24 @@ namespace TestIntegrationApplication.Helpers
             var key = Encoding.ASCII.GetBytes(_options.Secret);
             string token = JWT.Encode(payload, key , JwsAlgorithm.HS256);
             return token;
+        }
+
+        public string GetAuthorizationCode(string token)
+        {
+            var payload = JWT.Payload(token);
+            
+            try
+            {
+                var key = Encoding.ASCII.GetBytes(_options.ServerSecret);
+                JWT.Decode(token, key);
+            }
+            catch (Exception e)
+            {
+                throw new ApplicationException("Invalid tiken sifnature");
+            }
+            var serviceData = JObject.Parse(payload);
+            var code = serviceData.GetValue("AuthorizationCode");
+            return code.ToString();
         }
     }
 }

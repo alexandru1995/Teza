@@ -30,9 +30,6 @@ namespace TestIntegrationApplication
 
             services.AddSingleton<IJwtToken, JwtToken>();
             services.Configure<AuthenticationRequestModel>(Configuration.GetSection("AuthenticationRequest"));
-            //var authenticationRequest = Configuration.GetSection<AuthenticationRequestModel>("AuthenticationRequest");
-            //var authRequestOptions = new AuthenticationRequestModel();
-            //authenticationRequest.Bind(authRequestOptions);
 
 
             services.Configure<CookiePolicyOptions>(options =>

@@ -8,12 +8,12 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using TestIntegrationApplication.Helpers;
 using TestIntegrationApplication.Models;
+using Microsoft.Extensions.Primitives;
 
 namespace TestIntegrationApplication.Controllers
 {
     public class HomeController : Controller
     {
-        private string _SESSION_KEY = "sub";
         private IJwtToken _token;
         public HomeController(IJwtToken token)
         {
@@ -34,6 +34,15 @@ namespace TestIntegrationApplication.Controllers
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+
+        [HttpPost("OnLogin")]
+        public async Task<IActionResult> OnLogin()
+        {
+            StringValues token;
+            HttpContext.Request.Form.TryGetValue("Token", out token);
+            var test = token;
+            return null;
         }
     }
 }
