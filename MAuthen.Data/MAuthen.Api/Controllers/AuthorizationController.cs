@@ -1,4 +1,5 @@
-﻿using MAuthen.Api.Models.Authentication;
+﻿using MAuthen.Api.Helpers;
+using MAuthen.Api.Models.Authentication;
 using MAuthen.Api.Services.Interfaces;
 using MAuthen.Domain.Repositories.Interface;
 using Microsoft.AspNetCore.Authorization;
@@ -45,6 +46,8 @@ namespace MAuthen.Api.Controllers
             _role = role;
         }
 
+        
+
         [HttpPost]
         public async Task<IActionResult> SignIn([FromBody]SignInModel model, [FromServices] IAccountService accountService)
         {
@@ -65,7 +68,7 @@ namespace MAuthen.Api.Controllers
             {
                 return Unauthorized("Invalid username or password");
             }
-            
+
             var clams = new List<Claim>
             {
                 new Claim("FirstName", user.FirstName),
@@ -76,7 +79,10 @@ namespace MAuthen.Api.Controllers
             };
 
             var serviceId = await _service.GetServiceIdByName(model.ServiceName);
-            if(await _userRepository.IsBlocked(user.Id, serviceId))
+
+
+
+            if (await _userRepository.IsBlocked(user.Id, serviceId))
             {
                 return StatusCode(403, "You are bloked on this service");
             }
@@ -89,11 +95,11 @@ namespace MAuthen.Api.Controllers
             var userContact = await _contact.GetContactByUserId(user.Id);
             if (user.Contacts != null)
             {
-                clams.Add(new Claim("Email", userContact.Where(e => e.Email !=null).Select(c => c.Email).FirstOrDefault() ?? ""));
-                clams.Add(new Claim("PhoneNumber", userContact.Where(p => p.Phone!=null).Select(p => p.Phone).FirstOrDefault() ?? ""));
+                clams.Add(new Claim("Email", userContact.Where(e => e.Email != null).Select(c => c.Email).FirstOrDefault() ?? ""));
+                clams.Add(new Claim("PhoneNumber", userContact.Where(p => p.Phone != null).Select(p => p.Phone).FirstOrDefault() ?? ""));
 
             }
-            var refresh = GenerateRefreshToken();
+            var refresh = PasswordGenerator.Generate(32);
             _secret.UpdateRefreshToken(user.UserName, refresh);
 
             return Json(new AuthenticatedUserModel
@@ -148,5 +154,7 @@ namespace MAuthen.Api.Controllers
                 return Convert.ToBase64String(randomNumber);
             }
         }
+
+
     }
 }

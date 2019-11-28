@@ -1,4 +1,6 @@
-﻿namespace MAuthen.Api.Models.Authentication
+﻿using System;
+
+namespace MAuthen.Api.Models.Authentication
 {
     public class SignInModel
     {

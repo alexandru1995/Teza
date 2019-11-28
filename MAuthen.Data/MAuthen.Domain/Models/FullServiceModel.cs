@@ -26,7 +26,7 @@ namespace MAuthen.Domain.Models
                 CreatedOn = DateTime.Now,
                 LogoutUrl = model.LogoutUrl,
                 Certificate = model.Certificate,
-                TokenExpirationTime = model.TokenExpirationTime,
+                TokenExpirationTime = DateTime.Now.AddMinutes(15),
                 ServicePassword = model.ServicePassword
             };
         }

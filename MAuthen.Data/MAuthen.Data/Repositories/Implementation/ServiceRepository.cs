@@ -17,7 +17,7 @@ namespace MAuthen.Data.Repositories.Implementation
             _context = context;
         }
 
-        public async Task<SimpleServiceModel> AddService(string userName, Service service)
+        public async Task<ServiceSettings> AddService(string userName, Service service)
         {
             var newService = _context.Services.Add(service);
 
@@ -32,13 +32,12 @@ namespace MAuthen.Data.Repositories.Implementation
                     
                 });
             await _context.SaveChangesAsync();
-            return new SimpleServiceModel
+            return new ServiceSettings
             {
-                Id = newService.Entity.Id,
-                Name = newService.Entity.Name, 
-                Issuer= newService.Entity.Issuer,
-                CreatedOn = newService.Entity.CreatedOn,
-                LogoutUrl = newService.Entity.LogoutUrl
+                client_id = newService.Entity.Id,
+                issuer = newService.Entity.Issuer,
+                audiance = "localhost:5001/",
+                secret = newService.Entity.ServicePassword
             };
         }
 

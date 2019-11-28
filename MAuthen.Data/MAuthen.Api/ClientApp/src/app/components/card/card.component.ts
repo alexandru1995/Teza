@@ -4,6 +4,7 @@ import { AuthorizationService } from 'src/app/service/authorization.service';
 import { fadeAnimation } from '../animation';
 import { Router, ActivatedRoute } from '@angular/router';
 import { first } from 'rxjs/operators';
+import { Login } from 'src/app/models/login.model';
 
 @Component({
     selector: 'card',
@@ -21,6 +22,7 @@ export class CardComponent implements OnInit {
     submitted = false;
     loading = false;
     returnUrl: string;
+    serviceName: string;
 
     constructor(
         private formBuilder: FormBuilder,
@@ -37,6 +39,7 @@ export class CardComponent implements OnInit {
 
     ngOnInit(): void {
         this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/account';
+        this.serviceName = this.route.snapshot.paramMap.get("serviceName") || 'MAuthen';
     }
 
     onSubmit() {
@@ -45,7 +48,12 @@ export class CardComponent implements OnInit {
             return;
         }
         this.loading = true;
-        this.authorization.login(this.loginForm.value)
+        let user: Login = {
+            Password : this.loginForm.controls['password'].value,
+            ServiceName  : this.serviceName,
+            Username : this.loginForm.controls['username'].value
+        };
+        this.authorization.login(user)
             .pipe(first())
             .subscribe(
                 data => {

@@ -13,27 +13,16 @@
                 <div *ngIf="f.name.errors.required">Name is required</div>
             </div>
 
-            <input formControlName="isshuer" type="text" class="form-control mt-3" placeholder="Service Isshuer"
-                [ngClass]="{ 'is-invalid': f.isshuer.errors &&  submitted}">
-            <div *ngIf="f.isshuer.errors" class="invalid-feedback ml-3">
-                <div *ngIf="f.isshuer.errors.required">Service Isshuer is required</div>
+            <input formControlName="issuer" type="text" class="form-control mt-3" placeholder="Service issuer"
+                [ngClass]="{ 'is-invalid': f.issuer.errors &&  submitted}">
+            <div *ngIf="f.issuer.errors" class="invalid-feedback ml-3">
+                <div *ngIf="f.issuer.errors.required">Service issuer is required</div>
             </div>
 
             <input formControlName="logOutUrl" type="text" class="form-control mt-3" placeholder="Service Log Out URL"
                 [ngClass]="{ 'is-invalid': f.logOutUrl.errors && submitted}">
             <div *ngIf="f.logOutUrl.errors" class="invalid-feedback ml-3">
                 <div *ngIf="f.logOutUrl.errors.required">Service Log Out URL is required</div>
-            </div>
-
-            <input name="time" type="text" value="{{time}}" class="form-control mt-3" placeholder="Token Expiration Time"  (click)="openTimePiker()">
-            <div *ngIf="f.tokenExpirationTime.errors" class="invalid-feedback ml-3">
-                <div *ngIf="f.tokenExpirationTime.errors.required">Token Expiration Time is required</div>
-            </div>
-
-            <input formControlName="password" type="password" class="form-control mt-3" placeholder="Service Password"
-                [ngClass]="{ 'is-invalid': f.password.errors && submitted}">
-            <div *ngIf="f.password.errors" class="invalid-feedback ml-3">
-                <div *ngIf="f.password.errors.required">Service Password is required</div>
             </div>
         </form>
     </div>

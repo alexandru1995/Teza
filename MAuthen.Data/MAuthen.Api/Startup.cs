@@ -45,7 +45,18 @@ namespace MAuthen.Api
 
             var jwtSection = Configuration.GetSection("jwt");
             var jwtOptions = new JwtOptions();
-            jwtSection.Bind(jwtOptions);            
+            jwtSection.Bind(jwtOptions);
+
+            services.AddDistributedMemoryCache();
+
+            services.AddSession(options =>
+            {
+                // Set a short timeout for easy testing.
+                options.IdleTimeout = TimeSpan.FromMinutes(15);
+                options.Cookie.HttpOnly = true;
+                // Make the session cookie essential
+                options.Cookie.IsEssential = true;
+            });
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2).AddJsonOptions(options =>
             {
@@ -121,15 +132,18 @@ namespace MAuthen.Api
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
 
+            
+            app.UseSession();
             app.UseAuthentication();
             app.UseMiddleware<TokenManagerMiddleware>();
+            
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
                     name: "default",
                     template: "{controller}/{action=Index}/{id?}");
             });
-
+            
             app.UseSpa(spa =>
             {
                 // To learn more about options for serving an Angular SPA from ASP.NET Core,

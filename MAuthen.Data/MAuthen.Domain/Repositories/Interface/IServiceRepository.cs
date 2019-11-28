@@ -10,7 +10,7 @@ namespace MAuthen.Domain.Repositories.Interface
     {
         Task<IList<ServiceUserModel>> GetServiceUsers(Guid serviceId);
         Task<Guid> GetServiceIdByName(string name);
-        Task<SimpleServiceModel> AddService(string userName, Service service);
+        Task<ServiceSettings> AddService(string userName, Service service);
         Task<IList<SimpleServiceModel>> GetUserServices(string username);
         Task RemoveService(Guid serviceId);
         Task AddUserToService(Guid serviceId, Guid UserId);

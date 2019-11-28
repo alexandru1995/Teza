@@ -4,6 +4,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { AddServiceModalComponent } from 'src/app/components/add-service-modal/add-service-modal.component';
 import { ServiceService } from 'src/app/service/service.service';
 import { ContactEditModalComponent } from 'src/app/components/contact-edit-modal/contact-edit-modal.component';
+import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-service',
@@ -22,7 +23,8 @@ export class ServiceComponent implements OnInit {
 
   constructor(
     private modalService: NgbModal,
-    private service: ServiceService
+    private service: ServiceService,
+    private sanitizer: DomSanitizer
   ) { }
 
   ngOnInit() {
@@ -41,20 +43,22 @@ export class ServiceComponent implements OnInit {
     modalRef.result
       .then((rez) => {
         console.log(rez);
-        // this.service.add(rez).subscribe(service => {
-        //   if (this.services == null) {
-        //     this.getService()
-        //   } else {
-        //     this.services.push(service);
-        //   }
-        //   this.collectionSize++;
-        // })
+        this.service.add(rez).subscribe(service => {
+          if(service!=null){
+            var data = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(service));
+            var downloader = document.createElement('a');
+
+            downloader.setAttribute('href', data);
+            downloader.setAttribute('download', 'Settings.json');
+            downloader.click();
+          }
+            this.getService();
+        })
       })
       .catch(err => { })
   }
 
   updateService(service) {
-    console.log(service)
     var modalRef = this.modalService.open(AddServiceModalComponent, { centered: true });
     modalRef.componentInstance.title = "Edit Service";
     modalRef.componentInstance.name = service.name;

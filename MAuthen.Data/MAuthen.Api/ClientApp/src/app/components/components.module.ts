@@ -12,7 +12,6 @@ import { ContactEditModalComponent } from './contact-edit-modal/contact-edit-mod
 import { AddServiceModalComponent } from './add-service-modal/add-service-modal.component';
 import { AddRoleModalComponent } from './add-role-modal/add-role-modal.component';
 import { ChangeRoleModalComponent } from './change-role-modal/change-role-modal.component';
-import { TimePikerModalComponent } from './time-piker-modal/time-piker-modal.component';
 
 @NgModule({
   declarations: [
@@ -24,8 +23,7 @@ import { TimePikerModalComponent } from './time-piker-modal/time-piker-modal.com
     ContactEditModalComponent,
     AddServiceModalComponent,
     AddRoleModalComponent,
-    ChangeRoleModalComponent,
-    TimePikerModalComponent
+    ChangeRoleModalComponent
   ],
   exports: [
     NavbarComponent,
@@ -36,15 +34,13 @@ import { TimePikerModalComponent } from './time-piker-modal/time-piker-modal.com
     ContactEditModalComponent,
     AddServiceModalComponent,
     AddRoleModalComponent,
-    ChangeRoleModalComponent,
-    TimePikerModalComponent
+    ChangeRoleModalComponent
   ],
   entryComponents:[
     ContactEditModalComponent,
     AddServiceModalComponent,
     AddRoleModalComponent,
-    ChangeRoleModalComponent,
-    TimePikerModalComponent
+    ChangeRoleModalComponent
   ],
   imports: [
     ReactiveFormsModule,
