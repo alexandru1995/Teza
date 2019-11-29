@@ -27,9 +27,12 @@ namespace TestIntegrationApplication
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
+            services.AddHttpClient();
             services.AddSingleton<IJwtToken, JwtToken>();
             services.Configure<AuthenticationRequestModel>(Configuration.GetSection("AuthenticationRequest"));
+            //var authenticationRequest = Configuration.GetSection<AuthenticationRequestModel>("AuthenticationRequest");
+            //var authRequestOptions = new AuthenticationRequestModel();
+            //authenticationRequest.Bind(authRequestOptions);
 
 
             services.Configure<CookiePolicyOptions>(options =>

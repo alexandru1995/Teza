@@ -3,21 +3,31 @@ using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using System.Globalization;
+using System.Net.Http;
 using System.Security.Claims;
+using System.Text;
 using System.Threading.Tasks;
+using Jose;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Options;
+using Microsoft.Extensions.Primitives;
+using Newtonsoft.Json.Linq;
 using TestIntegrationApplication.Helpers;
 using TestIntegrationApplication.Models;
-using Microsoft.Extensions.Primitives;
 
 namespace TestIntegrationApplication.Controllers
 {
     public class HomeController : Controller
     {
-        private IJwtToken _token;
-        public HomeController(IJwtToken token)
+        private readonly IHttpClientFactory _clientFactory;
+        private readonly  IJwtToken _token;
+        private readonly AuthenticationRequestModel _options;
+        public HomeController(IJwtToken token, IOptions<AuthenticationRequestModel> options, IHttpClientFactory clientFactory)
         {
             _token = token;
+            _options = options.Value;
+            _clientFactory = clientFactory;
+
         }
         public IActionResult Index()
         {
@@ -26,7 +36,15 @@ namespace TestIntegrationApplication.Controllers
 
         public async Task <IActionResult> Privacy()
         {
-            ViewData["clientID"] =  _token.Create($"{this.Request.Host}");
+            var payload = new Dictionary<string, object>
+            {
+                {"scope", "Authorization"},
+                {"response_type", "code"},
+                {"client_id", _options.Client_Id},
+                {"redirect_uri", $"{this.Request.Host}"}
+            };
+
+            ViewData["clientID"] =  _token.Create(payload);
             return View();
         }
 
@@ -39,10 +57,36 @@ namespace TestIntegrationApplication.Controllers
         [HttpPost("OnLogin")]
         public async Task<IActionResult> OnLogin()
         {
-            StringValues token;
-            HttpContext.Request.Form.TryGetValue("Token", out token);
-            var test = token;
-            return null;
+            HttpContext.Request.Form.TryGetValue("AuthorizationCode", out var token);
+            try
+            {
+                var key = Encoding.ASCII.GetBytes(_options.ServerSecret);
+                JWT.Decode(token, key);
+                var payload = JWT.Payload(token);
+                var serviceData = JObject.Parse(payload);
+                var authorizationCode = serviceData.GetValue("AuthorizationCode");
+                var newPayload = new Dictionary<string, object>
+                {
+                    {"AuthorizationCode", authorizationCode},
+                    {"client_id", _options.Client_Id}
+                };
+                
+                var newToken = _token.Create(newPayload);
+                var test1 = new JObject{new JProperty("Token",newToken)};
+
+                var client  = new HttpClient();
+                var tokens = await client
+                    .PostAsync(_options.Audience + "Token", new StringContent(test1.ToString(), Encoding.UTF8, "application/json"));
+               
+
+
+            }
+            catch(Exception e)
+            {
+                throw new ApplicationException("Error on authentication");
+            }
+
+            return View("SuccessLogin");
         }
     }
 }
