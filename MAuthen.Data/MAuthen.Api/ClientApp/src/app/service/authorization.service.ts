@@ -33,6 +33,10 @@ export class AuthorizationService {
             );
     }
 
+    remoteLogin(data: Login): Observable<any>{
+        return this.http.post('Authorization/RemoteSignin', data);
+    }
+
     logout() {
         return this.http.get<any>(`Authorization/signout`)
             .pipe(map(() => {

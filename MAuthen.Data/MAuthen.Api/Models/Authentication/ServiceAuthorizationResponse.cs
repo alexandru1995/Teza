@@ -2,7 +2,7 @@
 {
     public class ServiceAuthorizationResponse
     {
-        public string Id_Token { get; set; }
-        public string Authorization_Token { get; set; }
+        public string AuthorizationCode { get; set; }
+        public string ServiceUrl { get; set; }
     }
 }

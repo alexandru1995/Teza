@@ -1,4 +1,4 @@
-import { Component, Output, EventEmitter, OnInit } from '@angular/core';
+import { Component, Output, EventEmitter, OnInit, ViewChild, ElementRef, AfterViewChecked } from '@angular/core';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { AuthorizationService } from 'src/app/service/authorization.service';
 import { fadeAnimation } from '../animation';
@@ -12,7 +12,7 @@ import { Login } from 'src/app/models/login.model';
     styleUrls: ['./card.component.css'],
     animations: [fadeAnimation]
 })
-export class CardComponent implements OnInit {
+export class CardComponent implements OnInit, AfterViewChecked {
 
 
     @Output() switch = new EventEmitter<boolean>();
@@ -23,6 +23,11 @@ export class CardComponent implements OnInit {
     loading = false;
     returnUrl: string;
     serviceName: string;
+
+    token: string;
+    serviceUrl: string;
+
+    @ViewChild('redirectForm', { static: false }) redirectForm: ElementRef;
 
     constructor(
         private formBuilder: FormBuilder,
@@ -35,6 +40,7 @@ export class CardComponent implements OnInit {
             password: ['', [Validators.required]]
         });
     }
+
     get f() { return this.loginForm.controls; }
 
     ngOnInit(): void {
@@ -49,22 +55,38 @@ export class CardComponent implements OnInit {
         }
         this.loading = true;
         let user: Login = {
-            Password : this.loginForm.controls['password'].value,
-            ServiceName  : this.serviceName,
-            Username : this.loginForm.controls['username'].value
+            Password: this.loginForm.controls['password'].value,
+            ServiceName: this.serviceName,
+            Username: this.loginForm.controls['username'].value
         };
-        this.authorization.login(user)
-            .pipe(first())
-            .subscribe(
+        if (this.serviceName != 'MAuthen') {
+            this.authorization.remoteLogin(user).subscribe(
                 data => {
-                    this.router.navigate([this.returnUrl])
+                    this.token = data.authorizationCode;
+                    this.serviceUrl = data.serviceUrl;
+
                 },
                 error => {
                     this.error = error.error;
                     this.loading = false;
-                    setTimeout(()=>this.hidenError(), 3000);
+                    setTimeout(() => this.hidenError(), 3000);
                 }
             )
+        }
+        else {
+            this.authorization.login(user)
+                .pipe(first())
+                .subscribe(
+                    data => {
+                        this.router.navigate([this.returnUrl])
+                    },
+                    error => {
+                        this.error = error.error;
+                        this.loading = false;
+                        setTimeout(() => this.hidenError(), 3000);
+                    }
+                )
+        }
     }
 
     hidenError() {
@@ -73,5 +95,10 @@ export class CardComponent implements OnInit {
 
     swichToTegistration() {
         this.switch.emit(true)
+    }
+    ngAfterViewChecked() {
+        if (this.token && this.serviceUrl) {
+            this.redirectForm.nativeElement.submit();
+        }
     }
 }

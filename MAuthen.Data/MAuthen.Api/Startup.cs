@@ -17,6 +17,7 @@ using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 
@@ -42,21 +43,17 @@ namespace MAuthen.Api
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddDbContextPool<MAuthenContext>(options =>
               options.UseSqlServer(@"Data Source=.\SQLEXPRESS;Initial Catalog=MAuthen;Integrated Security=True"));
+            services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IRoleRepository, RoleRepository>();
+            services.AddScoped<ISecretRepository, SecretRepository>();
+            services.AddScoped<IServiceRepository, ServiceRepository>();
+            services.AddScoped<IContactRepository, ContactRepository>();
 
             var jwtSection = Configuration.GetSection("jwt");
             var jwtOptions = new JwtOptions();
             jwtSection.Bind(jwtOptions);
 
             services.AddDistributedMemoryCache();
-
-            services.AddSession(options =>
-            {
-                // Set a short timeout for easy testing.
-                options.IdleTimeout = TimeSpan.FromMinutes(15);
-                options.Cookie.HttpOnly = true;
-                // Make the session cookie essential
-                options.Cookie.IsEssential = true;
-            });
 
             services.AddMvc()
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
@@ -69,12 +66,12 @@ namespace MAuthen.Api
             {
                 options.DefaultAuthenticateScheme = "bearer";
                 options.DefaultChallengeScheme = "bearer";
-            })
-                .AddJwtBearer("bearer", options =>
-                {
+            }).AddJwtBearer("bearer", options =>
+            {
+                
                     options.TokenValidationParameters = new TokenValidationParameters()
                     {
-                        ValidateIssuer = true,
+                        ValidateIssuer = false,
                         ValidateAudience = true,
                         LifetimeValidator =
                             (before, expires, verifiedToken, parameters) =>
@@ -85,7 +82,6 @@ namespace MAuthen.Api
                             },
                         ValidateLifetime = true,
                         ValidateIssuerSigningKey = true,
-                        ValidIssuer = jwtOptions.Issuer,
                         ValidAudience = jwtOptions.Audience,
                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtOptions.SecretKey)),
                         TokenDecryptionKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtOptions.SecretKey)),
@@ -109,11 +105,7 @@ namespace MAuthen.Api
             {
                 configuration.RootPath = "ClientApp/dist";
             });
-            services.AddScoped<IUserRepository, UserRepository>();
-            services.AddScoped<IRoleRepository, RoleRepository>();
-            services.AddScoped<ISecretRepository, SecretRepository>();
-            services.AddScoped<IServiceRepository, ServiceRepository>();
-            services.AddScoped<IContactRepository, ContactRepository>();
+            
             services.Configure<JwtOptions>(jwtSection);
         }
 
@@ -137,7 +129,6 @@ namespace MAuthen.Api
             app.UseAuthentication();
             app.UseMiddleware<TokenManagerMiddleware>();
 
-            app.UseSession();
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
@@ -158,5 +149,6 @@ namespace MAuthen.Api
                 }
             });
         }
+
     }
 }

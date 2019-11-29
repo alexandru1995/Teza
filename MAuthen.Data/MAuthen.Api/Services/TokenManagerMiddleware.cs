@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using MAuthen.Api.Services.Interfaces;
+using Microsoft.AspNetCore.Http;
 using System.Net;
 using System.Threading.Tasks;
-using MAuthen.Api.Services.Interfaces;
-using Microsoft.AspNetCore.Http;
 
 namespace MAuthen.Api.Services
 {
