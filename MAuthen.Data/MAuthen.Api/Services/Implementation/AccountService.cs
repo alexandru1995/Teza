@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
-namespace MAuthen.Api.Services.Implimentation
+namespace MAuthen.Api.Services.Implementation
 {
     public class AccountService : IAccountService
     {
@@ -17,15 +17,15 @@ namespace MAuthen.Api.Services.Implimentation
             _tokenManager = tokenManager;
         }
 
-        public JsonWebToken SignIn(IEnumerable<Claim> clames)
+        public JsonWebToken SignIn(IEnumerable<Claim> clames, string secretKey)
         {
-            var jwt = _jwtHandler.Create(clames);
+            var jwt = _jwtHandler.Create(clames, secretKey);
             return jwt;
         }
 
-        public ClaimsPrincipal GetPrincipalFromExpiredToken(string token)
+        public ClaimsPrincipal GetPrincipalFromExpiredToken(string token, string secretKey)
         {
-            return _jwtHandler.GetPrincipalFromExpiredToken(token);
+            return _jwtHandler.GetPrincipalFromExpiredToken(token, secretKey);
         }
 
         public async Task SignOut()

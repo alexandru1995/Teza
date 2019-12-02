@@ -2,11 +2,10 @@
 using MAuthen.Api.Helpers;
 using MAuthen.Api.Models.Authentication;
 using MAuthen.Api.Services.Interfaces;
-using MAuthen.Domain.Entities;
 using MAuthen.Domain.Repositories.Interface;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using System;
@@ -14,10 +13,8 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Security.Claims;
-using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Caching.Distributed;
 
 namespace MAuthen.Api.Controllers
 {
@@ -84,7 +81,7 @@ namespace MAuthen.Api.Controllers
                 return StatusCode(403, "You are blocked on this service");
             }
             ///////////////
-
+            
             var clams = new List<Claim>
             {
                 new Claim("FirstName", user.FirstName),
@@ -115,7 +112,7 @@ namespace MAuthen.Api.Controllers
                 LastName = user.LastName,
                 Tokens = new JsonWebToken
                 {
-                    AccessToken = accountService.SignIn(clams).AccessToken,
+                    AccessToken = accountService.SignIn(clams, _options.SecretKey).AccessToken,
                     RefreshToken = refresh
                 }
             });
@@ -150,6 +147,7 @@ namespace MAuthen.Api.Controllers
             ///////////////
 
             var service = await _service.GetById(serviceId);
+            await _service.AddUserToService(serviceId, user.Id);
             return Json(await ResponseOnRemoteLogin(user.Id, service.Issuer));
         }
 
@@ -157,7 +155,7 @@ namespace MAuthen.Api.Controllers
         [HttpPost("refresh")]
         public async Task<IActionResult> RefreshToken([FromBody]JsonWebToken model, [FromServices] IAccountService accountService)
         {
-            var principal = accountService.GetPrincipalFromExpiredToken(model.AccessToken);
+            var principal = accountService.GetPrincipalFromExpiredToken(model.AccessToken, _options.SecretKey);
             var username = principal.Identity.Name;
             if (username == null)
                 return BadRequest();
@@ -167,7 +165,7 @@ namespace MAuthen.Api.Controllers
                 _secret.UpdateRefreshToken(principal.Identity.Name, refresh);
                 return Json(new JsonWebToken
                 {
-                    AccessToken = accountService.SignIn(principal.Claims).AccessToken,
+                    AccessToken = accountService.SignIn(principal.Claims, _options.SecretKey).AccessToken,
                     RefreshToken = refresh
                 });
             }
@@ -188,9 +186,6 @@ namespace MAuthen.Api.Controllers
         private async Task<ServiceAuthorizationResponse> ResponseOnRemoteLogin(Guid userId, string issuer)
         {
             var authorizationCode = "_" + Guid.NewGuid();
-            //HttpContext.Session.Set(authorizationCode, Encoding.UTF8.GetBytes(userId.ToString()));
-            //Get Data from session
-            //var test = HttpContext.Session.GetString(authorizationCode);
             await _cache.SetStringAsync(authorizationCode, userId.ToString(), new DistributedCacheEntryOptions
             {
                 AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(5)

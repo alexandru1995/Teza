@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Cryptography;
-using System.Threading.Tasks;
-using MAuthen.Api.Models;
+﻿using MAuthen.Api.Models;
 using MAuthen.Api.Services.Interfaces;
 using Microsoft.Extensions.Options;
+using System;
+using System.Linq;
+using System.Security.Cryptography;
 
-namespace MAuthen.Api.Services.Implimentation
+namespace MAuthen.Api.Services.Implementation
 {
     public class PasswordProcessor: IPasswordProcessor
     {

@@ -20,7 +20,7 @@ namespace TestIntegrationApplication.Controllers
     public class HomeController : Controller
     {
         private readonly IHttpClientFactory _clientFactory;
-        private readonly  IJwtToken _token;
+        private readonly IJwtToken _token;
         private readonly AuthenticationRequestModel _options;
         public HomeController(IJwtToken token, IOptions<AuthenticationRequestModel> options, IHttpClientFactory clientFactory)
         {
@@ -34,7 +34,7 @@ namespace TestIntegrationApplication.Controllers
             return View();
         }
 
-        public async Task <IActionResult> Privacy()
+        public IActionResult Privacy()
         {
             var payload = new Dictionary<string, object>
             {
@@ -44,7 +44,7 @@ namespace TestIntegrationApplication.Controllers
                 {"redirect_uri", $"{this.Request.Host}"}
             };
 
-            ViewData["clientID"] =  _token.Create(payload);
+            ViewData["clientID"] = _token.Create(payload);
             return View();
         }
 
@@ -70,18 +70,19 @@ namespace TestIntegrationApplication.Controllers
                     {"AuthorizationCode", authorizationCode},
                     {"client_id", _options.Client_Id}
                 };
-                
-                var newToken = _token.Create(newPayload);
-                var test1 = new JObject{new JProperty("Token",newToken)};
 
-                var client  = new HttpClient();
-                var tokens = await client
-                    .PostAsync(_options.Audience + "Token", new StringContent(test1.ToString(), Encoding.UTF8, "application/json"));
-               
+                var newToken = _token.Create(newPayload);
+                var message = new JObject { new JProperty("Token", newToken) };
+                var client = new HttpClient();
+                var response = await client
+                    .PostAsync(_options.Audience + "Token", new StringContent(message.ToString(), Encoding.UTF8, "application/json"));
+                var responseToken = await response.Content.ReadAsStringAsync();
+                JWT.Decode(responseToken, key);
+                payload = JWT.Payload(responseToken);
 
 
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 throw new ApplicationException("Error on authentication");
             }

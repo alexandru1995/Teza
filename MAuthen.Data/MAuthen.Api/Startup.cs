@@ -3,7 +3,7 @@ using System.Text;
 using System.Threading.Tasks;
 using MAuthen.Api.Models.Authentication;
 using MAuthen.Api.Services;
-using MAuthen.Api.Services.Implimentation;
+using MAuthen.Api.Services.Implementation;
 using MAuthen.Api.Services.Interfaces;
 using MAuthen.Data;
 using MAuthen.Data.Repositories.Implementation;

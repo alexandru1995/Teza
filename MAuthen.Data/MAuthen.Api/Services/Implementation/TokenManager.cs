@@ -8,7 +8,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace MAuthen.Api.Services.Implimentation
+namespace MAuthen.Api.Services.Implementation
 {
     public class TokenManager : ITokenManager
     {

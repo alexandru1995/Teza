@@ -6,7 +6,7 @@ namespace MAuthen.Api.Services.Interfaces
 {
     public interface IJwtHandler
     {
-        JsonWebToken Create(IEnumerable<Claim> claims);
-        ClaimsPrincipal GetPrincipalFromExpiredToken(string token);
+        JsonWebToken Create(IEnumerable<Claim> claims, string secretKey);
+        ClaimsPrincipal GetPrincipalFromExpiredToken(string token, string secretKey);
     }
 }

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using Jose;
@@ -11,6 +13,7 @@ using MAuthen.Domain.Repositories.Interface;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Distributed;
+using Microsoft.Extensions.Options;
 using Microsoft.Extensions.Primitives;
 using Newtonsoft.Json.Linq;
 
@@ -20,14 +23,20 @@ namespace MAuthen.Api.Controllers
     [ApiController]
     public class TokenController : Controller
     {
-        private readonly IUserRepository _userRepository;
         private readonly IServiceRepository _serviceRepository;
         private readonly IDistributedCache _cache;
-        public TokenController(IDistributedCache cache, IUserRepository userRepository, IServiceRepository serviceRepository)
+        private readonly IRoleRepository _role;
+        private readonly IAccountService _accountService;
+        private readonly Models.Authentication.JwtOptions _options;
+        public TokenController(IDistributedCache cache, IServiceRepository serviceRepository,
+            IRoleRepository role, IAccountService accountService,
+            IOptions<Models.Authentication.JwtOptions> options)
         {
             _cache = cache;
-            _userRepository = userRepository;
             _serviceRepository = serviceRepository;
+            _role = role;
+            _accountService = accountService;
+            _options = options.Value;
         }
 
         [HttpPost]
@@ -37,7 +46,6 @@ namespace MAuthen.Api.Controllers
             var payload = JWT.Payload(authorizationCode.Token);
             var codeData = JObject.Parse(payload);
             var clientId = codeData.GetValue("client_id");
-            
             var service = await _serviceRepository.GetById(Guid.Parse(clientId.ToString()));
 
             try
@@ -47,27 +55,40 @@ namespace MAuthen.Api.Controllers
                 var code = codeData.GetValue("AuthorizationCode").ToString();
                 var userId = await _cache.GetStringAsync(code);
                 await _cache.RemoveAsync(code);
+                var tokens = new TokenResponseModel
+                {
+                    IdToken = await CreateIdToken(Guid.Parse(userId), service),
+                    AccessToken = CreateAccessToken(Guid.Parse(userId), service.Id)
 
+                };
+                var key = Encoding.ASCII.GetBytes(_options.SecretKey);
+                return Json(JWT.Encode(tokens, key, JwsAlgorithm.HS256));
             }
-            catch
+            catch(Exception err)
             {
                 return StatusCode(401);
             }
-            return null;
         }
 
-        private string CreateIdToken(Guid UserId, Service service)
+        private async Task<string> CreateIdToken(Guid userId, Service service)
         {
-            var payload = new Dictionary<string, object>
+            var clams = new List<Claim>();
+            var userRole = await _role.GetUserServiceRoles(userId, service.Id);
+            foreach (var role in userRole)
             {
-            };
-            return null;
+                clams.Add(new Claim(ClaimTypes.Role, role.Name));
+            }
+            return _accountService.SignIn(clams, service.ServicePassword).AccessToken;
         }
 
-        private string CreateAccessToken([FromServices] IAccountService accountService)
+        private string CreateAccessToken(Guid userId, Guid serviceId)
         {
-            return null;
+            var clams = new List<Claim>
+            {
+                new Claim(ClaimsIdentity.DefaultNameClaimType, userId.ToString()),
+                new Claim("client_id", serviceId.ToString())
+            };
+            return _accountService.SignIn(clams, _options.SecretKey).AccessToken;
         }
-
     }
 }

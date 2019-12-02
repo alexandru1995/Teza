@@ -9,8 +9,8 @@ namespace MAuthen.Api.Services.Interfaces
 {
     public interface IAccountService
     {
-        JsonWebToken SignIn(IEnumerable<Claim> clames);
-        ClaimsPrincipal GetPrincipalFromExpiredToken(string token);
+        JsonWebToken SignIn(IEnumerable<Claim> clames, string secretKey);
+        ClaimsPrincipal GetPrincipalFromExpiredToken(string token, string secretKey);
         Task SignOut();
         //void RevokeRefreshToken(string token);
     }
