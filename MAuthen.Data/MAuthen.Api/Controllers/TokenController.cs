@@ -40,7 +40,7 @@ namespace MAuthen.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Tokens([FromBody] AuthorizationCodeModel authorizationCode)
+        public async Task<string> Tokens([FromBody] AuthorizationCodeModel authorizationCode)
         {
 
             var payload = JWT.Payload(authorizationCode.Token);
@@ -62,11 +62,11 @@ namespace MAuthen.Api.Controllers
 
                 };
                 var key = Encoding.ASCII.GetBytes(_options.SecretKey);
-                return Json(JWT.Encode(tokens, key, JwsAlgorithm.HS256));
+                return JWT.Encode(tokens, key, JwsAlgorithm.HS256);
             }
             catch(Exception err)
             {
-                return StatusCode(401);
+                throw new UnauthorizedAccessException("Authentication error");
             }
         }
 

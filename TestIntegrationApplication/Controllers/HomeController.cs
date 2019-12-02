@@ -77,7 +77,8 @@ namespace TestIntegrationApplication.Controllers
                 var response = await client
                     .PostAsync(_options.Audience + "Token", new StringContent(message.ToString(), Encoding.UTF8, "application/json"));
                 var responseToken = await response.Content.ReadAsStringAsync();
-                JWT.Decode(responseToken, key);
+              
+                JWT.Decode(responseToken, Encoding.ASCII.GetBytes(_options.ServerSecret),JwsAlgorithm.HS256);
                 payload = JWT.Payload(responseToken);
 
 
