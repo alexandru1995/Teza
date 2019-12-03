@@ -14,6 +14,7 @@ using Microsoft.Extensions.Primitives;
 using Newtonsoft.Json.Linq;
 using TestIntegrationApplication.Helpers;
 using TestIntegrationApplication.Models;
+using System.Text.Json;
 
 namespace TestIntegrationApplication.Controllers
 {
@@ -80,6 +81,7 @@ namespace TestIntegrationApplication.Controllers
               
                 JWT.Decode(responseToken, Encoding.ASCII.GetBytes(_options.ServerSecret),JwsAlgorithm.HS256);
                 payload = JWT.Payload(responseToken);
+                var tokens = JsonSerializer.Deserialize<AuthorizationResponseModel>(payload);
 
 
             }

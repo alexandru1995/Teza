@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace TestIntegrationApplication.Models
+﻿namespace TestIntegrationApplication.Models
 {
     public class AuthenticationRequestModel
     {

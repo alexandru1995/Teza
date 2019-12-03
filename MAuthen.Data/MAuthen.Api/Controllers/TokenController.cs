@@ -64,7 +64,7 @@ namespace MAuthen.Api.Controllers
                 var key = Encoding.ASCII.GetBytes(_options.SecretKey);
                 return JWT.Encode(tokens, key, JwsAlgorithm.HS256);
             }
-            catch(Exception err)
+            catch
             {
                 throw new UnauthorizedAccessException("Authentication error");
             }
@@ -76,6 +76,7 @@ namespace MAuthen.Api.Controllers
             var userRole = await _role.GetUserServiceRoles(userId, service.Id);
             foreach (var role in userRole)
             {
+                clams.Add(new Claim(ClaimTypes.Name, userId.ToString()));
                 clams.Add(new Claim(ClaimTypes.Role, role.Name));
             }
             return _accountService.SignIn(clams, service.ServicePassword).AccessToken;

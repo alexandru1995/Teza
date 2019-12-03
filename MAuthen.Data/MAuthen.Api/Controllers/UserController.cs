@@ -80,17 +80,20 @@ namespace MAuthen.Api.Controllers
             return StatusCode(201, "Successful creation");
         }
         [HttpPost("AddContact")]
+        [Authorize(Roles= "User,UltraAdmin")]
         public async Task<IActionResult> AddContact([FromBody] ContactModel model)
         {
             return Json(await _contact.AddContacts(User.Identity.Name, model));
         }
         [HttpPost("UpdateContact")]
+        [Authorize(Roles = "User,UltraAdmin")]
         public async Task<IActionResult> UpdateContact([FromBody] ContactModel model)
         {
             await _contact.Update(model);
             return StatusCode(200);
         }
         [HttpDelete("DeleteContact/{id}")]
+        [Authorize(Roles = "User,UltraAdmin")]
         public async Task<IActionResult> DeleteContact(Guid id)
         {
             try
@@ -105,6 +108,7 @@ namespace MAuthen.Api.Controllers
             
         }
         [HttpPut]
+        [Authorize(Roles = "User,UltraAdmin")]
         public async Task<JsonResult> Update(User model)
         {
             await _user.Update(model);
@@ -112,6 +116,7 @@ namespace MAuthen.Api.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = "User,UltraAdmin")]
         public async Task<IActionResult> Delete(Guid id)
         {
             await _user.Delete(id);

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Text;
-using System.Threading.Tasks;
-using MAuthen.Api.Models.Authentication;
+﻿using MAuthen.Api.Models.Authentication;
 using MAuthen.Api.Services;
 using MAuthen.Api.Services.Implementation;
 using MAuthen.Api.Services.Interfaces;
@@ -17,9 +14,11 @@ using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
+using System;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace MAuthen.Api
 {

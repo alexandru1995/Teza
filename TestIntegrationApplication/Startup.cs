@@ -1,17 +1,20 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Tokens;
+using System;
+using System.Text;
+using System.Threading.Tasks;
 using TestIntegrationApplication.Helpers;
 using TestIntegrationApplication.Models;
+using TestIntegrationApplication.Services;
+using TestIntegrationApplication.Services.Implementation;
+using TestIntegrationApplication.Services.Interfaces;
 
 namespace TestIntegrationApplication
 {
@@ -29,21 +32,54 @@ namespace TestIntegrationApplication
         {
             services.AddHttpClient();
             services.AddSingleton<IJwtToken, JwtToken>();
-            services.Configure<AuthenticationRequestModel>(Configuration.GetSection("AuthenticationRequest"));
-            //var authenticationRequest = Configuration.GetSection<AuthenticationRequestModel>("AuthenticationRequest");
-            //var authRequestOptions = new AuthenticationRequestModel();
-            //authenticationRequest.Bind(authRequestOptions);
 
+            var secret = Configuration.GetSection("AuthenticationRequest:secret");
+            services.Configure<AuthenticationRequestModel>(Configuration.GetSection("AuthenticationRequest"));
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddSingleton<IAccountService, AccountService>();
+            services.AddSingleton<IJwtHandler, JwtHandler>();
+            services.AddTransient<TokenManagerMiddleware>();
+            services.AddTransient<ITokenManager, TokenManager>();
 
             services.Configure<CookiePolicyOptions>(options =>
             {
                 options.CheckConsentNeeded = context => true;
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
-            
-
             services.AddMvc()
                 .SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
+            {
+
+                options.TokenValidationParameters = new TokenValidationParameters()
+                {
+                    ValidateIssuer = false,
+                    ValidateAudience = false,
+                    LifetimeValidator =
+                        (before, expires, verifiedToken, parameters) =>
+                        {
+                            if (before.HasValue && before.Value > DateTime.UtcNow) { return true; }
+                            if (expires.HasValue && expires.Value >= DateTime.UtcNow) { return true; }
+                            return false;
+                        },
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secret.Value)),
+                    TokenDecryptionKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secret.Value)),
+
+                };
+                options.Events = new JwtBearerEvents
+                {
+                    OnAuthenticationFailed = context =>
+                    {
+                        if (context.Exception.GetType() == typeof(SecurityTokenInvalidLifetimeException))
+                        {
+                            context.Response.Headers.Add("Token-Expired", "true");
+                        }
+                        return Task.CompletedTask;
+                    }
+                };
+            });
             services.AddDistributedMemoryCache();
             services.AddSession(options =>
             {
@@ -70,10 +106,13 @@ namespace TestIntegrationApplication
             app.UseStaticFiles();
 
             app.UseSession();
+
             app.UseRouting();
-
+            app.UseAuthentication();
+            app.UseMiddleware<TokenManagerMiddleware>();
             app.UseAuthorization();
-
+            
+            
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
