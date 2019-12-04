@@ -1,33 +1,31 @@
-﻿using System;
-using System.Collections.Generic;
-using Microsoft.AspNetCore.Mvc;
-using System.Diagnostics;
-using System.Globalization;
-using System.Net.Http;
-using System.Security.Claims;
-using System.Text;
-using System.Threading.Tasks;
-using Jose;
+﻿using Jose;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Options;
-using Microsoft.Extensions.Primitives;
 using Newtonsoft.Json.Linq;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Net.Http;
+using System.Text;
+using System.Text.Json;
+using System.Threading.Tasks;
 using TestIntegrationApplication.Helpers;
 using TestIntegrationApplication.Models;
-using System.Text.Json;
 
 namespace TestIntegrationApplication.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly IHttpClientFactory _clientFactory;
         private readonly IJwtToken _token;
         private readonly AuthenticationRequestModel _options;
-        public HomeController(IJwtToken token, IOptions<AuthenticationRequestModel> options, IHttpClientFactory clientFactory)
+        private readonly IDistributedCache _cache;
+        public HomeController(IJwtToken token, IOptions<AuthenticationRequestModel> options, IDistributedCache cache)
         {
             _token = token;
             _options = options.Value;
-            _clientFactory = clientFactory;
+            _cache = cache;
 
         }
         public IActionResult Index()
@@ -53,6 +51,12 @@ namespace TestIntegrationApplication.Controllers
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+
+        public IActionResult SuccessLogin()
+        {
+            
+            return View();
         }
 
         [HttpPost("OnLogin")]
@@ -82,15 +86,15 @@ namespace TestIntegrationApplication.Controllers
                 JWT.Decode(responseToken, Encoding.ASCII.GetBytes(_options.ServerSecret),JwsAlgorithm.HS256);
                 payload = JWT.Payload(responseToken);
                 var tokens = JsonSerializer.Deserialize<AuthorizationResponseModel>(payload);
-
-
+                await _cache.RemoveAsync(tokens.UserId);
+                await _cache.SetStringAsync(tokens.UserId, tokens.AccessToken);
+                ViewData["IdToken"] = token;
+                return View("SuccessLogin");
             }
-            catch (Exception e)
+            catch
             {
                 throw new ApplicationException("Error on authentication");
             }
-
-            return View("SuccessLogin");
         }
     }
 }

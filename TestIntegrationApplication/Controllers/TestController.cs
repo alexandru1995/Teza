@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace TestIntegrationApplication.Controllers
@@ -12,7 +8,13 @@ namespace TestIntegrationApplication.Controllers
         [Authorize]
         public IActionResult Authentication()
         {
-            return Json("Uraaaaaaa");
+            return Json("Somple Authentication");
+        }
+
+        [Authorize]
+        public IActionResult User()
+        {
+            return View();
         }
     }
 }

@@ -79,7 +79,8 @@ namespace TestIntegrationApplication
                         return Task.CompletedTask;
                     }
                 };
-            });
+            })
+                .AddCookie();
             services.AddDistributedMemoryCache();
             services.AddSession(options =>
             {

@@ -57,6 +57,7 @@ namespace MAuthen.Api.Controllers
                 await _cache.RemoveAsync(code);
                 var tokens = new TokenResponseModel
                 {
+                    UserId = userId,
                     IdToken = await CreateIdToken(Guid.Parse(userId), service),
                     AccessToken = CreateAccessToken(Guid.Parse(userId), service.Id)
 
