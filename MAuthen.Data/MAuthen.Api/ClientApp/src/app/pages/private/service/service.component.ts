@@ -23,8 +23,7 @@ export class ServiceComponent implements OnInit {
 
   constructor(
     private modalService: NgbModal,
-    private service: ServiceService,
-    private sanitizer: DomSanitizer
+    private service: ServiceService
   ) { }
 
   ngOnInit() {

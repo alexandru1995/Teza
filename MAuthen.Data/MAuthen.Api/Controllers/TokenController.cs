@@ -1,21 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.IO;
-using System.Security.Claims;
-using System.Text;
-using System.Threading.Tasks;
-using Jose;
+﻿using Jose;
 using MAuthen.Api.Models.Token;
 using MAuthen.Api.Services.Interfaces;
 using MAuthen.Domain.Entities;
 using MAuthen.Domain.Repositories.Interface;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Options;
-using Microsoft.Extensions.Primitives;
 using Newtonsoft.Json.Linq;
+using System;
+using System.Collections.Generic;
+using System.Security.Claims;
+using System.Text;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 
 namespace MAuthen.Api.Controllers
 {
@@ -69,6 +66,14 @@ namespace MAuthen.Api.Controllers
             {
                 throw new UnauthorizedAccessException("Authentication error");
             }
+        }
+
+        [Authorize]
+        [HttpGet("signout")]
+        public async Task<IActionResult> SignOut([FromServices] IAccountService accountService, [FromServices]ITokenManager tokenManager)
+        {
+            await accountService.SignOut();
+            return StatusCode(200);
         }
 
         private async Task<string> CreateIdToken(Guid userId, Service service)

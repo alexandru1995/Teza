@@ -74,6 +74,7 @@ export class CardComponent implements OnInit, AfterViewChecked {
             )
         }
         else {
+            
             this.authorization.login(user)
                 .pipe(first())
                 .subscribe(

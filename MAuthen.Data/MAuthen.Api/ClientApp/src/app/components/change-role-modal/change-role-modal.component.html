@@ -6,6 +6,8 @@
         </button>
     </div>
     <div class="modal-body">
+        <div class="row" @fadeAnimation class="text-danger p-2" *ngIf="error"><i
+                class="fas fa-exclamation-circle pr-1 text-danger"></i> {{error}}</div>
         <input id="typeahead-template" type="text" class="form-control" [(ngModel)]="model" [ngbTypeahead]="search"
             [resultTemplate]="rt" [inputFormatter]="formatter" (focus)="focus$.next($event.target.value)"
             (click)="click$.next($event.target.value)" #instance="ngbTypeahead" />
@@ -13,7 +15,7 @@
     </div>
     <div class="modal-footer">
         <button type="button" class="btn btn-outline-secondary" (click)="modal.dismiss()">Cancel</button>
-        <button type="button" class="btn btn-primary" (click)="modal.close(model)">Save</button>
+        <button type="button" class="btn btn-primary" (click)="save(model)">Save</button>
     </div>
 </div>
 

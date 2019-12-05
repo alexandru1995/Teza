@@ -46,6 +46,10 @@ namespace TestIntegrationApplication
                 options.CheckConsentNeeded = context => true;
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
+            services.AddRouting(options =>
+            {
+                options.LowercaseUrls = true;
+            });
             services.AddMvc()
                 .SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
@@ -116,9 +120,7 @@ namespace TestIntegrationApplication
             
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapControllerRoute(
-                    name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                endpoints.MapDefaultControllerRoute();
             });
         }
     }

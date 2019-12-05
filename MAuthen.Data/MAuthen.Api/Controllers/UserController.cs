@@ -9,6 +9,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using System;
 using System.Threading.Tasks;
+using MAuthen.Api.Models.User;
 
 namespace MAuthen.Api.Controllers
 {
@@ -51,10 +52,21 @@ namespace MAuthen.Api.Controllers
             return Json(_user.GetAll());
         }
 
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetById(Guid id)
+        [HttpGet("User")]
+        public async Task<IActionResult> GetById()
         {
-            return Json(await _user.GetById(id));
+            var id = User.Identity.Name;
+            var user = await _user.GetById(Guid.Parse(id));
+            user.Contacts = await _contact.GetContactByUserId(user.Id);
+            return Json((UserComplexModel)user, new JsonSerializerSettings
+            {
+                NullValueHandling = NullValueHandling.Ignore,
+                ContractResolver = new DefaultContractResolver
+                {
+                    NamingStrategy = new CamelCaseNamingStrategy(),
+                },
+                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+            });
         }
         [HttpPost]
         [AllowAnonymous]
@@ -73,11 +85,11 @@ namespace MAuthen.Api.Controllers
             {
                 switch (err.GetType().Name)
                 {
-                    case "DbUpdateException": return StatusCode(409,"Error This email already exist.");
+                    case "DbUpdateException": return StatusCode(409,"Error This user name already exist.");
                 }
             }
             
-            return StatusCode(201, "Successful creation");
+            return StatusCode(200);
         }
         [HttpPost("AddContact")]
         [Authorize(Roles= "User,UltraAdmin")]

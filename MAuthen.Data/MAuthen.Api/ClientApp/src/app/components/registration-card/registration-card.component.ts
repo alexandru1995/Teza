@@ -1,8 +1,7 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
-import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
+import { Component, Output, EventEmitter } from '@angular/core';
+import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { phoneNumberValidator, passwordComplexity } from 'src/app/validators/phone-number';
 import { UserService } from 'src/app/service/user.service';
-import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
 import { User } from 'src/app/models/user';
 
 @Component({
@@ -21,7 +20,7 @@ export class RegistrationCardComponent {
 
     constructor(
         private formBuilder: FormBuilder,
-        private user: UserService
+        private user: UserService,
     ) {
         this.registrationForm = this.formBuilder.group({
             firstName: ['', Validators.required],
@@ -62,15 +61,14 @@ export class RegistrationCardComponent {
         user.birthday = form.birthday.month + "/" + form.birthday.day + "/" + form.birthday.year;
         user.password = form.password;
         user.gender = form.gender;
-        console.log(user)
         this.user.add(user).subscribe(
             data => {
-                console.log(data)
+                this.swichToAuth();
             },
             error => {
-                //TODO set error to username
-                const email = this.registrationForm.controls['email']
-                email.setErrors({
+                console.log(error);
+                const username = this.registrationForm.controls['username']
+                username.setErrors({
                     fildExist:
                     {
                         valid: false,

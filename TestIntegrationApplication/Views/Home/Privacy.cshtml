@@ -1,20 +1,25 @@
-﻿<html>
-<head>
-    <title>redirecting...</title>
-</head>
-<body onload="document.forms[0].submit();">
-<div>Redirecting to Login...</div>
-<form method="POST" action='https://localhost:5001/Service/login'>
-    <input name="clientID" value=@ViewData["clientID"]  type="hidden"/>
-    <noscript>
-        <p>
-            <strong>Note:</strong>
-            Since your browser does not support Javascript, please click the Continue button once to proceed.
-        </p>
-        <div>
-            <input type="submit" value="Continue"/>
-        </div>
-    </noscript>
-</form>
-</body>
-</html>
+﻿@*<html>
+    <head>
+        <title>Redirecting...</title>
+    </head>
+    <body onload="document.forms[0].submit();">
+    <div>Redirecting to Login...</div>
+    <form method="POST" action='https://localhost:5001/Service/login'>
+        <input name="clientID" value=@ViewData["clientID"]  type="hidden"/>
+        <noscript>
+            <p>
+                <strong>Note:</strong>
+                Since your browser does not support Javascript, please click the Continue button once to proceed.
+            </p>
+            <div>
+                <input type="submit" value="Continue"/>
+            </div>
+        </noscript>
+    </form>
+    </body>
+    </html>*@
+@{
+    ViewData["Title"] = "Privacy";
+}
+    
+<h1>Privacy</h1>

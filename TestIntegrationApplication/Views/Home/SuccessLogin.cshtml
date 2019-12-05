@@ -1,8 +1,64 @@
-﻿
-@{
-    ViewData["Title"] = "SuccessLogin";
-}
-<h4>@ViewData["IdToken"]</h4>
-<h1>SuccessLogin</h1>
-<a  href='@Url.Action("User","Test")'>test</a>
+﻿@model string;
 
+
+@{
+    ViewData["Title"] = "Success login";
+}
+<h1>SuccessLogin</h1>
+<button class="btn btn-primary" onclick="userRole('https://localhost:44356/Test/User')">Test with user</button>
+<button class="btn btn-primary" onclick="userRole('https://localhost:44356/User')">Get User Info</button>
+<button class="btn btn-info" onclick="userRole('https://localhost:44356/Test/Administrator')">Test with Admin</button>
+<button class="btn btn-danger" onclick="userLogout('https://localhost:44356/Account/OnLogout')">Logout</button>
+<div id="data">
+
+</div>
+
+@section scripts {
+    <script>
+        $(function() {
+            localStorage.setItem("token", "@Model");
+            console.log(localStorage.getItem("token"));
+        });
+
+        function userRole(url) {
+            $.ajax({
+                url: url,
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem("token")}`
+                },
+                type: "GET",
+                success: function(json) {
+                    $("#data").append(`"<div class="row">${JSON.stringify(json)}</div>" `);
+                },
+                error: function(error) {
+                    if (error.status === 401) {
+                        localStorage.clear();
+                        alert(error.status, error.statusText);
+                    }
+                    if (error.status === 403) {
+                        alert("Nu aveți acces la acest funcțional");
+                    }
+                    console.log(error)
+                    
+                }
+            });
+        }
+
+        function userLogout(url) {
+            localStorage.clear();
+            $.ajax({
+                url: url,
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem("token")}`
+                },
+                type: "POST",
+                success: function(json) {
+                    console.log(json);
+                },
+                error: function(error) {
+                    alert(error.status, error.statusText);
+                }
+            });
+        }
+    </script>
+}

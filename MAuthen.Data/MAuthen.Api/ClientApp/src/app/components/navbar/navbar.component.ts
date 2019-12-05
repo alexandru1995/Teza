@@ -20,7 +20,6 @@ export class NavbarComponent implements OnInit {
   
 
     menuItems = [
-    { name: "Home", link: '' },
     { name: "Services", link: "/services" },
     { name: "Account", link: "/account" }
   ];

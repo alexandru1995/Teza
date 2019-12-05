@@ -200,7 +200,7 @@ namespace MAuthen.Api.Controllers
             return new ServiceAuthorizationResponse
             {
                 AuthorizationCode = JWT.Encode(payload, key, JwsAlgorithm.HS256),
-                ServiceUrl = issuer + "OnLogin"
+                ServiceUrl = issuer + "Account/OnLogin"
             };
         }
     }

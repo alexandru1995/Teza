@@ -24,7 +24,7 @@ namespace MAuthen.Api.Models
         [Required(AllowEmptyStrings = false, ErrorMessage = "Password is required")]
         public string Password { get; set; }
 
-        public static implicit operator UserModel(User user)
+        public static implicit operator UserModel(Domain.Entities.User user)
         {
             return new UserModel
             {
@@ -41,9 +41,9 @@ namespace MAuthen.Api.Models
                 Gender = user.Gender
             };
         }
-        public static implicit operator User(UserModel user)
+        public static implicit operator Domain.Entities.User(UserModel user)
         {
-            return new User
+            return new Domain.Entities.User
             {
                 FirstName = user.FirstName,
                 LastName = user.LastName,
