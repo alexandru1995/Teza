@@ -27,7 +27,6 @@ namespace MAuthen.Api.Controllers
             _processor = processor;
         }
         
-
         [HttpGet]
         public async Task<JsonResult> Get()
         {
@@ -63,11 +62,12 @@ namespace MAuthen.Api.Controllers
                 NullValueHandling = NullValueHandling.Ignore,
                 ContractResolver = new DefaultContractResolver
                 {
-                    NamingStrategy = new CamelCaseNamingStrategy(),
+                    NamingStrategy = new CamelCaseNamingStrategy()
                 },
                 ReferenceLoopHandling = ReferenceLoopHandling.Ignore
             });
         }
+
         [HttpPost]
         [AllowAnonymous]
         public async Task<IActionResult> Add([FromBody]UserModel model)
@@ -91,12 +91,14 @@ namespace MAuthen.Api.Controllers
             
             return StatusCode(200);
         }
+
         [HttpPost("AddContact")]
         [Authorize(Roles= "User,UltraAdmin")]
         public async Task<IActionResult> AddContact([FromBody] ContactModel model)
         {
             return Json(await _contact.AddContacts(User.Identity.Name, model));
         }
+
         [HttpPost("UpdateContact")]
         [Authorize(Roles = "User,UltraAdmin")]
         public async Task<IActionResult> UpdateContact([FromBody] ContactModel model)
@@ -119,6 +121,7 @@ namespace MAuthen.Api.Controllers
             }
             
         }
+
         [HttpPut]
         [Authorize(Roles = "User,UltraAdmin")]
         public async Task<JsonResult> Update(User model)
@@ -132,7 +135,7 @@ namespace MAuthen.Api.Controllers
         public async Task<IActionResult> Delete(Guid id)
         {
             await _user.Delete(id);
-            return StatusCode(202,"Delited");
+            return StatusCode(202,"Deleted");
         }
     }
 }

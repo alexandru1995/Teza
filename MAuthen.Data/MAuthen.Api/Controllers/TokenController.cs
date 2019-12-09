@@ -70,7 +70,7 @@ namespace MAuthen.Api.Controllers
 
         [Authorize]
         [HttpGet("signout")]
-        public async Task<IActionResult> SignOut([FromServices] IAccountService accountService, [FromServices]ITokenManager tokenManager)
+        public async Task<IActionResult> SignOut([FromServices] IAccountService accountService)
         {
             await accountService.SignOut();
             return StatusCode(200);

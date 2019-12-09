@@ -14,7 +14,7 @@
                         class="fas fa-exclamation-circle pr-1 text-danger"></i> {{error}}</div>
                 <div class="input-group mb-3">
                     <div class="input-group-prepend">
-                        <span class="input-group-text">@</span>
+                        <span class="input-group-text"><i class="far fa-user-circle"></i></span>
                     </div>
                     <input formControlName="username" type="text" class="form-control" placeholder="User Name"
                         [ngClass]="{ 'is-invalid': f.username.errors && (loginForm.controls['username'].touched || submitted)}">

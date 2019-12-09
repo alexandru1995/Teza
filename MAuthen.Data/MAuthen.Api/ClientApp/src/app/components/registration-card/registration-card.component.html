@@ -39,7 +39,7 @@
                                 <i class="far fa-user-circle"></i>
                             </span>
                         </div>
-                        <input formControlName="username" type="text" class="form-control" placeholder="Nick Name"
+                        <input formControlName="username" type="text" class="form-control" placeholder="User Name"
                             [ngClass]="{ 'is-invalid': f.username.errors && (registrationForm.controls['username'].touched || submitted)}">
                         <div *ngIf="f.username.errors" class="invalid-feedback ml-3">
                             <div *ngIf="f.username.errors.required">Nick Name is required</div>
@@ -62,20 +62,6 @@
                     </div>
                 </div>
             </div>
-
-            <div class="input-group mb-3">
-                <div class="input-group-prepend">
-                    <span class="input-group-text">
-                        <i class="fas fa-phone-alt"></i>
-                    </span>
-                </div>
-                <input formControlName="phoneNumber" type="text" class="form-control" placeholder="Phone Number"
-                    [ngClass]="{ 'is-invalid': f.phoneNumber.errors && (registrationForm.controls['phoneNumber'].touched || submitted)}">
-                <div *ngIf="f.phoneNumber.errors" class="invalid-feedback ml-3">
-                    <div *ngIf="f.phoneNumber.errors.required">Phone number is required</div>
-                    <div *ngIf="f.phoneNumber.errors.invalidNumber">Phone number is not valid</div>
-                </div>
-            </div>
             <!-- ================ -->
             <div class="input-group mb-3">
                 <div class="input-group-prepend">
@@ -94,6 +80,19 @@
 
             </div>
             <!-- ================ -->
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">
+                        <i class="fas fa-phone-alt"></i>
+                    </span>
+                </div>
+                <input formControlName="phoneNumber" type="text" class="form-control" placeholder="Phone Number"
+                    [ngClass]="{ 'is-invalid': f.phoneNumber.errors && (registrationForm.controls['phoneNumber'].touched || submitted)}">
+                <div *ngIf="f.phoneNumber.errors" class="invalid-feedback ml-3">
+                    <div *ngIf="f.phoneNumber.errors.required">Phone number is required</div>
+                    <div *ngIf="f.phoneNumber.errors.invalidNumber">Phone number is not valid</div>
+                </div>
+            </div>
             <div class="input-group mb-3">
                 <div class="input-group-prepend">
                     <span class="input-group-text">@</span>
