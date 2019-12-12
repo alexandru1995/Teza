@@ -42,7 +42,6 @@ namespace MAuthen.Api.Services.Implementation
             {
                 AccessToken = token
             };
-            
         }
 
         public ClaimsPrincipal GetPrincipalFromExpiredToken(string token, string secretKey)
@@ -51,22 +50,18 @@ namespace MAuthen.Api.Services.Implementation
             var tokenValidationParameters = new TokenValidationParameters
             {
                 TokenDecryptionKey = securityKey,
-                ValidateAudience = false, //you might want to validate the audience and issuer depending on your use case
+                ValidateAudience = false, 
                 ValidateIssuer = false,
                 ValidateIssuerSigningKey = true,
                 IssuerSigningKey = securityKey,
-                ValidateLifetime = false //here we are saying that we don't care about the token's expiration date
-
+                ValidateLifetime = false 
             };
 
             var tokenHandler = new JwtSecurityTokenHandler();
             var principal = tokenHandler.ValidateToken(token, tokenValidationParameters, out var securityToken);
             var jwtSecurityToken = securityToken as JwtSecurityToken;
-            
-
             if (jwtSecurityToken == null || !jwtSecurityToken.InnerToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, StringComparison.InvariantCultureIgnoreCase))
                 throw new SecurityTokenException("Invalid token");
-
             return principal;
         }
     }

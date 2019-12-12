@@ -61,9 +61,9 @@ namespace MAuthen.Data
                     .IsUnique();
             });
 
-            modelBuilder.Entity<Role>(entyty =>
+            modelBuilder.Entity<Role>(entity =>
             {
-                entyty.Property(r => r.Options)
+                entity.Property(r => r.Options)
                 .HasConversion(converter);
             });
         }

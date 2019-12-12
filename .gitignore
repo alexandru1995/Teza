@@ -8,3 +8,5 @@ MAuthen\.Data/\.vs/
 **/obj/
 
 MAuthen\.Client/ClientApp/package-lock\.json
+
+TestIntegrationApplication/.vs/

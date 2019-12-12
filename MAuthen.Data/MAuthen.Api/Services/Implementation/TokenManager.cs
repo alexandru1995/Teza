@@ -50,7 +50,6 @@ namespace MAuthen.Api.Services.Implementation
             return authorizationHeader == StringValues.Empty
                 ? string.Empty
                 : authorizationHeader.Single().Split(" ").Last();
-
         }
         private static string GetKey(string token)
             => $"tokens: {token} : deactivated";

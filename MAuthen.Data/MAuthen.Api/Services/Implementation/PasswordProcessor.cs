@@ -25,7 +25,6 @@ namespace MAuthen.Api.Services.Implementation
             {
                 var key = Convert.ToBase64String(algorithm.GetBytes(KeySize));
                 var salt = Convert.ToBase64String(algorithm.Salt);
-
                 return $"{Options.Iterations}.{salt}.{key}";
             }
         }
@@ -42,9 +41,7 @@ namespace MAuthen.Api.Services.Implementation
             var iterations = Convert.ToInt32(parts[0]);
             var salt = Convert.FromBase64String(parts[1]);
             var key = Convert.FromBase64String(parts[2]);
-
             var needsUpgrade = iterations != Options.Iterations;
-
             using (var algorithm = new Rfc2898DeriveBytes(
                 password,
                 salt,

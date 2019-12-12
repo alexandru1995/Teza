@@ -12,7 +12,7 @@ namespace TestIntegrationApplication.Helpers
 {
     public class JwtToken : IJwtToken
     {
-        private AuthenticationRequestModel _options;
+        private readonly AuthenticationRequestModel _options;
         public JwtToken(IOptions<AuthenticationRequestModel> options)
         {
             _options = options.Value;

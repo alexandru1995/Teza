@@ -67,7 +67,6 @@ namespace TestIntegrationApplication.Controllers
                 var response = await client
                     .PostAsync(_options.Audience + "Token", new StringContent(message.ToString(), Encoding.UTF8, "application/json"));
                 var responseToken = await response.Content.ReadAsStringAsync();
-
                 JWT.Decode(responseToken, Encoding.ASCII.GetBytes(_options.ServerSecret), JwsAlgorithm.HS256);
                 payload = JWT.Payload(responseToken);
                 var tokens = JsonSerializer.Deserialize<AuthorizationResponseModel>(payload);
@@ -85,14 +84,12 @@ namespace TestIntegrationApplication.Controllers
         [Authorize]
         public async Task<IActionResult> OnLogout()
         {
-            
             var client = new HttpClient();
             var userId = User.Identity.Name;
             var accessToken = await _cache.GetStringAsync(userId);
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
             var response = await client
                 .GetAsync(_options.Audience + "Token/signout");
-
             await _tokenManager.DeactivateCurrentAsync();
             return StatusCode(200);
         }
