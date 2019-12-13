@@ -75,7 +75,8 @@ namespace MAuthen.Data.Repositories.Implementation
                     Id = s.ServiceId,
                     Name = s.Service.Name,
                     Issuer = s.Service.Issuer,
-                    CreatedOn = s.Service.CreatedOn
+                    CreatedOn = s.Service.CreatedOn,
+                    LogoutUrl = s.Service.LogoutUrl
                 }).ToListAsync();
         }
 

@@ -66,7 +66,6 @@ export class RegistrationCardComponent {
                 this.swichToAuth();
             },
             error => {
-                console.log(error);
                 const username = this.registrationForm.controls['username']
                 username.setErrors({
                     fildExist:

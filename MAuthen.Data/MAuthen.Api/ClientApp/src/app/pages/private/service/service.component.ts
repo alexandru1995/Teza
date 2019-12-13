@@ -5,6 +5,7 @@ import { AddServiceModalComponent } from 'src/app/components/add-service-modal/a
 import { ServiceService } from 'src/app/service/service.service';
 import { ContactEditModalComponent } from 'src/app/components/contact-edit-modal/contact-edit-modal.component';
 import { DomSanitizer } from '@angular/platform-browser';
+import { FullService } from 'src/app/models/service-models/full-service.model';
 
 @Component({
   selector: 'app-service',
@@ -28,6 +29,7 @@ export class ServiceComponent implements OnInit {
 
   ngOnInit() {
     this.getService();
+    
   }
 
   get servicesTable(): Service[] {
@@ -41,18 +43,7 @@ export class ServiceComponent implements OnInit {
     modalRef.componentInstance.title = "Add Service";
     modalRef.result
       .then((rez) => {
-        console.log(rez);
-        this.service.add(rez).subscribe(service => {
-          if(service!=null){
-            var data = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(service));
-            var downloader = document.createElement('a');
-
-            downloader.setAttribute('href', data);
-            downloader.setAttribute('download', 'Settings.json');
-            downloader.click();
-          }
-            this.getService();
-        })
+        this.getService();
       })
       .catch(err => { })
   }
@@ -60,17 +51,11 @@ export class ServiceComponent implements OnInit {
   updateService(service) {
     var modalRef = this.modalService.open(AddServiceModalComponent, { centered: true });
     modalRef.componentInstance.title = "Edit Service";
-    modalRef.componentInstance.name = service.name;
-    modalRef.componentInstance.isshuer = service.isshuer;
+    modalRef.componentInstance.existService = service;
     modalRef.result
       .then((rez) => {
-        service.name = rez.name;
-        service.domain = rez.domain;
-        this.service.update(service).subscribe(service => {
-          this.getService()
-        })
-      }
-      )
+        this.getService();
+      })
       .catch(err => { })
   }
 

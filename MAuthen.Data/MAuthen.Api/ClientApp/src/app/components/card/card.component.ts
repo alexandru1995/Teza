@@ -46,6 +46,9 @@ export class CardComponent implements OnInit, AfterViewChecked {
     ngOnInit(): void {
         this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/account';
         this.serviceName = this.route.snapshot.paramMap.get("serviceName") || 'MAuthen';
+        if(this.serviceName != 'MAuthen'){
+            this.authorization.currentUserSubject.next(null);
+        }
     }
 
     onSubmit() {

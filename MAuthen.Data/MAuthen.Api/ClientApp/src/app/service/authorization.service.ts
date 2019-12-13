@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Login } from '../models/login.model';
-import { Observable, BehaviorSubject, of } from 'rxjs';
-import { map, tap, mapTo, catchError } from 'rxjs/operators';
+import { Observable, BehaviorSubject } from 'rxjs';
+import { map, tap, mapTo } from 'rxjs/operators';
 import { Token } from '../models/token.medel';
 import { SimpleUser } from '../models/simpleUser.model';
 
@@ -16,7 +16,9 @@ export class AuthorizationService {
 
 
     constructor(private http: HttpClient) {
-        this.currentUserSubject = new BehaviorSubject<any>(JSON.parse(localStorage.getItem('User')));
+        this.currentUserSubject = new BehaviorSubject<any>(
+            JSON.parse(localStorage.getItem('User'))
+        );
         this.currentUser = this.currentUserSubject.asObservable();
     }
 
@@ -25,7 +27,7 @@ export class AuthorizationService {
     }
 
     login(data: Login): Observable<boolean> {
-        
+
         return this.http.post<SimpleUser>(`Authorization/`, data)
             .pipe(
                 tap((user: SimpleUser) => this.doLoginUser(user)),
@@ -33,7 +35,7 @@ export class AuthorizationService {
             );
     }
 
-    remoteLogin(data: Login): Observable<any>{
+    remoteLogin(data: Login): Observable<any> {
         return this.http.post('Authorization/RemoteSignin', data);
     }
 

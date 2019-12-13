@@ -39,7 +39,7 @@
                         <td class="clickable text-primary" [routerLink]='["/services/"+ service.id]'>
                             {{ service.name }}
                         </td>
-                        <td>{{ service.domain}}</td>
+                        <td>{{ service.issuer}}</td>
                         <td>{{ service.createdOn |  date:'mediumDate' }}</td>
                         <td class="text-center">
                             <button class="btn btn-linck" (click)="updateService(service)">

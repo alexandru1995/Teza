@@ -1,7 +1,7 @@
 import { Service } from './service.model';
 
 export class FullService extends Service{
-    logOutUrl : string;
+    logoutUrl : string;
     tokenExpirationTime: string;
     servicePassword: string;
 }

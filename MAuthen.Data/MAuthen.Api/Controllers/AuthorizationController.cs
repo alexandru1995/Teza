@@ -31,10 +31,7 @@ namespace MAuthen.Api.Controllers
         private readonly Models.Authentication.JwtOptions _options;
         private readonly IDistributedCache _cache;
 
-        public IConfiguration _configuration { get; }
-
         public AuthorizationController(
-            IConfiguration configuration,
             IUserRepository user,
             IPasswordProcessor processor,
             IContactRepository contact,
@@ -44,7 +41,6 @@ namespace MAuthen.Api.Controllers
             IRoleRepository role,
             IDistributedCache cache)
         {
-            _configuration = configuration;
             _userRepository = user;
             _processor = processor;
             _contact = contact;

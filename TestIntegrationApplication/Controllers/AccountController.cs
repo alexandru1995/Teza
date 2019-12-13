@@ -87,10 +87,10 @@ namespace TestIntegrationApplication.Controllers
             var client = new HttpClient();
             var userId = User.Identity.Name;
             var accessToken = await _cache.GetStringAsync(userId);
+            await _tokenManager.DeactivateCurrentAsync();
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
             var response = await client
                 .GetAsync(_options.Audience + "Token/signout");
-            await _tokenManager.DeactivateCurrentAsync();
             return StatusCode(200);
         }
     }

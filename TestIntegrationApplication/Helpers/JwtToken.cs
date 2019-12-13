@@ -1,11 +1,7 @@
-﻿using Microsoft.IdentityModel.Tokens;
-using System;
-using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
-using Jose;
+﻿using Jose;
 using Microsoft.Extensions.Options;
+using System.Collections.Generic;
+using System.Text;
 using TestIntegrationApplication.Models;
 
 namespace TestIntegrationApplication.Helpers

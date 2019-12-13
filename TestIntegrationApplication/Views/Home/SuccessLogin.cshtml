@@ -45,15 +45,15 @@
         }
 
         function userLogout(url) {
-            localStorage.clear();
+           
             $.ajax({
                 url: url,
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem("token")}`
                 },
                 type: "POST",
-                success: function(json) {
-                    console.log(json);
+                success: function() {
+                    localStorage.clear();
                 },
                 error: function(error) {
                     alert(error.status, error.statusText);

@@ -8,6 +8,7 @@ using MAuthen.Domain.Models;
 using MAuthen.Domain.Repositories.Interface;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using Microsoft.Extensions.Primitives;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -20,9 +21,12 @@ namespace MAuthen.Api.Controllers
     public class ServiceController : Controller
     {
         private readonly IServiceRepository _service;
-        public ServiceController(IServiceRepository service)
+        private readonly Models.Authentication.JwtOptions _options;
+        public ServiceController(IServiceRepository service,
+        IOptions<Models.Authentication.JwtOptions> options)
         {
             _service = service;
+            _options = options.Value;
         }
 
 
@@ -69,7 +73,17 @@ namespace MAuthen.Api.Controllers
         public async Task<IActionResult> AddService(FullServiceModel service)
         {
             service.ServicePassword = PasswordGenerator.Generate(255);
-            var newService = await _service.AddService(User.Identity.Name, service);
+            ServiceSettings newService;
+            
+            try
+            {
+                newService = await _service.AddService(User.Identity.Name, service);
+            }
+            catch (Exception err)
+            {
+                return BadRequest("Service with same name already exist");
+            }
+            newService.serverSecret = _options.SecretKey;
             var settings = new JsonRootModel {AuthenticationRequest = newService};
             var jsonSettings = JsonConvert.SerializeObject(settings, Formatting.Indented, new JsonSerializerSettings
             {
@@ -85,7 +99,14 @@ namespace MAuthen.Api.Controllers
         [HttpPut]
         public async Task<IActionResult> UpdateService(FullServiceModel service)
         {
-            await _service.Update(service);
+            try
+            {
+                await _service.Update(service);
+            }
+            catch
+            {
+                return BadRequest("Service with same name already exist");
+            }
             return StatusCode(200);
         }
 

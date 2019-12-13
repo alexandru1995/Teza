@@ -1,6 +1,6 @@
 export class Service{
     id: string;
     name: string;
-    isshuer: string;
+    issuer: string;
     createdOn: string;
 }

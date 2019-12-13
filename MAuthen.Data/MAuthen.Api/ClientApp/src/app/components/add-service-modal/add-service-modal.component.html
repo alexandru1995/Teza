@@ -11,6 +11,7 @@
                 [ngClass]="{ 'is-invalid': f.name.errors && submitted}">
             <div *ngIf="f.name.errors" class="invalid-feedback ml-3">
                 <div *ngIf="f.name.errors.required">Name is required</div>
+                <div *ngIf="f.name.errors.fildExist">{{f.name.errors.fildExist.message}}</div>
             </div>
 
             <input formControlName="issuer" type="text" class="form-control mt-3" placeholder="Service issuer"
