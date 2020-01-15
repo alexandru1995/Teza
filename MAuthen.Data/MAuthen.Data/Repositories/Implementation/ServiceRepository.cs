@@ -28,15 +28,14 @@ namespace MAuthen.Data.Repositories.Implementation
                     UserId = userId,
                     ServiceId = newService.Entity.Id,
                     RoleId = Guid.Parse("BD1FF3D5-6BE5-4660-B1BE-77284DD8B669"),
-                    CreatedOn = DateTime.Now,
-                    
+                    CreatedOn = DateTime.Now
                 });
             await _context.SaveChangesAsync();
             return new ServiceSettings
             {
                 client_id = newService.Entity.Id,
                 issuer = newService.Entity.Issuer,
-                audiance = "localhost:5001/",
+                audience = "https://localhost:5001/",
                 secret = newService.Entity.ServicePassword
             };
         }

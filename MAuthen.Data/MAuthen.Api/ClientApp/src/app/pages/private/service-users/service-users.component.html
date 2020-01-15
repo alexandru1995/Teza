@@ -25,7 +25,7 @@
                     <tr>
                         <th scope="col">Name</th>
                         <th scope="col">Role</th>
-                        <th scope="col"></th>
+                        <th scope="col" class="text-right">Blocked</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -37,12 +37,14 @@
                         <td class="text-right">
                             <button class="btn btn-linck" (click)="unBlockUser(user)" *ngIf="user.isBlocked !!">
                                 <span class="text-danger">
-                                    <i class="fas fa-ban"></i>
+                                    <i class="fas fa-lock"></i>
+                                    <!-- <i class="fas fa-ban"></i> -->
                                 </span>
                             </button>
                             <button class="btn btn-linck" (click)="blockUser(user)" *ngIf="!user.isBlocked">
                                 <span class="text-info">
-                                    <i class="fas fa-user-slash"></i>
+                                    <i class="fas fa-lock-open"></i>
+                                    <!-- <i class="fas fa-user-slash"></i> -->
                                 </span>
                             </button>
                         </td>

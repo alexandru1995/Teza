@@ -78,7 +78,7 @@ namespace MAuthen.Api.Controllers
             }
             ///////////////
             
-            var clams = new List<Claim>
+            var claims = new List<Claim>
             {
                 new Claim("FirstName", user.FirstName),
                 new Claim("LastName", user.LastName),
@@ -90,13 +90,13 @@ namespace MAuthen.Api.Controllers
             var userRole = await _role.GetUserServiceRoles(user.Id, serviceId);
             foreach (var role in userRole)
             {
-                clams.Add(new Claim(ClaimTypes.Role, role.Name));
+                claims.Add(new Claim(ClaimTypes.Role, role.Name));
             }
             var userContact = await _contact.GetContactByUserId(user.Id);
             if (user.Contacts != null)
             {
-                clams.Add(new Claim("Email", userContact.Where(e => e.Email != null).Select(c => c.Email).FirstOrDefault() ?? ""));
-                clams.Add(new Claim("PhoneNumber", userContact.Where(p => p.Phone != null).Select(p => p.Phone).FirstOrDefault() ?? ""));
+                claims.Add(new Claim("Email", userContact.Where(e => e.Email != null).Select(c => c.Email).FirstOrDefault() ?? ""));
+                claims.Add(new Claim("PhoneNumber", userContact.Where(p => p.Phone != null).Select(p => p.Phone).FirstOrDefault() ?? ""));
             }
 
             var refresh = PasswordGenerator.Generate(32);
@@ -108,7 +108,7 @@ namespace MAuthen.Api.Controllers
                 LastName = user.LastName,
                 Tokens = new JsonWebToken
                 {
-                    AccessToken = accountService.SignIn(clams, _options.SecretKey).AccessToken,
+                    AccessToken = accountService.SignIn(claims, _options.SecretKey).AccessToken,
                     RefreshToken = refresh
                 }
             });

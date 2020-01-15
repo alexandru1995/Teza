@@ -8,7 +8,7 @@ namespace MAuthen.Domain.Models
     {
         public Guid client_id { get; set; }
         public string issuer { get; set; }
-        public string audiance { get; set; } = "localhost:5001";
+        public string audience { get; set; } = "https://localhost:5001/";
         public string secret { get; set; }
         public string serverSecret { get; set; }
     }
